@@ -1,0 +1,38 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: code-generator
+  name: code-generator
+spec:
+  ports:
+    - port: 80
+      protocol: TCP
+      targetPort: 80
+  selector:
+    app: code-generator
+  type: ClusterIP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: code-generator
+  labels:
+    app: code-generator
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: code-generator
+  template:
+    metadata:
+      labels:
+        app: code-generator
+    spec:
+      containers:
+        - name: code-generator
+          image: {{ .Values.codeGenerator.image }}
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 80
+        

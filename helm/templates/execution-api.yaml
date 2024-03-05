@@ -1,0 +1,51 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: execution-api
+  name: execution-api
+spec:
+  ports:
+    - port: 80
+      protocol: TCP
+      targetPort: 80
+  selector:
+    app: execution-api
+  type: ClusterIP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: execution-api
+  labels:
+    app: execution-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: execution-api
+  template:
+    metadata:
+      labels:
+        app: execution-api
+    spec:
+      containers:
+        - name: execution-api
+          image: {{ .Values.executionApi.image }}
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 80
+          env:
+            - name: WORKFLOW_LOGS_PATH
+              value: {{ .Values.global.workflow_log_path }}
+            - name: WORKFLOW_DB
+              value: {{ .Values.mongodb.workflowdb.name }}
+            - name: WORKFLOW_COLLECTION
+              value: {{ .Values.mongodb.workflowdb.collection }}
+          volumeMounts:
+            - name: shared-volume
+              mountPath: /data
+        volumes:
+        - name: shared-volume
+          persistentVolumeClaim:
+            claimName: {{ .Release.Name }}-workflow-logs-pvc

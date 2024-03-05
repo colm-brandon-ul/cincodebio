@@ -1,0 +1,76 @@
+minio:
+  # This is is currently the work around for accessing the minio console (ip address is from multipass)
+  nameOverride: "minio"
+  fullnameOverride: "minio"
+  buckets:
+    experimentBucket: "experiment-bucket"
+    workflowBucket: "workflow-bucket"
+    resultsBucket: "results-bucket"
+  # move to a secret file;
+  auth:
+    rootUser: admin
+    rootPassword: mypassword
+  extraEnvVars:
+      # This is the workaround for accessing the minio console - need to resolve (as it depends on the ip address of the multipass VM for microk8s)
+      - name: MINIO_BROWSER_REDIRECT_URL
+        value: "http://192.168.64.2/minio-console/"
+
+mongodb:
+  image: mongo:latest
+  workflowdb:
+    name: "workflows"
+    collection: "flows"
+  jobsdb:
+    name: "jobsdb"
+    collections: "jobs"
+
+nginxProxy:
+  image: nginx:latest
+
+jobsApi:
+  hello: world
+  image: abc
+
+executionApi:
+  hello: world
+  image: abc
+
+serviceApi:
+  name: service-api
+  image: abc
+
+codeGenerator:
+  hello: world
+  image: abc
+  exchange_name: "code-generator-exchange"
+  routing_key: "code-generator"
+
+sibManager:
+  hello: world
+  image: abc
+  docker_hub:
+    namespace:
+  kaniko:
+    image: "gcr.io/kaniko-project/executor:latest"
+    namespace: "kaniko-build"
+    context_pvc_name: "kaniko-context"
+    context_pvc_mount_path: "/docker-build"
+
+executionEnvironment:
+  hello: world
+  image: abc
+
+global:
+  ontology_url: "http://"
+  dps_registry: "http://"
+  docker_hub_namespace: "sccecellmaps"
+  workflow_log_path: "data/workflow-logs"
+  dps_name_space: "dataprocessing-service-namespace"
+  # These are the default values for the cluster image registry with microk8s
+  # However these may need to be changed depending on the cluster
+  cluster_image_registry:
+    name: "registry"
+    namespace: "container-registry"
+    port: "5000"
+    domain_on_host: "localhost:32000"
+  

@@ -1,0 +1,71 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: http-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /$1
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    nginx.ingress.kubernetes.io/enable-rewrite-log: "true"
+
+spec:
+  ingressClassName: nginx
+  defaultBackend:
+    service:
+      name: nginx
+      port:
+        number: 80
+  rules:
+    - host: 
+    - http:
+        paths:
+          - path: /api/(.*)$
+            pathType: Prefix
+            backend:
+              service:
+                name: service1
+                port:
+                  number: 80
+          # Definitely needs to be available outside the cluster
+          - path: /execution-api/(.*)$
+            pathType: Prefix
+            backend:
+              service:
+                name: service1
+                port:
+                  number: 80
+
+          - path: /jobs-api/(.*)$
+            pathType: Prefix
+            backend:
+              service:
+                name: service1
+                port:
+                  number: 80
+          # Definitely needs to be available outside the cluster
+          - path: /services-api/(.*)$
+            pathType: Prefix
+            backend:
+              service:
+                name: service1
+                port:
+                  number: 80
+          # Definitely needs to be available outside the cluster
+          - path: /minio-console/(.*)$
+            pathType: Prefix
+            backend:
+              service:
+                name: minio
+                port:
+                  number: 9001
+          # Definitely needs to be available outside the cluster
+          - path: /minio-presigned/(.*)$
+            pathType: Prefix
+            backend:
+              service:
+                name: nginxproxy
+                port:
+                  number: 80
+
+
+     

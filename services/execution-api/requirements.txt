@@ -1,0 +1,9 @@
+fastapi
+uvicorn
+websockets
+pydantic==1.10.12
+pika
+pymongo
+requests
+python-multipart
+jinja2

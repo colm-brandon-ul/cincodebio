@@ -1,15 +1,10 @@
-name: Build, Test and Push Cellmaps Services to Dockerhub
+name: Build, Test and Push Cellmaps Services to Dockerhub on Trigger
 on:
-    pull_request:
-      types: [closed]
-      branches:
-        - main
+    workflow_dispatch
 
 jobs:
     build:
-        if: github.event.pull_request.merged == true
-        runs-on: ubuntu-latest
-
+        runs-on: ubuntu-latest 
         steps:
             - name: Checkout code
               uses: actions/checkout@v2
@@ -22,3 +17,19 @@ jobs:
               with:
                 username: ${{ secrets.DOCKERHUB_USERNAME }}
                 password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+            - name: Build and push Image
+              run: |
+                for dockerfile in $(find . -name Dockerfile); do
+                    dir_of_image=$(dirname $dockerfile)
+                    image_name=$(basename $dir_of_image)
+                    image_name=${image_name//\//-}
+                    docker_image_name="${image_name//[^a-zA-Z0-9]/-}"
+                    echo "Building $docker_image_name"
+                    docker buildx build --platform linux/amd64,linux/arm64 -t $docker_image_name:latest $dir_of_image --push
+                done;
+
+
+
+
+

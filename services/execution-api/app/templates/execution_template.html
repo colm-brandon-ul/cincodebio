@@ -1,0 +1,161 @@
+<html>
+    {{request.base_url}}
+    <ul id='messages'>
+    </ul>
+
+    <head>
+        <script>
+
+            // Declaration
+            class Workflow {
+            constructor(id,owner,status,state) {
+                this.id = id;
+                this.owner = owner;
+                this.status = status;
+                this.state = state;
+            }
+            }
+
+            /*
+            {'_id': '64c7a3a6923084b56dc97f9f', 
+            'owner': 'public', 
+            'status': 'completed', 
+            'state': [
+                {'id': '1f3f218c-f3f4-4dcc-a09c-369320a34566', 'workflow': '64c7a3a6923084b56dc97f9f', 'job_status': 'completed'}, 
+                {'id': 'c4651190-865c-4961-81b7-2766a32db8d5', 'workflow': '64c7a3a6923084b56dc97f9f', 'job_status': 'completed'}]}
+            */
+
+            Workflow.fromJson = function(json) {
+                // Need to figure out the solution for need to parse twice!
+                var data = JSON.parse(JSON.parse(json)); // Parsing the json string.
+                return new Workflow(data.id,data.owner,data.status,data.state);
+            };
+            
+            var wf_state;
+
+            var ws = new WebSocket('{{ws_address}}');
+            // Send Echo to client every second to keep connection open
+    
+            function sendEcho() {
+                // return new date and time
+                let dateTime= new Date();
+                // return the time
+                let time = dateTime.toLocaleTimeString();
+                console.log(time)
+                ws.send('echo')
+            }
+    
+            ws.onmessage = function(event) {
+                var messages = document.getElementById('messages')
+                var message = document.createElement('li')
+                // var content = document.createTextNode(event.data)
+
+                if (typeof wf_state !== 'undefined') {
+                // the variable is defined
+                    new_wf_state = Workflow.fromJson(event.data)
+                    
+                    // has the workflow status changed?
+                    if (wf_state.status !== new_wf_state.status){
+                        // Update Workflow State Display and update existing object
+
+
+                        existing_text_node = document.getElementById('wf-status')
+                        const newNode = document.createTextNode(new_wf_state.status);
+                        existing_text_node.replaceChild(newNode, existing_text_node.childNodes[0]);
+                        wf_state.status = new_wf_state.status
+
+                    }
+
+                    // Check Job State
+                    old_state_length = wf_state.state.length
+                    new_wf_state.state.forEach(function (item, index) {
+                        if (index >= old_state_length){
+                            // A new state has been added
+                            var message = document.createElement('li')
+                            message.setAttribute("id",item.id);
+                            console.log(item.job_status == 'awaiting_interaction')
+                            var content
+                            if (item.job_status == 'awaiting_interaction'){
+                                
+                                content = document.createElement('a')
+                                content.setAttribute("href",item.url)
+                                content_text = document.createTextNode(item.job_status);
+                                content.appendChild(content_text)
+                            }
+                            else{
+                                content = document.createTextNode(item.job_status)
+                            }
+                            
+                            message.appendChild(content)
+                            document.getElementById('wf-state-container').appendChild(message)
+                        }
+                        else {
+                            if (item.job_status != wf_state.state[index].job_status){
+                            existing_text_node = document.getElementById(item.id)
+                            // console.log(wf_state.state[index])
+                            console.log(item.job_status + " " + wf_state.state[index].job_status)
+                            console.log(item.job_status != wf_state.state[index].job_status)
+                            let newNode;
+                            if (item.job_status == 'awaiting_interaction') {
+                                newNode = document.createElement('a')
+                                newNode.setAttribute("href",item.url)
+                                content_text = document.createTextNode(item.job_status);
+                                newNode.appendChild(content_text)
+                            }
+                            else{
+                                newNode = document.createTextNode(item.job_status);
+                            }
+
+                            
+                            existing_text_node.replaceChild(newNode, existing_text_node.childNodes[0]);
+                        }
+                    }
+                    // console.log(item, index);
+                    });
+                    wf_state.state = new_wf_state.state
+                }
+                // the variable is undefined - therefore needs to be initialised
+                else {
+                    wf_state = Workflow.fromJson(event.data)
+                    document.getElementById('wf-status').appendChild(document.createTextNode(wf_state.status))
+
+                    wf_state.state.forEach(function (item, index) {
+                        var message = document.createElement('li')
+                        message.setAttribute("id",item.id);
+                        var content;
+                        if (item.job_status == 'awaiting_interaction') {
+                            content = document.createElement('a')
+                            content.setAttribute("href",item.url)
+                            content_text = document.createTextNode(item.job_status);
+                            content.appendChild(content_text)
+                            
+                        }
+                        else{
+                            content = document.createTextNode(item.job_status);
+                        }
+
+                        // var content = document.createTextNode(item.job_status)
+                        message.appendChild(content)
+                        document.getElementById('wf-state-container').appendChild(message)
+                    });
+                    
+                    
+
+                }
+                // message.appendChild(content)
+                // messages.appendChild(message)
+            };
+    
+            setInterval(sendEcho,1000)
+        </script>
+        <title>
+            CellMaps Execution Frontend
+        </title>
+    </head>
+    <body>
+        <div id="wf-status"></div>
+        <ol id="wf-state-container"></div>
+    </body>
+
+
+</html>

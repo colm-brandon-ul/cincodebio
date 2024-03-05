@@ -1,0 +1,84 @@
+<input type="text" id="experimentID" placeholder="insert-experiment-id"><br>
+<input type="file" id="selector" multiple><br>
+<button onclick="upload()">Upload</button>
+
+<div id="status">No uploads</div>
+
+<script type="text/javascript">
+  // `upload` iterates through all files selected and invokes a helper function called `retrieveNewURL`.
+  function upload() {
+        // Get selected files from the input element.
+        var files = document.querySelector("#selector").files;
+        var experimentId = document.getElementById("experimentID").value
+        console.log(experimentId)
+        for (var i = 0; i < files.length; i++) {
+            var file = files[i];
+            // Retrieve a URL from our server.
+            retrieveNewURL(file, experimentId, (file, url) => {
+                // Upload the file to the server.
+                console.log(url)
+                uploadFile(file, url);
+            });
+        }
+    }
+
+    // `retrieveNewURL` accepts the name of the current file and invokes the `/presignedUrl` endpoint to
+    // generate a pre-signed URL for use in uploading that file: 
+    function retrieveNewURL(file, experimentId, cb) {
+        fetch(`/presignedUrl/${experimentId}?name=${file.name}`).then((response) => {
+            response.text().then((url) => {
+                console.log(url)
+                cb(file, url);
+            });
+        }).catch((e) => {
+            console.error(e);
+        });
+    }
+
+    // ``uploadFile` accepts the current filename and the pre-signed URL. It then uses `Fetch API`
+    // to upload this file to S3 at `play.min.io:9000` using the URL:
+    function uploadFile(file, url) {
+        if (document.querySelector('#status').innerText === 'No uploads') {
+            document.querySelector('#status').innerHTML = '';
+        }
+
+        if (file.name == 'MarkerList.txt'){
+            url = "http://localhost:8000/experiment-bucket/123456/MarkerList.txt?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=minioadmin%2F20231011%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20231011T123731Z&X-Amz-Expires=604800&X-Amz-SignedHeaders=host&X-Amz-Signature=5ea85453b40166460d40640d9b520ca6238fabe3b3c86a7b70a43119ab965c45"
+
+        }
+        else {
+            url = "http://localhost:8000/experiment-bucket/123456/20220331-EBV-HT-EBV_Positive.qptiff?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=minioadmin%2F20231011%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20231011T123731Z&X-Amz-Expires=604800&X-Amz-SignedHeaders=host&X-Amz-Signature=3cc61ea13dd127dab27291b15038ff8a204fcacd7da7613b976725c0d8620342"
+        }
+
+
+        var http = new XMLHttpRequest();
+        // var url = 'your_URL.php';
+        // var params = 'on=true';
+        http.open('PUT',`${url}`, true);
+        //Send the proper header information along with the request
+        http.setRequestHeader("Content-Type", file.type);
+        http.onreadystatechange = function() {//Call a function when the state changes.
+            if(http.readyState == 4 && http.status == 200) {
+                alert(http.responseText);
+                // If multiple files are uploaded, append upload status on the next line.
+                document.querySelector('#status').innerHTML += `<br>Uploaded ${file.name}.`;
+            
+            }}
+        http.send(file);
+
+
+        // console.log(url.toString())
+        // fetch(url.toString(), {
+        //     method: 'PUT',
+        //     body: file,
+        //     headers: {
+        //         'Content-Type': 'application/x-www-form-urlencoded'
+        //     }
+        // }).then(() => {
+        //     // If multiple files are uploaded, append upload status on the next line.
+        //     document.querySelector('#status').innerHTML += `<br>Uploaded ${file.name}.`;
+        // }).catch((e) => {
+        //     console.error(e);
+        // });
+    }
+</script>

@@ -1,0 +1,253 @@
+# Quite similar to helm!
+{# These Imports aren't going to change #}
+from enum import Enum
+from pydantic import BaseModel, Field,root_validator, RootModel
+from typing import List, Any, Union, Optional
+from fastapi.responses import HTMLResponse
+
+{# This is the enum for job objects #}
+class JobStatus(str, Enum):
+    submitted = 'submitted'
+    accepted = 'accepted'
+    awaiting_interaction = 'awaiting_interaction'
+    interaction_accepted = 'interaction_accepted'
+    processing = 'processing'
+    completed = 'completed'
+    failed = "failed"
+
+# Data Models for the Data/Workflow Parameters
+{# These data models need to mimic the cellmaps_sdk as closely as possible #}
+class TmaSymbolicLink(RootModel[str]):
+    ...
+
+class TmaProteinChannel(BaseModel):
+    url: TmaSymbolicLink
+
+class TissueMicroArray(BaseModel):
+    channels: dict[str,TmaProteinChannel]
+
+class TissueCoreSymbolicLink(RootModel[str]):
+    ...
+
+class TissueCoreProteinChannel(BaseModel):
+    url: TissueCoreSymbolicLink
+
+class TissueCore(BaseModel):
+    channels: dict[str, TissueCoreProteinChannel]
+    ...
+
+class DearrayedTissueMicroArray(BaseModel):
+    cores : dict[str, TissueCore]
+
+# Workflow Parameters Models
+class NuclearStain(RootModel[str]):
+    ...
+
+class NuclearMarker(RootModel[str]):
+    ...
+
+class MembraneMarker(RootModel[str]):
+    ...
+
+# System Parameter Models
+class ProteinChannelMarker(RootModel[str]):
+    ...
+
+class ROI(BaseModel):
+    x1: float
+    y1: float
+    x2 : float
+    y2: float
+    img_w: float
+    img_h: float
+
+class PredictedROIs(BaseModel):
+    confidence_value : float
+    rois: List[ROI]
+
+class TissueCoreCellSegmentationMaskSymbolicLink(RootModel[str]):
+    ...
+
+class TissueCoreSegmentationMask(BaseModel):
+    url: TissueCoreCellSegmentationMaskSymbolicLink
+
+class TissueCoreCellSegmentationMasks(BaseModel):
+    nucleus_mask: TissueCoreSegmentationMask
+    membrane_mask: TissueCoreSegmentationMask
+
+class DearrayedTissueMicroArrayCellSegmentationMask(BaseModel):
+    cores: dict[str, TissueCoreCellSegmentationMasks]
+
+class TissueCoreFcsFileSymbolicLink(RootModel[str]):
+    ...
+
+class TissueCoreFcsFile(BaseModel):
+    url: TissueCoreFcsFileSymbolicLink
+
+
+class DearrayedTissueMicroArrayMissileFCS(BaseModel):
+    cores: dict[str, TissueCoreFcsFile]
+
+
+class WsiSymbolicLink(RootModel[str]):
+    ...
+
+class WsiProteinChannel(BaseModel):
+    url: WsiSymbolicLink
+
+class WholeSlideImage(BaseModel):
+    channels: dict[str,WsiProteinChannel]
+
+class WholeSlideImageCellSegmentationMaskSymbolicLink(RootModel[str]):
+    ...
+
+class WholeSlideImageSegmentationMask(BaseModel):
+    url: WholeSlideImageCellSegmentationMaskSymbolicLink
+
+class WholeSlideImageCellSegmentationMask(BaseModel):
+    nucleus_mask: WholeSlideImageSegmentationMask
+    membrane_mask: WholeSlideImageSegmentationMask
+
+class WholeSlideImageFcsFileSymbolicLink(RootModel[str]):
+    ...
+
+class WholeSlideImageMissileFCS(BaseModel):
+    url: WholeSlideImageFcsFileSymbolicLink
+
+class ROIs (RootModel[List[ROI]]):
+	...
+
+class NuclearMarkers (RootModel[List[NuclearMarker]]):
+	...
+
+class MembraneMarkers (RootModel[List[MembraneMarker]]):
+	...
+
+class ProteinChannelMarkers (RootModel[List[ProteinChannelMarker]]):
+	...
+
+# Data Models for the Dataprocess Services (Input/Output)
+{%- macro render_classdef(services, parent_name, indent = 0) %}
+{%- for k,v in services.items() %}
+{%- if k != 'CLASS_TYPE' and k != 'FIELDS'%} {#2#}
+{%- if v['CLASS_TYPE'] == 'dataclass' %}
+{{ '\t' * indent }}class {{ parent_name ~ '_' ~ k-}}(BaseModel):
+{{- render_classdef(v, parent_name, indent=indent + 1) -}}
+{%- elif v['CLASS_TYPE'] == 'enum' %}
+{{ '\t' * indent }}class {{ parent_name ~ '_' ~ k-}}(str, Enum):
+{{- render_classdef(v, parent_name, indent=indent + 1) -}}
+{%- endif %}
+{%- endif %} {#2#}
+{%- endfor %}
+{%- if 'FIELDS' in services.keys() %}
+    {%- if services['CLASS_TYPE'] == 'enum'%}
+        {%- for field in services['FIELDS'] %}
+{{ '\t' * indent }}{{- field['name'] -}}={{ field['value'] }} 
+        {%- endfor %}
+    {%- else %}
+        {%- for field in services['FIELDS'] %}
+            {%- if field['type'] not in services.keys() %}
+                {%- if field['metadata'] == none%}
+                    {%- if field['optional'] == true and field['default_value'] == none %}
+{{ '\t' * indent }}{{- field['name'] -}}: Optional[{{ field['type'] }}] = None
+                    {%- elif field['optional'] == true and field['default_value'] != none %}
+{{ '\t' * indent }}{{- field['name'] -}}: Optional[{{ field['type'] }}] = {{ field['default_value'] }}              
+                    {%- elif field['optional'] == false and field['default_value'] == none %}
+{{ '\t' * indent }}{{- field['name'] -}}: {{ field['type'] }}
+                    {%- endif %}
+                {%- else %}
+                    {%- if field['optional'] == true and field['default_value'] == none %}
+{{ '\t' * indent }}{{- field['name'] -}}: Optional[{{ field['type'] }}] = Field({{ None, field['metadata'] }})
+                    {%- elif field['optional'] == true and field['default_value'] != none %}
+{{ '\t' * indent }}{{- field['name'] -}}: Optional[{{ field['type'] }}] = Field({{ field['default_value'] , field['metadata'] }})
+                    {%- endif %}
+                {%- endif %}
+            {%- else %}
+                {%- if field['optional'] == false and field['default_value'] != none %}
+{{ '\t' * indent }}{{- field['name'] -}}: {{ parent_name ~ '_' ~ field['type'] }} = {{  parent_name ~ '_' ~ field['default_value'] }}
+                {%- elif field['optional'] == false and field['default_value'] == none %}
+{{ '\t' * indent }}{{- field['name'] -}}: {{ parent_name ~ '_' ~ field['type'] }}
+                {%- endif %}
+            {%- endif %}
+         {%- endfor %}
+    {%- endif %}
+{%- endif %}
+{%- endmacro %}
+
+{%- macro Print_AutomatedInputRequest(ServiceName, model) %}
+{% set parent_name = ServiceName | to_camel ~ '_Input_Request' %}
+class {{ parent_name }}(BaseModel):
+{{- render_classdef(model, parent_name, indent=1) -}}
+{%- endmacro %}
+
+{%- macro Print_AutomatedInputResponse(ServiceName) %}
+class {{ ServiceName | to_camel }}_Input_Response(BaseModel):
+    id: str
+    workflow: str
+    job_status: JobStatus
+    data: Optional[dict] = None
+    frontend: Optional[str] = None
+    url: Optional[str] = None
+{%- endmacro %}
+
+{%- macro Print_AutomatedOutputResponse(ServiceName,model) %}
+{% set parent_name = ServiceName | to_camel ~ '_Output_Response' %}
+class {{ parent_name }}(BaseModel):
+{{- render_classdef(model, parent_name, indent=1) -}}
+{%- endmacro %}
+
+{%- macro Print_InteractiveInputRequest(ServiceName,model) %}
+{% set parent_name = ServiceName | to_camel ~ '_Input_Request' %}
+class {{ parent_name }}(BaseModel):
+{{- render_classdef(model, parent_name, indent=1) -}}
+{%- endmacro %}
+
+{%- macro Print_InteractiveInputResponse(ServiceName) %}
+class {{ ServiceName | to_camel }}_Input_Response(BaseModel):
+    id: str
+    workflow: str
+    job_status: JobStatus
+    data: Optional[dict] = None
+    frontend: Optional[str] = None
+    url: Optional[str] = None
+{%- endmacro %}
+
+{%- macro Print_InteractiveFrontEndResponse(ServiceName) %}
+class {{ ServiceName | to_camel }}_FrontEnd_Response(HTMLResponse):
+    ...
+{%- endmacro %}
+
+{%- macro Print_InteractiveInteractionInputRequest(ServiceName,model) %}
+{% set parent_name = ServiceName | to_camel ~ '_InteractionInput_Request' %}
+class {{ parent_name }}(BaseModel):
+{{- render_classdef(model, parent_name, indent=1) -}}
+{%- endmacro %}
+
+{%- macro Print_InteractiveInteractionInputResponse(ServiceName) %}
+class {{ ServiceName | to_camel }}_InteractionInput_Response(BaseModel):
+    url: str
+{%- endmacro %}
+{%- macro Print_InteractiveOutputResponse(ServiceName, model) %}
+{% set parent_name = ServiceName | to_camel ~ '_Output_Response' %}
+class {{ parent_name }}(BaseModel):
+{{- render_classdef(model, parent_name, indent=1) -}}
+{%- endmacro %}
+
+{%- for v in services -%}
+{%- if v['cincodebio.schema']['service_type']  == 'automated' %}
+{{- Print_AutomatedInputRequest(v['cincodebio.schema']['service_name'], v['cincodebio.schema']['process_input'])}}
+{{- Print_AutomatedInputResponse(v['cincodebio.schema']['service_name'])}}
+{{- Print_AutomatedOutputResponse(v['cincodebio.schema']['service_name'], v['cincodebio.schema']['process_output'])}}
+{%- elif v['cincodebio.schema']['service_type']  == 'interactive' %}
+{{- Print_InteractiveInputRequest(v['cincodebio.schema']['service_name'], v['cincodebio.schema']['prepare_template_input'])}}
+{{- Print_InteractiveInputResponse(v['cincodebio.schema']['service_name'])}}
+{{- Print_InteractiveFrontEndResponse(v['cincodebio.schema']['service_name'])}}
+{{- Print_InteractiveInteractionInputRequest(v['cincodebio.schema']['service_name'],v['cincodebio.schema']['process_input'])}}
+{{- Print_InteractiveInteractionInputResponse(v['cincodebio.schema']['service_name'])}}
+{{- Print_InteractiveOutputResponse(v['cincodebio.schema']['service_name'],v['cincodebio.schema']['process_output'])}}
+{%- endif %}
+{% endfor %}
+
+
+
+

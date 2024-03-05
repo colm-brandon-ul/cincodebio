@@ -1,0 +1,94 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: sib-manager
+  name: sib-manager
+spec:
+  ports:
+    - port: 80
+      protocol: TCP
+      targetPort: 80
+  selector:
+    app: sib-manager
+  type: ClusterIP
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ .Values.sibManager.kaniko.context_pvc_name }}
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: sib-manager-state-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 50Mi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sib-manager
+  labels:
+    app: sib-manager
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sib-manager
+  template:
+    metadata:
+      labels:
+        app: sib-manager
+    spec:
+      containers:
+        - name: sib-manager
+          image: {{ .Values.sibManager.image }}
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 80
+          volumeMounts:
+            - name: docker-context-volume
+              mountPath: {{ .Values.sibManager.kaniko.context_pvc_mount_path }}
+            - name: sib-manager-state-volume
+              mountPath: /sib-manager-state
+          env:
+          - name: DOCKER_BUILD_CONTEXT_VOLUME
+            value: {{ .Values.sibManager.kaniko.context_pvc_name }}
+          - name: DOCKER_BUILD_CONTEXT_MOUNT_PATH
+            value: {{ .Values.sibManager.kaniko.context_pvc_mount_path }}
+          - name: KANIKO_IMAGE
+            value: {{ .Values.sibManager.kaniko.image }}
+          - name: KANIKO_BUILD_NAMESPACE
+            value: {{ .Values.sibManager.kaniko.namespace }}
+          - name: REGISTRY_NAME
+            value: {{ .Values.global.cluster_image_registry.name }}
+          - name: REGISTRY_NAMESPACE
+            value: {{ .Values.global.cluster_image_registry.namespace }}
+          - name: REGISTRY_PORTx
+            value: {{ .Values.global.cluster_image_registry.port }}
+          - name: CONTAINER_REGISTRY_DOMAIN_ON_HOST
+            value: {{ .Values.global.cluster_image_registry.domain_on_host }}
+          - name: SERVICE_API_NAME
+            value: {{ .Values.serviceApi.name }}
+          - name: DOCKER_HUB_NAMESPACE
+            value: {{ .Values.global.docker_hub_namespace}}
+        
+
+      volumes:
+        - name: docker-context-volume
+          persistentVolumeClaim:
+            claimName: {{ .Values.sibManager.kaniko.context_pvc_name }}
+        - name: sib-manager-state-volume
+          persistentVolumeClaim:
+            claimName: sib-manager-state-pvc

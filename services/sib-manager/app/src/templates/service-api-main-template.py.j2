@@ -1,0 +1,199 @@
+# Quite similar to helm!
+{# Imports #}
+from typing import Annotated
+from fastapi import FastAPI, BackgroundTasks, Header, Request
+from fastapi.responses import HTMLResponse
+import requests 
+import json
+import logging 
+import time 
+import random
+import uuid
+import os
+{# Relative Imports - Just import all models #}
+{# utils imports will change to k8s specific ones #}
+from .k8sjobs import submit_k8s_job
+from .models import *
+from .utils import callback_to_execution, create_redirect_to_execution_env_link, interactive_callback_to_execution, interactive_submit_interaction_callback_to_execution
+
+{# Create FASTAPI app #}
+app = FastAPI()
+
+{# Define Variables which come from the Environment #}
+JMS_ADDRESS = f"{os.environ.get('JOBS_API_SERVICE_HOST')}:{os.environ.get('JOBS_API_SERVICE_PORT')}" # jobsapi
+
+@app.get("/health", include_in_schema=False)
+async def health():
+    return {"status": "ok"}
+
+{# Initial submits will always come from the execution env #}
+{# Automated API #}
+{# Submit Job #}
+{%- macro printAutomated(AbstractConcept, ServiceName, ContainerImageName) %}
+@app.post("/{{ AbstractConcept | to_kebab }}/{{ ServiceName | to_kebab }}", 
+          response_model={{ ServiceName | to_camel }}_Input_Response,
+          response_model_exclude_none=True)
+async def {{ ServiceName | to_snake }}_submit(
+    data: {{ ServiceName | to_camel }}_Input_Request, 
+    background_tasks: BackgroundTasks, 
+    request: Request,
+    # need to add a custom header for if the request is from the execution environment
+    cdb_workflow_id: Annotated[Union[str, None], Header()] = None
+    ):
+    
+    # Maybe add assertions to ensure that the headers are not None
+
+    logging.info(f'REQUEST DETAILS: {request.headers}, {request.app}, {request.path_params}, {request.query_params}, {request.url}')
+
+    # Create job in JMS
+    res = requests.post(
+        f"http://{JMS_ADDRESS}/create-job/", 
+        json={'workflow': cdb_workflow_id})
+    
+    # logging job
+    logging.info(f"Status: {res.status_code}")
+
+    # deserialise job state
+    job_state = json.loads(res.content)
+    
+    logging.info(job_state)
+
+    {# need to swap out k8s function with whatever it is called #}
+    background_tasks.add_task(
+        submit_k8s_job,
+        routing_key='task.{{ AbstractConcept | to_kebab }}.{{ ServiceName | to_kebab }}.process',
+        image_name = "{{ ContainerImageName }}",
+        data = data.model_dump(), 
+        job_id = job_state['id'])
+
+    {# Essentially just serialze the job state object #}
+    return {{ ServiceName | to_camel }}_Input_Response(**job_state)
+
+
+{# Get Result #}
+@app.get("/{{ AbstractConcept | to_kebab }}/{{ ServiceName | to_kebab }}/{job_id}", 
+         response_model={{ ServiceName | to_camel }}_Output_Response)
+async def {{ ServiceName | to_snake }}_result(job_id: str):
+
+    # Get job from JMS
+    res = requests.get(
+        f"http://{JMS_ADDRESS}/get-job-by-id/{job_id}")
+    logging.warning(f"Status: {res.status_code}")
+    
+    # logging job status code
+    logging.info(f"Status: {res.status_code}")
+
+    # Deserialise the job
+    job_state = json.loads(res.content)
+    {# Create the return object from the data entry in the job object #}
+    return {{ ServiceName | to_camel }}_Output_Response(**job_state['data'])
+{%- endmacro %}
+{# Interactive API #}
+{# Submit Job #}
+{%- macro printInteractive(AbstractConcept, ServiceName, ContainerImageName) %}
+@app.post("/{{ AbstractConcept | to_kebab }}/{{ ServiceName | to_kebab }}", 
+          response_model={{ ServiceName | to_camel }}_Input_Response)
+async def {{ ServiceName | to_snake }}_submit(
+    data: {{ ServiceName | to_camel }}_Input_Request, 
+    background_tasks: BackgroundTasks,
+    request: Request, 
+    # need to add a custom header for if the request is from the execution environment
+    cdb_external_url: Annotated[Union[str, None], Header()] = None,
+    cdb_workflow_id: Annotated[Union[str, None], Header()] = None 
+    ):
+
+
+    logging.info(f'REQUEST DETAILS: {request.headers}, {request.app}, {request.path_params}, {request.query_params}, {request.url}')
+    # Create job in JMS
+    res = requests.post(
+        f"http://{JMS_ADDRESS}/create-job/", 
+        json={'workflow': cdb_workflow_id})
+
+    # Deserialise job object
+    job_state = json.loads(res.content)
+    {# need to swap out k8s function with whatever it is called #}
+    background_tasks.add_task(
+        submit_k8s_job, 
+        routing_key = 'task.{{ AbstractConcept | to_kebab }}.{{ ServiceName | to_kebab }}.prepare-template',
+        data= data.model_dump(),
+        image_name = "{{ ContainerImageName }}",
+        # Need to replace with a non-hardcoded method for this
+        base_url = cdb_external_url,
+        job_id = job_state['id'])
+    return {{ ServiceName | to_camel }}_Input_Response(**job_state)
+
+
+{# Get Interactive Front-end #}
+
+@app.get("/{{ AbstractConcept | to_kebab }}/{{ ServiceName | to_kebab }}/frontend/{job_id}", 
+         response_class={{ ServiceName | to_camel }}_FrontEnd_Response)
+async def {{ ServiceName | to_snake }}_frontend(job_id: str):
+    
+    # Get Job from DATABASE
+    res = requests.get(
+        f"http://{JMS_ADDRESS}/get-job-by-id/{job_id}")
+
+    {# Deserialize Job Object #}
+    job_state = json.loads(res.content)
+
+    {# Could customise this to return 404 not found if job_state['frontend'] is empty #}
+
+    # Get Frontend from Job Object
+    return {{ ServiceName | to_camel }}_FrontEnd_Response(job_state['frontend'])
+
+
+{# Submit Interaction #}
+@app.post("/{{ AbstractConcept | to_kebab }}/{{ ServiceName | to_kebab }}/submit/{job_id}",
+          response_model={{ ServiceName | to_camel }}_InteractionInput_Response)
+async def {{ ServiceName | to_snake }}_submit_interaction(
+    job_id: str, 
+    data: {{ ServiceName | to_camel }}_InteractionInput_Request, 
+    request: Request, 
+    background_tasks: BackgroundTasks):
+
+    logging.info('SUBMIT INTERACTION')
+    logging.info(job_id)
+    logging.info(data)
+    
+    {# Need to make sure the k8s function is written correctly #}
+    background_tasks.add_task(
+        submit_k8s_job,
+        routing_key = 'task.{{ AbstractConcept | to_kebab }}.{{ ServiceName | to_kebab }}.process',
+        data= data.model_dump(), 
+        image_name = "{{ ContainerImageName }}",
+        is_interactive_submit = True,
+        base_url = request.base_url,
+        job_id = job_id)
+    
+    {# Need to make sure the correct thing is being passed to the rewrite method  #}
+    return {{ ServiceName | to_camel }}_InteractionInput_Response(
+        **{'url': create_redirect_to_execution_env_link(
+            job_id=job_id,base_url=request.base_url)})
+
+{# Get Result #}
+@app.get("/{{ AbstractConcept | to_kebab }}/{{ ServiceName | to_kebab }}/{job_id}", 
+         response_model={{ ServiceName | to_camel }}_Output_Response)
+async def {{ ServiceName | to_snake }}_result(job_id: str):
+
+    # Get job from JMS
+    res = requests.get(
+        f"http://{JMS_ADDRESS}/get-job-by-id/{job_id}")
+
+    # logging job status code
+    logging.info(f"Status: {res.status_code}")
+
+    # Deserialise the job
+    job_state = json.loads(res.content)
+
+    {# Create the return object from the data entry in the job object #}
+    return {{ ServiceName | to_camel }}_Output_Response(**job_state['data'])
+{%- endmacro %}
+{# Iterate over all services #}
+{%- for v in services -%}
+{% if v['cincodebio.schema']['service_type']  == 'automated' %}
+{{- printAutomated(v['cincodebio.schema']['abstract_concept'], v['cincodebio.schema']['service_name'],v['image']) }}
+{% elif v['cincodebio.schema']['service_type']  == 'interactive' %}
+{{- printInteractive(v['cincodebio.schema']['abstract_concept'], v['cincodebio.schema']['service_name'], v['image']) }}
+{% endif %}
+{% endfor %}
+

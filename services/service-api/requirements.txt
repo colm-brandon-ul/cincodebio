@@ -1,0 +1,8 @@
+fastapi == 0.68.0
+uvicorn
+websockets
+pydantic
+pika
+pymongo
+requests
+kubernetes
