@@ -1,6 +1,6 @@
 jinja2-strcase
 Jinja2
-fastapi
+fastapi==0.68.0
 pydantic
 uvicorn
 requests

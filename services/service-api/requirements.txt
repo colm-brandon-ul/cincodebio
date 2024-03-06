@@ -1,5 +1,5 @@
-fastapi==0.68.0
-pydantic==2.3.0
+fastapi
+pydantic
 uvicorn
 websockets
 pika
