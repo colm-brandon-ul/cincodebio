@@ -46,6 +46,10 @@ spec:
               value: {{ .Values.minio.buckets.workflowBucket }}
             - name: MINIO_EXPERIMENT_BUCKET
               value: {{ .Values.minio.buckets.experimentBucket }}
+            - name: MINIO_SERVICE_HOSTNAME
+              value: {{ .Values.minio.nameOverride }}
+            - name: JOBS_API_SERVICE_HOSTNAME
+              value: {{ .Values.jobsApi.name }}
             - name: CINCO_DE_BIO_NAMESPACE
               valueFrom:
                 fieldRef:

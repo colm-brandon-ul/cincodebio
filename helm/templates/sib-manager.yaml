@@ -2,15 +2,15 @@ apiVersion: v1
 kind: Service
 metadata:
   labels:
-    app: sib-manager
-  name: sib-manager
+    app: {{ .Values.sibManager.name }}
+  name: {{ .Values.sibManager.name }}
 spec:
   ports:
     - port: 80
       protocol: TCP
       targetPort: 80
   selector:
-    app: sib-manager
+    app: {{ .Values.sibManager.name }}
   type: ClusterIP
 ---
 apiVersion: v1
@@ -38,21 +38,21 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: sib-manager
+  name: {{ .Values.sibManager.name }}
   labels:
-    app: sib-manager
+    app: {{ .Values.sibManager.name }}
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: sib-manager
+      app: {{ .Values.sibManager.name }}
   template:
     metadata:
       labels:
-        app: sib-manager
+        app: {{ .Values.sibManager.name }}
     spec:
       containers:
-        - name: sib-manager
+        - name: {{ .Values.sibManager.name }}
           image: {{ .Values.sibManager.image }}
           imagePullPolicy: IfNotPresent
           ports:
@@ -75,7 +75,7 @@ spec:
             value: {{ .Values.global.cluster_image_registry.name }}
           - name: REGISTRY_NAMESPACE
             value: {{ .Values.global.cluster_image_registry.namespace }}
-          - name: REGISTRY_PORTx
+          - name: REGISTRY_PORT
             value: {{ .Values.global.cluster_image_registry.port }}
           - name: CONTAINER_REGISTRY_DOMAIN_ON_HOST
             value: {{ .Values.global.cluster_image_registry.domain_on_host }}
@@ -83,6 +83,10 @@ spec:
             value: {{ .Values.serviceApi.name }}
           - name: DOCKER_HUB_NAMESPACE
             value: {{ .Values.global.docker_hub_namespace}}
+          - name: CINCO_DE_BIO_NAMESPACE
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.namespace
         
 
       volumes:

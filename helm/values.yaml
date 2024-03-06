@@ -28,24 +28,26 @@ nginxProxy:
   image: nginx:latest
 
 jobsApi:
-  hello: sccecincodebio/jobs-api:latest
-  image: abc
+  image: sccecincodebio/jobs-api:latest
+  name: jobs-api
 
 executionApi:
-  hello: sccecincodebio/execution-api:latest
-  image: abc
+  image: sccecincodebio/execution-api:latest
+  name: execution-api
 
 serviceApi:
-  name: sccecincodebio/service-api:latest
-  image: abc
+  image: sccecincodebio/service-api:latest
+  name: service-api
 
 codeGenerator:
   image: sccecincodebio/code-generator:latest
+  name: code-generator
   exchange_name: "code-generator-exchange"
   routing_key: "code-generator"
 
 sibManager:
   image: sccecincodebio/sib-manager:latest
+  name: sib-manager
   kaniko:
     image: "gcr.io/kaniko-project/executor:latest"
     namespace: "kaniko-build"
@@ -54,6 +56,7 @@ sibManager:
 
 executionEnvironment:
   image: sccecincodebio/execution-environment:latest
+  name: execution-environment
 
 global:
   ontology_url: "http://"
