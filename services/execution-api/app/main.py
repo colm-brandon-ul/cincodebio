@@ -1,7 +1,7 @@
 from fastapi import FastAPI, WebSocket, File, UploadFile, BackgroundTasks, Request, WebSocketDisconnect, status
 from fastapi.staticfiles import StaticFiles
-from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse, JSONResponse
+from jinja2 import Environment, FileSystemLoader
 import requests 
 import json
 import logging 
@@ -38,7 +38,7 @@ from handlers import (add_job_state_to_workflow_in_db, create_workflow_log_file,
 
 
 app = FastAPI()
-templates = Jinja2Templates(directory=Path(BASE_DIR,"templates"))
+env = Environment(loader=FileSystemLoader(Path(BASE_DIR,"templates")))
 # app.mount("/static", StaticFiles(directory="static"), name="static")
 
 # Handles the Ingestion of the Model from the IME
@@ -140,7 +140,10 @@ async def render_front_end(request: Request, workflow_id: str):
     # Create the appropriate WS address
     ws_address = f"{request.base_url.__str__().replace('http','ws')}state/ws/{workflow_id}"
 
-    return templates.TemplateResponse("execution_template.html",{"request": request, 'ws_address' :ws_address})
+    template = env.get_template("execution_template.html")
+    html_content = template.render(request=request, ws_address=ws_address)
+
+    return HTMLResponse(content=html_content)
 
 
 
