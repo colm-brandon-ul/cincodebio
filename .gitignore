@@ -130,5 +130,6 @@ dmypy.json
 
 
 local_secrets.txt
-.DS_STORE
+
+.DS_Store
 
