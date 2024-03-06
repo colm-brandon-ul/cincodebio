@@ -1,7 +1,8 @@
-fastapi == 0.68.0
+fastapi==0.68.0
+pydantic==2.3.0
 uvicorn
 websockets
-pydantic
+
 pika
 pymongo
 requests

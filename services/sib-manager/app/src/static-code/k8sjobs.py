@@ -1,22 +1,19 @@
-
 from kubernetes import client, config
 from kubernetes.client.rest import ApiException
 import json
 import logging
 import os
 
-# to be populated - do I want a seperate namespace for jobs?
-NAMESPACE = os.environ.get('DPS_NAMESPACE')
-MINIO_ACCESS_KEY = os.environ.get('MINIO_ACCESS_KEY')
-MINIO_SECRET_KEY = os.environ.get('MINIO_SECRET_KEY')
+
 
 # Loads the config - if running in a cluster, it will load the in-cluster config, otherwise it will load the kubeconfig file
 try:
     config.load_incluster_config()  
 except:
-    config.load_kube_config()
-
-# Namespace should be an env variable
+    try:
+        config.load_kube_config()
+    except Exception as e:
+        logging.info(f"Exception when calling config.load_kube_config: {e}")
 
 
 def submit_k8s_job(
@@ -26,7 +23,20 @@ def submit_k8s_job(
         job_id: str, # this is the unique job id from the JMS
         base_url: str = None, # this is the base url (for interactive services and defaults to none)
         ):
-    ...
+    
+    # to be populated - do I want a seperate namespace for jobs?
+    NAMESPACE = os.environ.get('DPS_NAMESPACE')
+    MINIO_ACCESS_KEY = os.environ.get('MINIO_ACCESS_KEY')
+    MINIO_SECRET_KEY = os.environ.get('MINIO_SECRET_KEY')
+    MINIO_WORKFLOW_BUCKET = os.environ.get('MINIO_WORKFLOW_BUCKET')
+    MINIO_EXPERIMENT_BUCKET = os.environ.get('MINIO_EXPERIMENT_BUCKET')
+
+    # Create the FQDN for the minio and jobs-api services (so dps running in different namespace can access them)
+    MINIO_FQDN = f'{os.environ.get("MINIO_SERVICE_HOSTNAME")}.{os.environ.get("CINCO_DE_BIO_NAMESPACE")}.svc.cluster.local'
+    MINIO_SERVICE_PORT = os.environ.get('MINIO_SERVICE_PORT')
+
+    JOBS_API_FQDN = f'{os.environ.get("JOBS_API_SERVICE_HOSTNAME")}.{os.environ.get("CINCO_DE_BIO_NAMESPACE")}.svc.cluster.local'
+    JOBS_API_SERVICE_PORT = os.environ.get('JOBS_API_SERVICE_PORT')
 
     try:
         # Create the Namespace if it doesn't exist
@@ -47,6 +57,7 @@ def submit_k8s_job(
 
     
     # popluating env variables
+    # If the dps are running in a different namespace, need info for FDQN's
     env_vars = [
         client.V1EnvVar(
                 name="CINCODEBIO_DATA_PAYLOAD",
@@ -68,6 +79,30 @@ def submit_k8s_job(
         client.V1EnvVar(
                 name="MINIO_SECRET_KEY",
                 value=MINIO_SECRET_KEY
+        ),
+        client.V1EnvVar(
+                name="MINIO_WORKFLOW_BUCKET",
+                value=MINIO_WORKFLOW_BUCKET
+        ),
+        client.V1EnvVar(
+                name="MINIO_EXPERIMENT_BUCKET",
+                value=MINIO_EXPERIMENT_BUCKET
+        ),
+        client.V1EnvVar(
+            name="MINIO_SERVICE_HOST",
+            value=MINIO_FQDN # FQDN for minio
+        ),
+        client.V1EnvVar(
+            name="MINIO_SERVICE_PORT",
+            value=MINIO_SERVICE_PORT
+        ),
+        client.V1EnvVar(
+            name="JOBS_API_SERVICE_HOST",
+            value=JOBS_API_FQDN # FQDN for jobs-api
+        ),
+        client.V1EnvVar(
+            name="JOBS_API_SERVICE_PORT",
+            value=JOBS_API_SERVICE_PORT
         )
     ]
 
