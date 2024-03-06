@@ -1,3 +1,4 @@
+aiofiles
 fastapi == 0.68.0
 pydantic==1.10.12
 uvicorn

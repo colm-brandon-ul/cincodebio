@@ -72,7 +72,7 @@ def rebuild_service_api(dh_namespace):
     static_path = pathlib.Path(STATIC_CODE_DIR)
     state_path = pathlib.Path(PERSISTENT_STATE_MOUNT_PATH)
     # Retrieve the set of sibs available from DH
-    latest, rest = utils.get_valid_images_from_namespace(dh_namespace, static_path)
+    latest, rest = utils.get_valid_images_from_namespace(dh_namespace)
 
     # WRITE THEM TO LOCAL STATE - LATEST, INSTALLED, OTHER
         # Initially, we will assume that all latest sibs are installed
