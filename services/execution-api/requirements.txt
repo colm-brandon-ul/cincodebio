@@ -1,6 +1,7 @@
 aiofiles
-fastapi[all] == 0.68.0
+fastapi==0.68.0
 pydantic==1.10.12
+jinja2>=2.11.2,<3.0.0
 uvicorn
 websockets
 pika
