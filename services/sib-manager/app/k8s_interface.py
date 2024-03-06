@@ -60,6 +60,15 @@ def get_available_architectures() -> List[str]:
 
     return unique_architectures
 
+def create_build_namespace(namespace: str):
+    # Create the Namespace if it doesn't exist
+    api_instance = client.CoreV1Api()
+    namespace = client.V1Namespace(metadata=client.V1ObjectMeta(name=namespace))
+    try:
+        api_instance.create_namespace(body=namespace)
+    except ApiException as e:
+        logging.info(f"Exception when calling CoreV1Api->create_namespace: {e}")
+
 
 
 def prepare_build_context(
@@ -234,6 +243,9 @@ def submit_kaniko_build(image_name: str,context_path: str = DOCKER_BUILD_CONTEXT
                 restart_policy="Never")
         ),
     )
+
+    # create namespace for build if it doesn't exist
+    create_build_namespace(KANIKO_BUILD_NAMESPACE)
 
 
     # Submit the job to the cluster

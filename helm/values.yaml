@@ -50,7 +50,7 @@ sibManager:
   name: sib-manager
   kaniko:
     image: "gcr.io/kaniko-project/executor:latest"
-    namespace: "kaniko-build"
+    namespace: "default"
     context_pvc_name: "kaniko-context"
     context_pvc_mount_path: "/docker-build"
 

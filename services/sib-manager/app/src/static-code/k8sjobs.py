@@ -16,6 +16,8 @@ except:
         logging.info(f"Exception when calling config.load_kube_config: {e}")
 
 
+
+
 def submit_k8s_job(
         routing_key: str, # this is unique to a service / and distinguishes between process & prepare templated methods being called
         data: dict, # this is the data to be processed
