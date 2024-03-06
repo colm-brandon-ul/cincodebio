@@ -12,7 +12,7 @@ EXCHANGE_TYPE = ExchangeType.direct
 ROUTING_KEY = os.environ.get('CODE_GENERATOR_ROUTING_KEY')
 RABBIT_MQ_HOST = f"{os.environ.get('RABBITMQ_SERVICE_HOST')}:{os.environ.get('RABBITMQ_SERVICE_PORT')}"
 
-from .models import JobState, UpdateWorkflow, Workflow
+from models import JobState, UpdateWorkflow, Workflow
 
 # Function to dispatch model to code generator
 def model_submission_handler(workflow_id, model):

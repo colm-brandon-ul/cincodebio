@@ -30,8 +30,10 @@ logging.basicConfig(format='%(asctime)s - %(process)d - %(levelname)s - %(messag
     - API for returning all workflows
 """
 
-from .models import JobStatus, UpdateWorkflow, Workflow, JobState, WorkflowStatus
-from .handlers import add_job_state_to_workflow_in_db, create_workflow_log_file, get_workflow_from_db_by_id, model_submission_handler, insert_new_workflow_to_db, create_logs_directory_handler, update_job_status_in_workflow_in_db, update_workflow_in_db, update_workflow_log_file
+from models import JobStatus, UpdateWorkflow, Workflow, JobState, WorkflowStatus
+from handlers import (add_job_state_to_workflow_in_db, create_workflow_log_file, get_workflow_from_db_by_id, 
+                      model_submission_handler, insert_new_workflow_to_db, create_logs_directory_handler,
+                       update_job_status_in_workflow_in_db, update_workflow_in_db, update_workflow_log_file)
 
 
 
