@@ -3,8 +3,8 @@
                              xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
                              xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
                              xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
-                             ontologyIRI="http://example.com/ontology/cincodebio.owl"
-                             owl:versionIRI="http://example.com/ontology/cincodebio.owl/v0.1.0">  
+                             ontologyIRI="https://raw.githubusercontent.com/colm-brandon-ul/cincodebio/main/ontology/cincodebio.owl"
+                             owl:versionIRI="https://raw.githubusercontent.com/colm-brandon-ul/cincodebio/ontology-v0.1.0/ontology/cincodebio.owl">  
     <!-- Define a root class 'Service' -->
     <owl:Class rdf:about="#Service">
         <rdfs:label>Service</rdfs:label>
