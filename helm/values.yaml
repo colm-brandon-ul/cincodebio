@@ -26,6 +26,7 @@ mongodb:
 
 nginxProxy:
   image: nginx:latest
+  name: nginxproxy
 
 jobsApi:
   image: sccecincodebio/jobs-api:latest

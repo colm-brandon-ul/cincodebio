@@ -74,10 +74,13 @@ def get_repo_from_namespace_dh(namespace: str) -> List[Dict]:
 
             print(f'NUM REPOS: {len(repositories)}')
 
+
+
     relevant_repos = []
     # Filter out the non-image repositories
     for repo in repositories:
-        if repo['repository_type'] == 'image' and repo['is_private'] == False:
+        # for some reason the images type is set to none rather than image (need to resolve this in future)
+        if  repo['is_private'] == False:
             relevant_repos.append({
                 'name': repo['name'],
                 'namespace': namespace,
@@ -377,3 +380,4 @@ def code_gen(template_env: jinja2.Environment, service_models: List) -> Tuple[st
     )
 
     return api_code, data_model_code
+

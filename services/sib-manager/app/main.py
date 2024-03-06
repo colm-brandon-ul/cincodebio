@@ -85,6 +85,7 @@ def rebuild_service_api(dh_namespace):
     with open(state_path / OTHER_SIBS, "w") as f:
         json.dump(rest,f)
 
+    logging.warning(f"Latest SIBs: {latest}")
     # Generate the code for the service-api
     api_code, model_code = utils.code_gen(
         template_env=env,

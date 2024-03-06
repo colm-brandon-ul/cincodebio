@@ -36,36 +36,36 @@ apiVersion: v1
 kind: Service
 metadata:
   labels:
-    app: nginxproxy
-  name: nginxproxy
+    app: {{ .Values.nginxProxy.name }}
+  name: {{ .Values.nginxProxy.name }}
 spec:
   ports:
     - port: 80
       protocol: TCP
       targetPort: 80
   selector:
-    app: nginxproxy
+    app: {{ .Values.nginxProxy.name }}
   type: ClusterIP
 
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: nginxproxy
+  name: {{ .Values.nginxProxy.name }}
   labels:
-    app: nginxproxy
+    app: {{ .Values.nginxProxy.name }}
 spec:
   # replicas: 1
   selector:
     matchLabels:
-      app: nginxproxy
+      app: {{ .Values.nginxProxy.name }}
   template:
     metadata:
       labels:
-        app: nginxproxy
+        app: {{ .Values.nginxProxy.name }}
     spec:
       containers:
-      - name: nginxproxy
+      - name: {{ .Values.nginxProxy.name }}
         image: {{ .Values.nginxProxy.image }}
         volumeMounts:
         - name: nginx-config-volume

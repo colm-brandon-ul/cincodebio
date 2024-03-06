@@ -31,7 +31,7 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: service1
+                name: {{ .Values.executionApi.name }}
                 port:
                   number: 80
 
@@ -39,7 +39,7 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: service1
+                name: {{ .Values.jobsApi.name }}
                 port:
                   number: 80
           # Definitely needs to be available outside the cluster
@@ -47,7 +47,7 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: service1
+                name: {{ .Values.serviceApi.name }}
                 port:
                   number: 80
           # Definitely needs to be available outside the cluster
@@ -55,7 +55,7 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: minio
+                name: {{ .Values.minio.fullnameOverride }}
                 port:
                   number: 9001
           # Definitely needs to be available outside the cluster
@@ -63,7 +63,7 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: nginxproxy
+                name: {{ .Values.nginxProxy.image }}
                 port:
                   number: 80
 
