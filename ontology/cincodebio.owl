@@ -1,0 +1,86 @@
+
+<owl:Ontology xmlns:owl="http://www.w3.org/2002/07/owl#"
+                             xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+                             xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+                             xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+                             ontologyIRI="http://example.com/ontology/cincodebio.owl"
+                             owl:versionIRI="http://example.com/ontology/cincodebio.owl/v0.1.0">  
+    <!-- Define a root class 'Service' -->
+    <owl:Class rdf:about="#Service">
+        <rdfs:label>Service</rdfs:label>
+        <rdfs:comment>A root class representing a service.</rdfs:comment>
+    </owl:Class>
+    
+    <!-- Define another root class 'Data' -->
+    <owl:Class rdf:about="#Data">
+        <rdfs:label>Data</rdfs:label>
+        <rdfs:comment>A root class representing data.</rdfs:comment>
+    </owl:Class>
+    
+    <!-- Define a subclass 'Interactive' -->
+    <owl:Class rdf:about="#Interactive">
+        <rdfs:label>Interactive</rdfs:label>
+        <rdfs:comment>A subclass of Service representing an interactive service.</rdfs:comment>
+        <rdfs:subClassOf rdf:resource="#Service"/>
+    </owl:Class>
+    
+    <!-- Define a subclass 'Automated' -->
+    <owl:Class rdf:about="#Automated">
+        <rdfs:label>Automated</rdfs:label>
+        <rdfs:comment>A subclass of Service representing an automated service.</rdfs:comment>
+        <rdfs:subClassOf rdf:resource="#Service"/>
+    </owl:Class>
+    
+    <!-- Define a subclass 'Semantic' -->
+    <owl:Class rdf:about="#Semantic">
+        <rdfs:label>Semantic</rdfs:label>
+        <rdfs:comment>A subclass of Data representing semantic data.</rdfs:comment>
+        <rdfs:subClassOf rdf:resource="#Data"/>
+    </owl:Class>
+    
+    <!-- Define a subclass 'Syntactic' -->
+    <owl:Class rdf:about="#Syntactic">
+        <rdfs:label>Syntactic</rdfs:label>
+        <rdfs:comment>A subclass of Data representing syntactic data.</rdfs:comment>
+        <rdfs:subClassOf rdf:resource="#Data"/>        
+    </owl:Class>
+
+    <!-- Difference between Data & Parameters -->
+    <!-- int, float, string, bool, ordered_list, Hashmap/dict -->
+    <!-- Data is written to disk and needs and interface to r/w where as paramters can just be serialised primitively? -->
+    <!-- Atomic & Non-Atomic -->
+
+    <!-- IMAGE DATA -->
+        <!-- Multi-page TIFF -->
+        <!-- Single-page TIFF -->
+        <!-- JPEG -->
+        <!-- PNG -->
+
+    <!-- TABULAR -->
+        <!-- TSV -->
+        <!-- CSV -->
+        <!-- HDF5? -->
+
+    <!-- VIDEO -->
+        <!-- MP4 -->
+        <!-- WEBM -->
+
+    <!-- AUDIO -->
+        <!-- MP3 -->
+        <!-- WAV -->
+        <!-- AAC -->
+
+    <!-- GRAPH -->
+        <!-- Pajek -->
+        <!-- GraphML -->
+
+    <!-- TEXT -->
+        <!-- TXT -->
+
+    <!-- Description of the ontology -->
+    <owl:Annotation>
+        <owl:annotatedSource rdf:resource=""/>
+        <owl:annotatedProperty rdf:resource="http://www.w3.org/2000/01/rdf-schema#comment"/>
+        <owl:literal xml:lang="en">This is the base ontology for Cinco de Bio.</owl:literal>
+    </owl:Annotation>
+</owl:Ontology>

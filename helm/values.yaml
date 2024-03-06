@@ -28,28 +28,24 @@ nginxProxy:
   image: nginx:latest
 
 jobsApi:
-  hello: world
+  hello: sccecincodebio/jobs-api:latest
   image: abc
 
 executionApi:
-  hello: world
+  hello: sccecincodebio/execution-api:latest
   image: abc
 
 serviceApi:
-  name: service-api
+  name: sccecincodebio/service-api:latest
   image: abc
 
 codeGenerator:
-  hello: world
-  image: abc
+  image: sccecincodebio/code-generator:latest
   exchange_name: "code-generator-exchange"
   routing_key: "code-generator"
 
 sibManager:
-  hello: world
-  image: abc
-  docker_hub:
-    namespace:
+  image: sccecincodebio/sib-manager:latest
   kaniko:
     image: "gcr.io/kaniko-project/executor:latest"
     namespace: "kaniko-build"
@@ -57,8 +53,7 @@ sibManager:
     context_pvc_mount_path: "/docker-build"
 
 executionEnvironment:
-  hello: world
-  image: abc
+  image: sccecincodebio/execution-environment:latest
 
 global:
   ontology_url: "http://"
