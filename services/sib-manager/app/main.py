@@ -138,7 +138,7 @@ async def startup_event(background_tasks: BackgroundTasks):
     config.load_incluster_config()
     # Check if the service-api is available (i.e. deplyoment successful.)
     service_deployment_health_check = health_check_with_timeout(
-        url =f"http://{os.getenv("SERVICE_API_SERVICE_HOST")}:{os.getenv("SERVICE_API_SERVICE_PORT")}/health",
+        url =f"http://{os.getenv('SERVICE_API_SERVICE_HOST')}:{os.getenv('SERVICE_API_SERVICE_PORT')}/health",
         timeout=300)
     
     container_registry_health_check = health_check_with_timeout(

@@ -7,3 +7,4 @@ requests
 pymongo
 minio
 kubernetes
+watchgod

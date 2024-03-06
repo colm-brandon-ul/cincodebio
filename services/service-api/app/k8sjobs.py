@@ -10,7 +10,10 @@ import os
 try:
     config.load_incluster_config()  
 except:
-    config.load_kube_config()
+    try:
+        config.load_kube_config()
+    except Exception as e:
+        logging.info(f"Exception when calling config.load_kube_config: {e}")
 
 # Namespace should be an env variable
 
