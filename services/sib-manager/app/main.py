@@ -8,7 +8,7 @@ import requests
 # This is relative to the working directorty not where the python script is.
 # workdir needs to be set to the root of the project (i.e. app)
 TEMPLATE_DIR = "./src/templates/"
-STATIC_CODE_DIR = "./src/static_code/"
+STATIC_CODE_DIR = "./src/static-code/"
 PERSISTENT_STATE_MOUNT_PATH = "/sib-manager-state"
 
 LATEST_SIBS = "latest_sibs.json"
