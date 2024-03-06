@@ -69,6 +69,6 @@ global:
   cluster_image_registry:
     name: "registry"
     namespace: "container-registry"
-    port: "5000"
+    port: 5000
     domain_on_host: "localhost:32000"
   

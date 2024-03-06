@@ -54,7 +54,7 @@ spec:
       containers:
         - name: {{ .Values.sibManager.name }}
           image: {{ .Values.sibManager.image }}
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           ports:
             - containerPort: 80
           volumeMounts:
@@ -76,7 +76,7 @@ spec:
           - name: REGISTRY_NAMESPACE
             value: {{ .Values.global.cluster_image_registry.namespace }}
           - name: REGISTRY_PORT
-            value: {{ .Values.global.cluster_image_registry.port }}
+            value: {{ .Values.global.cluster_image_registry.port | quote }}
           - name: CONTAINER_REGISTRY_DOMAIN_ON_HOST
             value: {{ .Values.global.cluster_image_registry.domain_on_host }}
           - name: SERVICE_API_NAME

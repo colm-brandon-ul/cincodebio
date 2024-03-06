@@ -156,21 +156,6 @@ async def startup_event(background_tasks: BackgroundTasks):
         # Failure - for some reason the service-api deployment failed
         # Need to log this and raise an error
         logging.error("Dependant services are not available. Local Registry Health Check: {container_registry_health_check}. Service API Health Check: {service_deployment_health_check}")
-        
-
-
-    
-    
-    
-# Need to retrieve the set of sibs available
-
-# Need to generate the code
-    
-# Need to create the docker context
-    
-# Trigger the image build with kaniko and push the image to the registry
-    
-# Need to create the k8s deployment (to trigger update of service api)
 
 
 

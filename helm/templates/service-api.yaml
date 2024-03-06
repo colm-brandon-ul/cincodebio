@@ -32,7 +32,7 @@ spec:
       containers:
         - name: {{ .Values.serviceApi.name }}
           image: {{ .Values.serviceApi.image }}
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           ports:
             - containerPort: 80
           env:
