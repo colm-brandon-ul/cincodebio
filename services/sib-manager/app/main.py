@@ -94,7 +94,7 @@ def rebuild_service_api(dh_namespace):
     # Need to create the docker context
 
     # Read the Dockerfile, k8s jobs and requirements.txt from static_code dir
-    with open(static_path / 'Dockerfile', 'r') as f:
+    with open(static_path / 'Dockerfile.txt', 'r') as f:
         dfile = f.read()
     
     with open(static_path / 'k8sjobs.py', 'r') as f:
