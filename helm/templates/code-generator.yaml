@@ -32,7 +32,7 @@ spec:
       containers:
         - name: {{ .Values.codeGenerator.name}}
           image: {{ .Values.codeGenerator.image }}
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           ports:
             - containerPort: 80
           env:
