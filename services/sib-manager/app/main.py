@@ -134,7 +134,7 @@ def rebuild_service_api(dh_namespace):
     
 
 @app.on_event("startup")
-async def startup_event(background_tasks: BackgroundTasks):
+async def startup_event():
     config.load_incluster_config()
     # Check if the service-api is available (i.e. deplyoment successful.)
     service_deployment_health_check = health_check_with_timeout(
@@ -151,7 +151,7 @@ async def startup_event(background_tasks: BackgroundTasks):
 
         # If conditions are met, trigger the rebuild of the service-api
         
-        background_tasks.add_task(rebuild_service_api, dh_namespace=os.getenv('DOCKER_HUB_NAMESPACE'))
+        rebuild_service_api(dh_namespace=os.getenv('DOCKER_HUB_NAMESPACE'))
     else:
         # Failure - for some reason the service-api deployment failed
         # Need to log this and raise an error
