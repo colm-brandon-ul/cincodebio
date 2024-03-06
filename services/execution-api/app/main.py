@@ -35,7 +35,7 @@ from handlers import (add_job_state_to_workflow_in_db, create_workflow_log_file,
                       model_submission_handler, insert_new_workflow_to_db, create_logs_directory_handler,
                        update_job_status_in_workflow_in_db, update_workflow_in_db, update_workflow_log_file)
 
-
+from db import get_db_client
 
 app = FastAPI()
 env = Environment(loader=FileSystemLoader(Path(BASE_DIR,"templates")))
@@ -186,8 +186,6 @@ async def websocket_endpoint(websocket: WebSocket,workflow_id: str):
         manager.disconnect(websocket)
         # await manager.broadcast(f"Client #{client_id} left the chat")
         
-
-from .db import get_db_client
 
 @app.get("/get-workflows")
 async def get_all_workflow_objects():
