@@ -6,6 +6,7 @@ import requests
 import json
 import logging
 import pprint
+import json
 # Relative imports
 from k8s_interface import get_available_architectures
 
@@ -311,6 +312,12 @@ def extract_cdb_labels(blob: Dict[str, str]) -> Dict[str, str]:
 
     # check it has the required labels (i.e. the ontology version and the schema dps schema)
     if 'cincodebio.ontology_version' in labels.keys() and 'cincodebio.schema' in labels.keys():
+        
+        # need to deserialize the schema (from json string to dict)
+
+        labels['cincodebio.schema'] = json.loads(labels['cincodebio.schema'])
+        
+        # return the labels
         return labels
     else:
         return None
