@@ -85,7 +85,7 @@ def rebuild_service_api(dh_namespace):
     with open(state_path / OTHER_SIBS, "w") as f:
         json.dump(rest,f)
 
-    logging.warning(f"Latest SIBs: {latest}")
+    # logging.warning(f"Latest SIBs: {latest}")
 
     # logging.warning(f"Latest SIBs: {latest}")
 
@@ -95,7 +95,7 @@ def rebuild_service_api(dh_namespace):
         service_models=latest,   
     )
 
-    logging.warning(f"API CODE: {api_code}")
+    # logging.warning(f"API CODE: {api_code}")
 
     # Need to create the docker context
 

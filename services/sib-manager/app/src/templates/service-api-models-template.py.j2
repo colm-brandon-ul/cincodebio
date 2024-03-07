@@ -142,7 +142,7 @@ class ProteinChannelMarkers (RootModel[List[ProteinChannelMarker]]):
 {%- if 'FIELDS' in services.keys() %}
     {%- if services['CLASS_TYPE'] == 'enum'%}
         {%- for field in services['FIELDS'] %}
-{{ '\t' * indent }}{{- field['name'] -}}={{ field['value'] }} 
+{{ '\t' * indent }}{{- field['name'] -}}="{{ field['value'] }}"
         {%- endfor %}
     {%- else %}
         {%- for field in services['FIELDS'] %}
