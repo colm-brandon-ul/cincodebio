@@ -67,7 +67,7 @@ def create_build_namespace(namespace: str):
     try:
         api_instance.create_namespace(body=namespace)
     except ApiException as e:
-        logging.info(f"Exception when calling CoreV1Api->create_namespace: {e}")
+        logging.info(f"Exception when calling CoreV1Api->create_namespace")
 
 
 
@@ -176,7 +176,7 @@ def submit_kaniko_build(image_name: str,context_path: str = DOCKER_BUILD_CONTEXT
             body=pvc)
         logging.info("PersistentVolumeClaim created successfully.")
     except client.ApiException as e:
-        logging.warning(f"Exception when calling CoreV1Api->create_namespaced_persistent_volume_claim: {e}")
+        logging.warning(f"Exception when calling CoreV1Api->create_namespaced_persistent_volume_claim")
 
     
 
@@ -274,7 +274,7 @@ def get_kaniko_build_status(job_name: str, namespace: str = KANIKO_BUILD_NAMESPA
                 name=job_name, 
                 namespace=namespace)
             
-            logging.warning("Job status: ", job_status.status)
+            # logging.warning("Job status: ", job_status.status)
             # Check if job is completed
             if job_status.status.succeeded == job_status.spec.completions:
                 logging.warning("Job completed")
@@ -282,7 +282,7 @@ def get_kaniko_build_status(job_name: str, namespace: str = KANIKO_BUILD_NAMESPA
                 status_code = True
                 break
         except client.ApiException as e:
-            logging.warning(f"Exception when calling BatchV1Api->read_namespaced_job_status: {e}")
+            logging.warning(f"Exception when calling BatchV1Api->read_namespaced_job_status")
         
         curent_time = time.time()
 
@@ -329,7 +329,7 @@ def submit_rolling_update(image_name: str,service_api_deployment_name: str, serv
         body=deployment
     )
 
-    logging.warning(f"Deployment updated. status='{str(api_response)}'")
+    # logging.warning(f"Deployment updated. status='{str(api_response)}'")
 
 
 if __name__ == "__main__":

@@ -21,3 +21,6 @@
 .idea/
 *.tmproj
 .vscode/
+
+# Files to not include in the package (currently)
+# code-generator.yaml
