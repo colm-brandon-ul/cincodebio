@@ -314,8 +314,11 @@ def extract_cdb_labels(blob: Dict[str, str]) -> Dict[str, str]:
     if 'cincodebio.ontology_version' in labels.keys() and 'cincodebio.schema' in labels.keys():
         
         # need to deserialize the schema (from json string to dict)
-
-        labels['cincodebio.schema'] = json.loads(labels['cincodebio.schema'])
+        try:
+            labels['cincodebio.schema'] = json.loads(labels['cincodebio.schema'])
+        except:
+            # if it fails return None as the schema is not valid (probably because the json string has been stored in correctly)
+            return None
         
         # return the labels
         return labels
