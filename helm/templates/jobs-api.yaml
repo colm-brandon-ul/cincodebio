@@ -1,0 +1,53 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: {{ .Values.jobsApi.name }}
+  name: {{ .Values.jobsApi.name }}
+spec:
+  ports:
+    - port: 80
+      protocol: TCP
+      targetPort: 80
+  selector:
+    app: {{ .Values.jobsApi.name }}
+  type: ClusterIP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.jobsApi.name }}
+  labels:
+    app: {{ .Values.jobsApi.name }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Values.jobsApi.name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.jobsApi.name }}
+    spec:
+      containers:
+        - name: {{ .Values.jobsApi.name }}
+          image: {{ .Values.jobsApi.image }}
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80
+          env:
+            - name: JOBS_DB
+              value: {{ .Values.mongodb.jobsdb.name }}
+            - name: JOBS_COLLECTION
+              value: {{ .Values.mongodb.jobsdb.collection }}
+            - name: CINCO_DE_BIO_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+          volumeMounts:
+            - name: shared-volume
+              mountPath: /data
+      volumes:
+      - name: shared-volume
+        persistentVolumeClaim:
+          claimName: {{ .Release.Name }}-workflow-logs-pvc

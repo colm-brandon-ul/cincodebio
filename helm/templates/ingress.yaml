@@ -63,7 +63,7 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: {{ .Values.nginxProxy.image }}
+                name: {{ .Values.nginxProxy.name }}
                 port:
                   number: 80
 

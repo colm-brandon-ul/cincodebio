@@ -53,25 +53,3 @@ spec:
         - name: shared-volume
           persistentVolumeClaim:
             claimName: {{ .Release.Name }}-workflow-logs-pvc
-          image: {{ .Values.executionApi.image }}
-          imagePullPolicy: IfNotPresent
-          ports:
-          - containerPort: 80
-          env:
-          - name: WORKFLOW_LOGS_PATH
-            value: {{ .Values.global.workflow_log_path }}
-          - name: WORKFLOW_DB
-            value: {{ .Values.mongodb.workflowdb.name }}
-          - name: WORKFLOW_COLLECTION
-            value: {{ .Values.mongodb.workflowdb.collection }}
-          - name: CINCO_DE_BIO_NAMESPACE
-            valueFrom:
-              fieldRef:
-                fieldPath: metadata.namespace
-          volumeMounts:
-            - name: shared-volume
-              mountPath: /data
-      volumes:
-      - name: shared-volume
-        persistentVolumeClaim:
-          claimName: {{ .Release.Name }}-workflow-logs-pvc

@@ -22,7 +22,7 @@ mongodb:
     collection: "flows"
   jobsdb:
     name: "jobsdb"
-    collections: "jobs"
+    collection: "jobs"
 
 nginxProxy:
   image: nginx:latest

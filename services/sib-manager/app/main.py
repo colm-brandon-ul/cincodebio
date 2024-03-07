@@ -86,6 +86,9 @@ def rebuild_service_api(dh_namespace):
         json.dump(rest,f)
 
     logging.warning(f"Latest SIBs: {latest}")
+
+    logging.warning(f"Latest SIBs: {latest}")
+
     # Generate the code for the service-api
     api_code, model_code = utils.code_gen(
         template_env=env,
@@ -103,6 +106,9 @@ def rebuild_service_api(dh_namespace):
 
     with open(static_path / 'requirements.txt', 'r') as f:
         requirements_content = f.read()
+
+    logging.warning(f"API CODE: {api_code}")
+    logging.warning(f"MODEL CODE: {model_code}")
 
     if k8s_interface.prepare_build_context(
         pfile_content=api_code,
