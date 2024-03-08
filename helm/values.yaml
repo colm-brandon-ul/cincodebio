@@ -59,6 +59,14 @@ executionEnvironment:
   image: sccecincodebio/execution-environment:latest
   name: execution-environment
 
+rabbitmq:
+  nameOverride: "rabbitmq"
+  fullnameOverride: "rabbitmq"
+  # Need to be updated, but are fine for now
+  auth:
+    user: "guest"
+    password: "guest"
+
 global:
   ontology_url: "http://"
   dps_registry: "http://"

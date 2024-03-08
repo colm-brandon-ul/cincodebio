@@ -36,6 +36,10 @@ spec:
           ports:
             - containerPort: 80
           env:
+          - name: RABBITMQ_USERNAME
+            value: {{ .Values.rabbitmq.auth.user }}
+          - name: RABBITMQ_PASSWORD
+            value: {{ .Values.rabbitmq.auth.password }}
           - name: CINCO_DE_BIO_NAMESPACE
             valueFrom:
               fieldRef:

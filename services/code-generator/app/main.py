@@ -67,7 +67,9 @@ def do_work(ch, method_frame, body):
 
 def main():
     threads = []
-    connection_params = pika.ConnectionParameters(host=RABBIT_MQ_HOST,port=RABBIT_MQ_PORT)
+    # RabbitMQ Connection
+    credentials = pika.PlainCredentials(os.getenv('RABBITMQ_USERNAME'), os.getenv('RABBITMQ_PASSWORD'))
+    connection_params = pika.ConnectionParameters(host=RABBIT_MQ_HOST,port=RABBIT_MQ_PORT, credentials=credentials)
     for i in range(20):
         try:
             connection = pika.BlockingConnection(connection_params)
