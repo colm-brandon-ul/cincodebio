@@ -126,6 +126,42 @@ class MembraneMarkers (RootModel[List[MembraneMarker]]):
 class ProteinChannelMarkers (RootModel[List[ProteinChannelMarker]]):
 	...
 
+
+class MissileExpressionCountsSymbolicLink(RootModel[str]):
+    ...
+
+class MissileExpressionCounts(BaseModel):
+    url: MissileExpressionCountsSymbolicLink
+
+
+class MissileExpressionSpatialDataSymbolicLink(RootModel[str]):
+    ...
+
+class MissileExpressionSpatialData(BaseModel):
+    url: MissileExpressionSpatialDataSymbolicLink
+
+
+class MissileMetadataSymbolicLink(RootModel[str]):
+    ...
+
+class MissileMetadata(BaseModel):
+    url: MissileMetadataSymbolicLink
+
+
+class MissileClustersSymbolicLink(RootModel[str]):
+    ...
+
+class MissileClusters(BaseModel):
+    url: MissileClustersSymbolicLink
+
+class MissileNeighbourhoodsSymbolicLink(RootModel[str]):
+    ...
+
+class MissileNeighbourhoods(BaseModel):
+    url: MissileNeighbourhoodsSymbolicLink
+
+
+
 # Data Models for the Dataprocess Services (Input/Output)
 {%- macro render_classdef(services, parent_name, indent = 0) %}
 {%- for k,v in services.items() %}
