@@ -1,9 +1,9 @@
 import os
 import requests
 import json
-SERVICE_API = os.environ.get('SERVICE_API_SOCKET_ADDRESS')
+SERVICE_API = os.environ.get('SERVICE_API_SERVICE_HOST')
 WORKFLOW_LOG_PATH = os.environ.get('WORKFLOW_LOGS_PATH')
-EXECUTION_API_SOCKET_ADDRESS = os.environ.get('EXECUTION_API_SOCKET_ADDRESS')
+EXECUTION_API_SOCKET_ADDRESS = os.environ.get('EXECUTION_API_SERVICE_HOST')
 # time.sleep(random.randint(1,30))
 workflow_id = "WORKFLOW_ID"
 experiment_data_bucket_name = 'experiment-bucket'
