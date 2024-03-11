@@ -221,7 +221,7 @@ def test_code_submission_handler(workflow_id, model):
 
 
 @app.post("/test/python-code/submit")
-async def root(model: UploadFile, request: Request, background_tasks: BackgroundTasks):
+async def root(request: Request, background_tasks: BackgroundTasks, model: UploadFile = File(...)):
     # Let the full file upload
     model_file = await model.read()
 

@@ -8,6 +8,8 @@ EXECUTION_API_SOCKET_ADDRESS = os.environ.get('EXECUTION_API_SOCKET_ADDRESS')
 workflow_id = "WORKFLOW_ID"
 experiment_data_bucket_name = 'experiment-bucket'
 workflow_bucket_name = 'workflow-bucket'
+CDB_EXTERNAL_URL = 'http://192.168.64.2'
+
 logging.info(workflow_id)
 
 # As soon as the script begins executing, this sets the workflow state to processing
@@ -16,16 +18,18 @@ logging.warning(res.content)
 
 
 # Submit Second Job to Service
-res = requests.post(f"http://{SERVICE_API}/init/init-tma", 
+res = requests.post(f"http://{SERVICE_API}/start/init-tma", 
                     json={'system_parameters' : {
-                          'workflow_id': workflow_id,
-                          'experiment_data_bucket_name' : experiment_data_bucket_name,
-                          'workflow_bucket_name' : workflow_bucket_name,
                           'data_flow': {"tissue_micro_array" : True,
                            "nuclear_stain": True,
                            "nuclear_markers" : True,
                            "membrane_markers": True,}
-                    },})
+                    },},
+                    headers = {
+                        "cdb-workflow-id": workflow_id,
+                        "cdb-external-url": CDB_EXTERNAL_URL 
+                        })
+
 logging.warning(res.content)
 job_details = json.loads(res.content)
 logging.warning(job_details)
