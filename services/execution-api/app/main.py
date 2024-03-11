@@ -234,7 +234,7 @@ async def root(request: Request, background_tasks: BackgroundTasks, model: Uploa
     
     
     # Dispatch the model to the code generator
-    background_tasks.add_task(test_code_submission_handler, workflow_id = uuid, model = model_file)
+    background_tasks.add_task(test_code_submission_handler, workflow_id = uuid, model = model_file.decode("utf-8"))
     logging.info(f"Dispatched model to Code Generator for Workflow: {uuid}") 
     
     
