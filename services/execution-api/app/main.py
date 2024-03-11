@@ -195,3 +195,55 @@ async def get_all_workflow_objects():
 async def get_workflow_by_id(workflow_id: str):
     workflow_state = get_workflow_from_db_by_id(workflow_id)
     return workflow_state.json()
+
+
+
+
+# Function to dispatch model to code generator
+def test_code_submission_handler(workflow_id, model):
+
+    # Update the workflow state to accepted
+    update_workflow_in_db(workflow_id=workflow_id,workflow=UpdateWorkflow(status="accepted"))
+
+    EXECUTION_ADDRESS = f"{os.getenv('EXECUTION_ENVIRONMENT_SERVICE_HOST')}:{os.getenv('EXECUTION_ENVIRONMENT_SERVICE_PORT')}"
+
+    # Send code to execution environment
+
+    # This will be replaced with some code generatioon functionality
+    res = requests.post(f"http://{EXECUTION_ADDRESS}/", 
+                        json={"code": model.replace("WORKFLOW_ID", workflow_id), 
+                              "workflow_id": workflow_id})
+    logging.warning(str(res.status_code))
+
+
+
+
+
+
+@app.post("/test/python-code/submit")
+async def root(model: UploadFile, request: Request, background_tasks: BackgroundTasks):
+    # Let the full file upload
+    model_file = await model.read()
+
+    # Create Workflow Object
+    wf_obj = Workflow(status="submitted", state=[])
+    uuid = insert_new_workflow_to_db(wf_obj)
+
+    # Create Workflow Log File
+    create_workflow_log_file(WORKFLOW_LOG_PATH,uuid)
+    
+    
+    # Dispatch the model to the code generator
+    background_tasks.add_task(test_code_submission_handler, workflow_id = uuid, model = model_file)
+    logging.info(f"Dispatched model to Code Generator for Workflow: {uuid}") 
+    
+    
+    
+    # Return Status as Accepted and a link to the front-end URL
+    return JSONResponse(
+        status_code=status.HTTP_202_ACCEPTED, 
+        content={"url": str(request.base_url) + f"frontend/{uuid}"})
+
+
+
+

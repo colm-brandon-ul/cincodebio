@@ -50,15 +50,58 @@
     <!-- Data is written to disk and needs and interface to r/w where as paramters can just be serialised primitively? -->
     <!-- Atomic & Non-Atomic -->
 
+    <!-- Define a subclass 'Atomic' -->
+    <owl:Class rdf:about="#Atomic">
+        <rdfs:label>Atomic</rdfs:label>
+        <rdfs:comment>A subclass of Data representing atomic data.</rdfs:comment>
+        <rdfs:subClassOf rdf:resource="#Semantic"/>
+
+       <!-- Define a subclass 'Atomic' -->
+    <owl:Class rdf:about="#NonAtomic">
+        <rdfs:label>Atomic</rdfs:label>
+        <rdfs:comment>A subclass of Data representing non-atomic data.</rdfs:comment>
+        <rdfs:subClassOf rdf:resource="#Semantic"/>
+
     <!-- IMAGE DATA -->
         <!-- Multi-page TIFF -->
         <!-- Single-page TIFF -->
+    <owl:Class rdf:about="#OMETIFF">
+        <rdfs:label>OME.TIFF</rdfs:label>
+        <rdfs:comment>Syntactic Data type for OME.TIFF Files</rdfs:comment>
+        <rdfs:subClassOf rdf:resource="#Syntactic"/>
+    </owl:Class>
         <!-- JPEG -->
+    <owl:Class rdf:about="#JPEG">
+        <rdfs:label>JPEG</rdfs:label>
+        <rdfs:comment>Syntactic Data type for JPEG Files</rdfs:comment>
+        <rdfs:subClassOf rdf:resource="#Syntactic"/>        
+    </owl:Class>
         <!-- PNG -->
+    <owl:Class rdf:about="#PNG">
+        <rdfs:label>PNG</rdfs:label>
+        <rdfs:comment>Syntactic Data type for PNG Files</rdfs:comment>
+        <rdfs:subClassOf rdf:resource="#Syntactic"/>        
+    </owl:Class>
 
     <!-- TABULAR -->
+        <!-- Excel -->
+    <owl:Class rdf:about="#Excel">
+        <rdfs:label>Excel</rdfs:label>
+        <rdfs:comment>Syntactic Data type for Excel Files</rdfs:comment>
+        <rdfs:subClassOf rdf:resource="#Syntactic"/>        
+    </owl:Class>
         <!-- TSV -->
+    <owl:Class rdf:about="#TSV">
+        <rdfs:label>TSV</rdfs:label>
+        <rdfs:comment>Syntactic Data type for TSV Files</rdfs:comment>
+        <rdfs:subClassOf rdf:resource="#Syntactic"/>        
+    </owl:Class>
         <!-- CSV -->
+    <owl:Class rdf:about="#CSV">
+        <rdfs:label>CSV</rdfs:label>
+        <rdfs:comment>Syntactic Data type for CSV Files</rdfs:comment>
+        <rdfs:subClassOf rdf:resource="#Syntactic"/>        
+    </owl:Class>
         <!-- HDF5? -->
 
     <!-- VIDEO -->

@@ -1,47 +1,47 @@
-apiVersion: v1
-kind: Service
-metadata:
-  labels:
-    app: {{ .Values.codeGenerator.name}}
-  name: {{ .Values.codeGenerator.name}}
-spec:
-  ports:
-    - port: 80
-      protocol: TCP
-      targetPort: 80
-  selector:
-    app: {{ .Values.codeGenerator.name}}
-  type: ClusterIP
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: {{ .Values.codeGenerator.name}}
-  labels:
-    app: {{ .Values.codeGenerator.name}}
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: {{ .Values.codeGenerator.name}}
-  template:
-    metadata:
-      labels:
-        app: {{ .Values.codeGenerator.name}}
-    spec:
-      containers:
-        - name: {{ .Values.codeGenerator.name}}
-          image: {{ .Values.codeGenerator.image }}
-          imagePullPolicy: Always
-          ports:
-            - containerPort: 80
-          env:
-          - name: RABBITMQ_USERNAME
-            value: {{ .Values.rabbitmq.auth.user }}
-          - name: RABBITMQ_PASSWORD
-            value: {{ .Values.rabbitmq.auth.password }}
-          - name: CINCO_DE_BIO_NAMESPACE
-            valueFrom:
-              fieldRef:
-                fieldPath: metadata.namespace
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   labels:
+#     app: {{ .Values.codeGenerator.name}}
+#   name: {{ .Values.codeGenerator.name}}
+# spec:
+#   ports:
+#     - port: 80
+#       protocol: TCP
+#       targetPort: 80
+#   selector:
+#     app: {{ .Values.codeGenerator.name}}
+#   type: ClusterIP
+# ---
+# apiVersion: apps/v1
+# kind: Deployment
+# metadata:
+#   name: {{ .Values.codeGenerator.name}}
+#   labels:
+#     app: {{ .Values.codeGenerator.name}}
+# spec:
+#   replicas: 1
+#   selector:
+#     matchLabels:
+#       app: {{ .Values.codeGenerator.name}}
+#   template:
+#     metadata:
+#       labels:
+#         app: {{ .Values.codeGenerator.name}}
+#     spec:
+#       containers:
+#         - name: {{ .Values.codeGenerator.name}}
+#           image: {{ .Values.codeGenerator.image }}
+#           imagePullPolicy: Always
+#           ports:
+#             - containerPort: 80
+#           env:
+#           - name: RABBITMQ_USERNAME
+#             value: {{ .Values.rabbitmq.auth.user }}
+#           - name: RABBITMQ_PASSWORD
+#             value: {{ .Values.rabbitmq.auth.password }}
+#           - name: CINCO_DE_BIO_NAMESPACE
+#             valueFrom:
+#               fieldRef:
+#                 fieldPath: metadata.namespace
         

@@ -164,7 +164,7 @@ async def startup_event():
     else:
         # Failure - for some reason the service-api deployment failed
         # Need to log this and raise an error
-        logging.error("Dependant services are not available. Local Registry Health Check: {container_registry_health_check}. Service API Health Check: {service_deployment_health_check}")
+        logging.error(f"Dependant services are not available. Local Registry Health Check: {container_registry_health_check}. Service API Health Check: {service_deployment_health_check}")
 
 
 
@@ -178,7 +178,34 @@ def health_check():
     return {"status": "healthy"}
 
 
-@app.get("/update-service-list")
-def update_service_list():
-    ...
+@app.get("/get-installed-sibs")
+def get_installed_sibs():
+    state_path = pathlib.Path(PERSISTENT_STATE_MOUNT_PATH)
+    with open(state_path / INSTALLED_SIBS, "r") as f:
+        return json.loads(f.read())
+    
 
+@app.get("/get-uninstalled-sibs")
+def get_uninstalled_sibs():
+    # set of sibs that are not installed but are available
+    # compare latest and installed
+    state_path = pathlib.Path(PERSISTENT_STATE_MOUNT_PATH)
+    with open(state_path / OTHER_SIBS, "r") as f:
+        return json.loads(f.read())
+    
+
+# This is the front end for the SIB Manager
+@app.get("/sib-manager")
+def sib_manager(request: Request):
+    template = env.get_template("sib-manager.html.j2")
+    return template.render(request=request)
+
+
+@app.get("/update-installed-sibs")
+def update_installed_sibs(request: Request, background_task: BackgroundTasks):
+
+    # state_path = pathlib.Path(PERSISTENT_STATE_MOUNT_PATH)
+    # with open(state_path / INSTALLED_SIBS, "w") as f:
+    #     json.dump(latest,f)
+
+    ...
