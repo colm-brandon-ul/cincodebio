@@ -109,6 +109,9 @@ def rebuild_service_api(dh_namespace):
     with open(static_path / 'requirements.txt', 'r') as f:
         requirements_content = f.read()
 
+    with open(static_path / 'utils.py', 'r') as f:
+        utils_content = f.read()
+
     # logging.warning(f"API CODE: {api_code}")
     # logging.warning(f"MODEL CODE: {model_code}")
 
@@ -117,7 +120,8 @@ def rebuild_service_api(dh_namespace):
         mfile_content=model_code,
         docker_image_content=dfile,
         k8s_jobs_content= k8s_jobs_content,
-        requiremnts_txt_content=requirements_content
+        requiremnts_txt_content=requirements_content,
+        utils_content = utils_content
     ):
 
         # Submit the kaniko job to build the service api image image

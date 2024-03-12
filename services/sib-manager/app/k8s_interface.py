@@ -77,6 +77,7 @@ def prepare_build_context(
         docker_image_content: str,
         k8s_jobs_content: str,
         requiremnts_txt_content: str,
+        utils_content: str, 
         context_path: str = DOCKER_BUILD_CONTEXT_MOUNT_PATH):
     
     """
@@ -134,6 +135,10 @@ def prepare_build_context(
         # Write the k8s_jobs.py file
         with open(bp / 'app' / 'k8sjobs.py', 'w') as f:
             f.write(k8s_jobs_content)
+
+        # Write the k8s_jobs.py file
+        with open(bp / 'app' / 'utils.py', 'w') as f:
+            f.write(utils_content)
 
         return True
     except:
