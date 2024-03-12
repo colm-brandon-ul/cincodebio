@@ -8,6 +8,7 @@ EXECUTION_API_SOCKET_ADDRESS = os.environ.get('EXECUTION_API_SERVICE_HOST')
 workflow_id = "WORKFLOW_ID"
 experiment_data_bucket_name = 'experiment-bucket'
 workflow_bucket_name = 'workflow-bucket'
+# Rather than hardcoding the external URL, we can use the service name to get the external URL
 CDB_EXTERNAL_URL = 'http://192.168.64.2/services-api'
 
 logging.info(workflow_id)
@@ -18,7 +19,7 @@ logging.warning(res.content)
 
 
 # Submit Second Job to Service
-res = requests.post(f"http://{SERVICE_API}/start/init-wsi", 
+res = requests.post(f"http://{SERVICE_API}/start/init-tma", 
                     json={'system_parameters' : {
                           'data_flow': {"whole_slide_image" : True,
                            "protein_channel_markers" : True,

@@ -17,7 +17,7 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent
 
 WORKFLOW_LOG_PATH = os.environ.get('WORKFLOW_LOGS_PATH')
-EXECUTION_INGRESS_PATH = 'execution-api'
+EXECUTION_INGRESS_PATH = os.environ.get('EXECUTION_API_INGRESS_PATH')
 
 
 logging.basicConfig(format='%(asctime)s - %(process)d - %(levelname)s - %(message)s', level=logging.WARNING)

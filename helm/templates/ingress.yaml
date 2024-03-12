@@ -27,7 +27,7 @@ spec:
                 port:
                   number: 80
           # Definitely needs to be available outside the cluster
-          - path: /execution-api/(.*)$
+          - path: /{{ .Values.global.execution_api_ingress_path }}/(.*)$
             pathType: Prefix
             backend:
               service:
@@ -43,7 +43,7 @@ spec:
                 port:
                   number: 80
           # Definitely needs to be available outside the cluster
-          - path: /services-api/(.*)$
+          - path: /{{ .Values.global.services_api_ingress_path }}/(.*)$
             pathType: Prefix
             backend:
               service:

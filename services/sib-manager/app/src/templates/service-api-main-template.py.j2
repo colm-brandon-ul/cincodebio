@@ -14,12 +14,16 @@ import os
 {# utils imports will change to k8s specific ones #}
 from .k8sjobs import submit_k8s_job
 from .models import *
+from .utils import create_redirect_to_execution_env_link
+
+{# Logging #}
 
 {# Create FASTAPI app #}
 app = FastAPI()
 
 {# Define Variables which come from the Environment #}
 JMS_ADDRESS = f"{os.environ.get('JOBS_API_SERVICE_HOST')}:{os.environ.get('JOBS_API_SERVICE_PORT')}" # jobsapi
+EXECUTION_INGRESS_PATH = os.environ.get('EXECUTION_API_INGRESS_PATH')
 
 @app.get("/health", include_in_schema=False)
 async def health():
@@ -167,7 +171,8 @@ async def {{ ServiceName | to_snake }}_submit_interaction(
     {# Need to make sure the correct thing is being passed to the rewrite method  #}
     return {{ ServiceName | to_camel }}_InteractionInput_Response(
         **{'url': create_redirect_to_execution_env_link(
-            job_id=job_id,base_url=request.base_url)})
+            job_id=job_id,base_url=request.base_url,execution_ingress_path=EXECUTION_INGRESS_PATH)})
+
 
 {# Get Result #}
 @app.get("/{{ AbstractConcept | to_kebab }}/{{ ServiceName | to_kebab }}/{job_id}", 
