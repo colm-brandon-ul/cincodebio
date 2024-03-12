@@ -6,7 +6,7 @@ import logging
 import time 
 import random
 
-from .models import Code
+from models import Code
 
 """
     Execution Environment - Receives Code & Runs it
