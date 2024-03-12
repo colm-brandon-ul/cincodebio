@@ -8,7 +8,7 @@ EXECUTION_API_SOCKET_ADDRESS = os.environ.get('EXECUTION_API_SERVICE_HOST')
 workflow_id = "WORKFLOW_ID"
 experiment_data_bucket_name = 'experiment-bucket'
 workflow_bucket_name = 'workflow-bucket'
-CDB_EXTERNAL_URL = 'http://192.168.64.2'
+CDB_EXTERNAL_URL = 'http://192.168.64.2/services-api'
 
 logging.info(workflow_id)
 
@@ -18,9 +18,10 @@ logging.warning(res.content)
 
 
 # Submit Second Job to Service
-res = requests.post(f"http://{SERVICE_API}/start/init-tma", 
+res = requests.post(f"http://{SERVICE_API}/start/init-wsi", 
                     json={'system_parameters' : {
-                          'data_flow': {"tissue_micro_array" : True,
+                          'data_flow': {"whole_slide_image" : True,
+                           "protein_channel_markers" : True,
                            "nuclear_stain": True,
                            "nuclear_markers" : True,
                            "membrane_markers": True,}

@@ -26,7 +26,7 @@ jobs:
                     image_name=${image_name//\//-}
                     docker_image_name="${image_name//[^a-zA-Z0-9]/-}"
                     if [[ $docker_image_name != "rpy2-base-image" ]]; then  
-                    if [[ $docker_image_name == "execution-environment" ]]; then
+                    if [[ $docker_image_name == "execution-api" ]]; then
                         echo "Building $docker_image_name"
                         docker buildx build --platform linux/amd64,linux/arm64 -t ${{ secrets.DOCKERHUB_USERNAME }}/$docker_image_name:latest $dir_of_image --push
                     fi  

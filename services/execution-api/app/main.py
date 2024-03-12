@@ -17,6 +17,7 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent
 
 WORKFLOW_LOG_PATH = os.environ.get('WORKFLOW_LOGS_PATH')
+EXECUTION_INGRESS_PATH = 'execution-api'
 
 
 logging.basicConfig(format='%(asctime)s - %(process)d - %(levelname)s - %(message)s', level=logging.WARNING)
@@ -72,7 +73,7 @@ async def root(model: UploadFile, request: Request, background_tasks: Background
     # Return Status as Accepted and a link to the front-end URL
     return JSONResponse(
         status_code=status.HTTP_202_ACCEPTED, 
-        content={"url": str(request.base_url) + f"frontend/{uuid}"})
+        content={"url": str(request.base_url) + f"{EXECUTION_INGRESS_PATH}/frontend/{uuid}"})
 
 
 # Needs to be indepotent (possibly?)
@@ -138,7 +139,7 @@ async def render_front_end(request: Request, workflow_id: str):
     logging.warning(f"FRONT END REQUEST: {request.base_url}")
 
     # Create the appropriate WS address
-    ws_address = f"{request.base_url.__str__().replace('http','ws')}state/ws/{workflow_id}"
+    ws_address = f"{request.base_url.__str__().replace('http','ws')}/{EXECUTION_INGRESS_PATH}/state/ws/{workflow_id}"
 
     template = env.get_template("execution_template.html")
     html_content = template.render(request=request, ws_address=ws_address)
@@ -242,7 +243,7 @@ async def root(request: Request, background_tasks: BackgroundTasks, model: Uploa
     # Return Status as Accepted and a link to the front-end URL
     return JSONResponse(
         status_code=status.HTTP_202_ACCEPTED, 
-        content={"url": str(request.base_url) + f"frontend/{uuid}"})
+        content={"url": str(request.base_url) + f"{EXECUTION_INGRESS_PATH}/frontend/{uuid}"})
 
 
 

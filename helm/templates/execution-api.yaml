@@ -46,9 +46,8 @@ spec:
     spec:
       volumes:
         - name: shared-volume
-          emptyDir: {}
-          # persistentVolumeClaim:
-            # claimName: {{ .Release.Name }}-workflow-logs-pvc
+          persistentVolumeClaim:
+            claimName: {{ .Release.Name }}-workflow-logs-pvc
       containers:
         - name: {{ .Values.executionApi.name }}
           image: {{ .Values.executionApi.image }}
@@ -72,7 +71,7 @@ spec:
                   fieldPath: metadata.namespace
           volumeMounts:
             - name: shared-volume
-              mountPath: /data
+              mountPath: /app/data
         - name: {{ .Values.executionEnvironment.name}}
           image: {{ .Values.executionEnvironment.image }}
           imagePullPolicy: Always
@@ -91,5 +90,5 @@ spec:
                   fieldPath: metadata.namespace
           volumeMounts:
             - name: shared-volume
-              mountPath: /data
+              mountPath: /app/data
       
