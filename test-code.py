@@ -21,7 +21,7 @@ logging.warning(res.content)
 # Submit Second Job to Service
 res = requests.post(f"http://{SERVICE_API}/start/init-tma", 
                     json={'system_parameters' : {
-                          'data_flow': {"whole_slide_image" : True,
+                          'data_flow': {"tissue_micro_array" : True,
                            "protein_channel_markers" : True,
                            "nuclear_stain": True,
                            "nuclear_markers" : True,

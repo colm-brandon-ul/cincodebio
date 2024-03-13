@@ -10,6 +10,8 @@ minio:
   auth:
     rootUser: admin
     rootPassword: mypassword
+  mode: "standalone"
+  defaultBuckets: experiment-bucket;workflow-bucket;results-bucket
   extraEnvVars:
       # This is the workaround for accessing the minio console - need to resolve (as it depends on the ip address of the multipass VM for microk8s)
       - name: MINIO_BROWSER_REDIRECT_URL
