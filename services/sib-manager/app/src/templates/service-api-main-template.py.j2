@@ -152,6 +152,7 @@ async def {{ ServiceName | to_snake }}_submit_interaction(
     job_id: str, 
     data: {{ ServiceName | to_camel }}_InteractionInput_Request, 
     request: Request, 
+    cdb_workflow_id: Annotated[Union[str, None], Header()] = None 
     background_tasks: BackgroundTasks):
 
     logging.info('SUBMIT INTERACTION')
@@ -171,7 +172,7 @@ async def {{ ServiceName | to_snake }}_submit_interaction(
     {# Need to make sure the correct thing is being passed to the rewrite method  #}
     return {{ ServiceName | to_camel }}_InteractionInput_Response(
         **{'url': create_redirect_to_execution_env_link(
-            job_id=job_id,base_url=request.base_url,execution_ingress_path=EXECUTION_INGRESS_PATH)})
+            job_id=cdb_workflow_id,base_url=request.base_url,execution_ingress_path=EXECUTION_INGRESS_PATH)})
 
 
 {# Get Result #}
