@@ -158,6 +158,13 @@ async def {{ ServiceName | to_snake }}_submit_interaction(
     logging.info('SUBMIT INTERACTION')
     logging.info(job_id)
     logging.info(data)
+
+    # Get Job from DATABASE
+    res = requests.get(
+        f"http://{JMS_ADDRESS}/get-job-by-id/{job_id}")
+
+    {# Deserialize Job Object #}
+    job_state = json.loads(res.content)
     
     {# Need to make sure the k8s function is written correctly #}
     background_tasks.add_task(
@@ -168,11 +175,14 @@ async def {{ ServiceName | to_snake }}_submit_interaction(
         is_interactive_submit = True,
         base_url = request.base_url,
         job_id = job_id)
+
+
+    
     
     {# Need to make sure the correct thing is being passed to the rewrite method  #}
     return {{ ServiceName | to_camel }}_InteractionInput_Response(
         **{'url': create_redirect_to_execution_env_link(
-            job_id=cdb_workflow_id,base_url=request.base_url,execution_ingress_path=EXECUTION_INGRESS_PATH)})
+            job_id=job_state['workflow'],base_url=request.base_url,execution_ingress_path=EXECUTION_INGRESS_PATH)})
 
 
 {# Get Result #}
