@@ -24,6 +24,7 @@ def submit_k8s_job(
         image_name: str, # this is the docker image to be used for the job
         job_id: str, # this is the unique job id from the JMS
         base_url: str = None, # this is the base url (for interactive services and defaults to none)
+        is_interactive_submit: bool = False # this is a flag to determine if the job is interactive or not
         ):
     
     # to be populated - do I want a seperate namespace for jobs?

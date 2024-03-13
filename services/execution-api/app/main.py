@@ -60,6 +60,8 @@ async def root(model: UploadFile, request: Request, background_tasks: Background
     wf_obj = Workflow(status="submitted", state=[])
     uuid = insert_new_workflow_to_db(wf_obj)
 
+    # Before a model is submitted to be built / ran there should be check to see if any data has been uploaded
+
     # Create Workflow Log File
     create_workflow_log_file(WORKFLOW_LOG_PATH,uuid)
     
