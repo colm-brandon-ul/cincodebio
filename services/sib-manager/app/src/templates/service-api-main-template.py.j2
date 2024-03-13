@@ -152,7 +152,6 @@ async def {{ ServiceName | to_snake }}_submit_interaction(
     job_id: str, 
     data: {{ ServiceName | to_camel }}_InteractionInput_Request, 
     request: Request, 
-    cdb_workflow_id: Annotated[Union[str, None], Header()] = None 
     background_tasks: BackgroundTasks):
 
     logging.info('SUBMIT INTERACTION')
