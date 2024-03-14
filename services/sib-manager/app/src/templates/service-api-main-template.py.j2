@@ -181,7 +181,7 @@ async def {{ ServiceName | to_snake }}_submit_interaction(
     {# Need to make sure the correct thing is being passed to the rewrite method  #}
     return {{ ServiceName | to_camel }}_InteractionInput_Response(
         **{'url': create_redirect_to_execution_env_link(
-            job_id=job_state['workflow'],base_url=request.base_url,execution_ingress_path=EXECUTION_INGRESS_PATH)})
+            job_id=str(job_state['workflow']),base_url=str(request.base_url),execution_ingress_path=EXECUTION_INGRESS_PATH)})
 
 
 {# Get Result #}
