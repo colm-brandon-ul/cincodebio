@@ -172,7 +172,6 @@ async def {{ ServiceName | to_snake }}_submit_interaction(
         data= data.model_dump(), 
         image_name = "{{ ContainerImageName }}",
         is_interactive_submit = True,
-        base_url = request.base_url,
         job_id = job_id)
 
 
