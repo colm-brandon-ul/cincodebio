@@ -158,10 +158,11 @@ async def {{ ServiceName | to_snake }}_submit_interaction(
     logging.info(job_id)
     logging.info(data)
 
-    # Get Job from DATABASE
-    res = requests.get(
-        f"http://{JMS_ADDRESS}/get-job-by-id/{job_id}")
-
+    # Update job to interaction_accepted
+    res = requests.put(
+                f"http://{JMS_ADDRESS}/update-job/{job_id}", 
+                json={'job_status': 'interaction_accepted'})
+                
     {# Deserialize Job Object #}
     job_state = json.loads(res.content)
     
