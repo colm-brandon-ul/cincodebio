@@ -56,7 +56,7 @@ def submit_k8s_job(
     job = client.V1Job()
 
     # Add metadata to the Job
-    job.metadata = client.V1ObjectMeta(name=job_id)
+    job.metadata = client.V1ObjectMeta(name=job_id+routing_key)
 
     
     # popluating env variables
@@ -140,4 +140,4 @@ def submit_k8s_job(
     try:
         api_instance.create_namespaced_job(namespace=NAMESPACE, body=job)
     except ApiException as e:
-        logging.info(f"Exception when calling BatchV1Api->create_namespaced_job for job: {job_id}: {e}")
+        logging.warning(f"Exception when calling BatchV1Api->create_namespaced_job for job: {job_id}: {e}")

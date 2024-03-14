@@ -380,6 +380,8 @@ def code_gen(template_env: jinja2.Environment, service_models: List) -> Tuple[st
     Returns:
         Tuple[str, str]: A tuple containing the generated API code [index 0] and data model code [index 1].
     """
+
+    # perhaps rather than the tag I should use the digest (as the tag can be updated)
     
     api_code = template_env.get_template("service-api-main-template.py.j2").render(
         services=service_models
