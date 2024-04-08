@@ -4,22 +4,6 @@ from fastapi import FastAPI, Request, BackgroundTasks
 from kubernetes import client, config
 import jinja2
 import requests
-
-# Set up the Jinja environment
-# This is relative to the working directorty not where the python script is.
-# workdir needs to be set to the root of the project (i.e. app)
-TEMPLATE_DIR = "./src/templates/"
-STATIC_CODE_DIR = "./src/static-code/"
-PERSISTENT_STATE_MOUNT_PATH = "/sib-manager-state"
-
-LATEST_SIBS = "latest_sibs.json"
-OTHER_SIBS = "other_sibs.json"
-INSTALLED_SIBS = "installed_sibs.json"
-
-CURRENT_SIBS_IME_JSON = "current_ime_sibs.json"
-UTD_SIB_FILE = "lib.sibs"
-
-
 # ONTOLOGY_VERSION = "0.1.0"
 
 import utils 
@@ -35,6 +19,21 @@ import logging
 from models import CheckSibFileHashRequest, HashValid, UtdSibFileResponse
 from cinco_interface import compute_local_hash, check_if_windows, convert_newlines
 import handlers
+
+# Set up the Jinja environment
+# This is relative to the working directorty not where the python script is.
+# workdir needs to be set to the root of the project (i.e. app)
+TEMPLATE_DIR = "./src/templates/"
+STATIC_CODE_DIR = "./src/static-code/"
+PERSISTENT_STATE_MOUNT_PATH = "/sib-manager-state"
+
+LATEST_SIBS = "latest_sibs.json"
+OTHER_SIBS = "other_sibs.json"
+INSTALLED_SIBS = "installed_sibs.json"
+
+CURRENT_SIBS_IME_JSON = "current_ime_sibs.json"
+UTD_SIB_FILE = "lib.sibs"
+SIB_MAP_FILE = "sib_map.json"
 
 JINJA_ENV = jinja2.Environment(
     loader=jinja2.FileSystemLoader(TEMPLATE_DIR), 
@@ -143,15 +142,22 @@ def update_installed_sibs(request: Request, background_task: BackgroundTasks):
 # for use with the IME, it will compare the hash of the sib file
 # with the hash of the up to date sib file stored in the SIB Manager
     
+# --- ENDPOINTS FOR THE Workflow Code Gen ---
+@app.get("/get-sib-map")
+def get_sib_map(request: Request):
+    state_path = pathlib.Path(PERSISTENT_STATE_MOUNT_PATH)
+    with open(state_path / SIB_MAP_FILE, "r") as f:
+        return json.loads(f.read())
+    
 
 # --- ENDPOINTS FOR THE ECLIPSE BASED IME ---
 
-@app.post("/sib-manager/check-sib-file-hash")
+@app.post("/check-sib-file-hash")
 async def check_sib_file_hash(body: CheckSibFileHashRequest):
     
     local_hash, local_hash_nl = compute_local_hash()
-    logging.warning(f"Local hash: {local_hash}, {local_hash_nl}")
-    logging.warning(f"File hash received: {body}")
+    logging.info(f"Local hash: {local_hash}, {local_hash_nl}")
+    logging.info(f"File hash received: {body}")
     # if hash is equal to neither, it's incorrect
     if body.fileHash != local_hash and body.fileHash != local_hash_nl: 
         return HashValid.INVALID
@@ -159,10 +165,10 @@ async def check_sib_file_hash(body: CheckSibFileHashRequest):
     return HashValid.VALID
 
 
-@app.get("/sib-manager/get-utd-sib-file")
+@app.get("/get-utd-sib-file")
 def get_utd_sib_file(request: Request):
     user_agent = request.headers.get('User-Agent', '')
-    logging.warning(f"User-Agent: {user_agent}")
+    logging.info(f"User-Agent: {user_agent}")
     
     # check if user is using Windows (then convert newlines to CRLF)
     if check_if_windows(user_agent):
@@ -175,3 +181,6 @@ def get_utd_sib_file(request: Request):
         return UtdSibFileResponse(
                 file=f.read()
             )
+    
+
+

@@ -1,6 +1,6 @@
 from typing import List
 from main import (STATIC_CODE_DIR,PERSISTENT_STATE_MOUNT_PATH,LATEST_SIBS,
-                  OTHER_SIBS,INSTALLED_SIBS, JINJA_ENV, CURRENT_SIBS_IME_JSON)
+                  OTHER_SIBS,INSTALLED_SIBS, JINJA_ENV, CURRENT_SIBS_IME_JSON, SIB_MAP_FILE)
 import pathlib
 import utils
 import k8s_interface, cinco_interface
@@ -12,13 +12,26 @@ import requests
 
 
 def update_code_gen_maps(new_sib_maps: dict) -> bool:
-    res = requests.post("URL_TO_CODE_GEN_SERVICE", json=new_sib_maps)
+    """
+        Writes the new SIB maps to the local state directory.
+
+        Args:
+            new_sib_maps (dict): The new sib maps to update the code gen maps with
+
+        Returns:
+            bool: True if the update is successful, False otherwise
+    """
+    state_path = pathlib.Path(PERSISTENT_STATE_MOUNT_PATH)
+
     try:
-        res.raise_for_status()
+        with open(state_path / SIB_MAP_FILE, "w") as f:
+            json.dump(new_sib_maps,f)
         return True
-    except requests.exceptions.HTTPError as e:
-        logging.error(f"Failed to update the code gen maps: {e}")
+        
+    except FileNotFoundError:
         return False
+    
+    
 
 
 def initial_build_service_api(dh_namespace: str) -> bool:
