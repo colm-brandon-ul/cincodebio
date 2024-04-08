@@ -10,12 +10,15 @@ import logging
 import time 
 import os
 
+from codegen.main import HippoFlowCodegenrator
+
 # K8s Service Discovery (ENV Variables)
 # my-service -> MY_SERVICE_SERVICE_HOST, MY_SERVICE_SERVICE_PORT
 
 # Import Environment Variables
 EXECUTION_ADDRESS = f'http://{os.environ.get("EXECUTION_ENVIRONMENT_SERVICE_HOST")}:{os.environ.get("EXECUTION_ENVIRONMENT_SERVICE_PORT")}'
 EXECUTION_API_ADDRESS = f'http://{os.environ.get("EXECUTION_API_SERVICE_HOST")}:{os.environ.get("EXECUTION_API_SERVICE_PORT")}'
+SIB_MANAGER_ADDRESS = f'http://{os.environ.get("SIB_MANAGER_SERVICE_HOST")}:{os.environ.get("SIB_MANAGER_SERVICE_PORT")}'
 
 # RabbitMQ ENV Variables
 RABBIT_MQ_HOST = os.environ.get('RABBITMQ_SERVICE_HOST')
@@ -51,14 +54,31 @@ def do_work(ch, method_frame, body):
     # Code generator and dispatch 
     logging.warning(payload["workflow_id"])
     logging.warning(payload["model"])
+    payload["external_url"]
+
+    res = requests.get(f"http://{SIB_MANAGER_ADDRESS}/get-sib-map")
+
+    sib_map = json.loads(res.content.decode("utf-8"))
+
+    executable = HippoFlowCodegenrator.generate(
+        model = payload["model"],
+        workflow_id=payload["workflow_id"],
+        sib_mapping=sib_map,
+        external_url=payload["external_url"]
+        
+    )
     
-    res = requests.post(f"http://{EXECUTION_API_ADDRESS}/control/update-workflow/{payload['workflow_id']}", json={"status": "accepted"})
 
     # This will be replaced with some code generatioon functionality
     res = requests.post(f"http://{EXECUTION_ADDRESS}/", 
-                        json={"code": payload["model"].replace("WORKFLOW_ID", payload["workflow_id"]), 
+                        json={"code": executable, 
                               "workflow_id": payload["workflow_id"]})
-    logging.warning(str(res.status_code))
+    
+
+    if res.status_code == 202:
+        res = requests.post(f"http://{EXECUTION_API_ADDRESS}/control/update-workflow/{payload['workflow_id']}", json={"status": "accepted"})
+
+    # logging.warning(str(res.status_code))
 
     # For acknowledging the message from the main loop
     cb = functools.partial(ack_message, ch, method_frame.delivery_tag)

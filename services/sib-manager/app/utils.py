@@ -327,7 +327,7 @@ def extract_cdb_labels(blob: Dict[str, str]) -> Dict[str, str]:
     
     
     # Rest of the code...
-def get_valid_images_from_namespace(namespace: str):
+def get_valid_images_from_namespace(namespace: str) -> Tuple[List,List]:
     """
     Retrieves the valid images from a given namespace.
 

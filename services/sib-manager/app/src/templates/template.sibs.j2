@@ -1,0 +1,81 @@
+{%- macro addInput(input) %}
+Input {{ input.id }} at {{ input.x }},{{ input.y }} size {{ input.w }},{{ input.h }} {
+    name "{{ input.name }}"
+    typeName "{{ input.type }}"
+    isList {{ input.isList }}
+}
+{% endmacro %}
+{%- macro addOutput(output) %}
+Output {{ output.id }} at {{ output.x }},{{ output.y }} size {{ output.w }},{{ output.h }} {
+    name "{{ output.name }}"
+    typeName "{{ output.type }}"
+    isList {{ output.isList }}
+}
+{% endmacro %}
+{%- macro addBranch(branch) %}
+Branch {{ branch.id }} at {{ branch.x }},{{ branch.y }} size {{ branch.w }},{{ branch.h }} {
+    name "{{ branch.name }}"
+}
+{% endmacro %}
+{%- macro addTask(task) %}
+Task {{ task.id }} at {{ task.x }}, {{ task.y }} size {{ task.w }},{{ task.h }} {
+    name "{{ task.name }}"
+    label "{{ task.label }}"
+    {% for input in task.inputs %}
+    {{ addInput(input) }}
+
+    {% endfor %}
+    Label {{ task.label_id }} at {{ task.label_x }},{{ task.label_y }} size {{ task.label_w }}, {{ task.label_h }} {
+        name "{{ task.name }}"
+        label "{{ task.label }}"
+    }
+
+    {% for output in task.outputs %}
+    {{ addOutput(output) }}
+
+    {% endfor %}
+
+    {% for branch in task.branches %}
+    {{ addBranch(branch) }}
+
+    {% endfor %}
+}
+{% endmacro %}
+{%- macro addService(service) %}
+Service {{ service.id }} at {{ service.x }}, {{ service.y }} size {{ service.w }},{{ service.h }} {
+    name "{{ service.name }}"
+    label "{{ service.label }}"
+    {% for input in service.inputs %}
+    {{ addInput(input)|indent(4) }}
+
+    {% endfor %}
+    Label {{ service.label_id }} at {{ service.label_x }},{{ service.label_y }} size {{ service.label_w }}, {{ service.label_h }} {
+        name "{{ service.name }}"
+        label "{{ service.label }}"
+    }
+
+    {% for output in service.outputs %}
+    {{ addOutput(output)|indent(4) }}
+
+    {% endfor %}
+
+    {% for branch in service.branches %}
+    {{ addBranch(branch)|indent(4) }}
+
+    {% endfor %}
+}
+{% endmacro %}
+{%- macro addSibLibrary(siblibrary) %}SIBLibrary {{ siblibrary.id }} {
+    {% for service in siblibrary.services %}
+    {% if service.type == "automated" %}
+    {{- addService(service)|indent(4) }}
+
+    {% else %}
+    {{- addTask(service)|indent(4) }}
+
+    {% endif %}
+    {% endfor %}
+
+}
+{%- endmacro %}
+{{- addSibLibrary(siblibrary) }}

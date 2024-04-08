@@ -1,5 +1,6 @@
 from fastapi import FastAPI, Request, BackgroundTasks
-from minio import Minio
+
+# from minio import Minio
 from kubernetes import client, config
 import jinja2
 import requests
@@ -15,6 +16,10 @@ LATEST_SIBS = "latest_sibs.json"
 OTHER_SIBS = "other_sibs.json"
 INSTALLED_SIBS = "installed_sibs.json"
 
+CURRENT_SIBS_IME_JSON = "current_ime_sibs.json"
+UTD_SIB_FILE = "lib.sibs"
+
+
 # ONTOLOGY_VERSION = "0.1.0"
 
 import utils 
@@ -27,8 +32,11 @@ import pathlib
 import json
 import logging
 
+from models import CheckSibFileHashRequest, HashValid, UtdSibFileResponse
+from cinco_interface import compute_local_hash, check_if_windows, convert_newlines
+import handlers
 
-env = jinja2.Environment(
+JINJA_ENV = jinja2.Environment(
     loader=jinja2.FileSystemLoader(TEMPLATE_DIR), 
     extensions=['jinja2_strcase.StrcaseExtension'])
 
@@ -48,102 +56,6 @@ def health_check_with_timeout(url, timeout):
 
     return False
 
-
-def check_if_local_state_exists():
-    state_path = pathlib.Path(PERSISTENT_STATE_MOUNT_PATH)
-    try:
-        with open(state_path / LATEST_SIBS, "r") as f:
-            json.loads(f.read())
-
-        with open(state_path / OTHER_SIBS, "r") as f:
-            json.loads(f.read())
-
-        with open(state_path / INSTALLED_SIBS, "r") as f:
-            json.loads(f.read())
-
-            return True
-
-    except FileNotFoundError:
-        return False
-
-
-
-def rebuild_service_api(dh_namespace):
-    static_path = pathlib.Path(STATIC_CODE_DIR)
-    state_path = pathlib.Path(PERSISTENT_STATE_MOUNT_PATH)
-    # Retrieve the set of sibs available from DH
-    latest, rest = utils.get_valid_images_from_namespace(dh_namespace)
-
-    # WRITE THEM TO LOCAL STATE - LATEST, INSTALLED, OTHER
-        # Initially, we will assume that all latest sibs are installed
-    with open(state_path / LATEST_SIBS, "w") as f:
-        json.dump(latest,f)
-
-    with open(state_path / INSTALLED_SIBS, "w") as f:
-        json.dump(latest,f)
-
-    with open(state_path / OTHER_SIBS, "w") as f:
-        json.dump(rest,f)
-
-    # logging.warning(f"Latest SIBs: {latest}")
-
-    # logging.warning(f"Latest SIBs: {latest}")
-
-    # Generate the code for the service-api
-    api_code, model_code = utils.code_gen(
-        template_env=env,
-        service_models=latest,   
-    )
-
-    # logging.warning(f"API CODE: {api_code}")
-
-    # Need to create the docker context
-
-    # Read the Dockerfile, k8s jobs and requirements.txt from static_code dir
-    with open(static_path / 'Dockerfile.txt', 'r') as f:
-        dfile = f.read()
-    
-    with open(static_path / 'k8sjobs.py', 'r') as f:
-        k8s_jobs_content = f.read()
-
-    with open(static_path / 'requirements.txt', 'r') as f:
-        requirements_content = f.read()
-
-    with open(static_path / 'utils.py', 'r') as f:
-        utils_content = f.read()
-
-    # logging.warning(f"API CODE: {api_code}")
-    # logging.warning(f"MODEL CODE: {model_code}")
-
-    if k8s_interface.prepare_build_context(
-        pfile_content=api_code,
-        mfile_content=model_code,
-        docker_image_content=dfile,
-        k8s_jobs_content= k8s_jobs_content,
-        requiremnts_txt_content=requirements_content,
-        utils_content = utils_content
-    ):
-
-        # Submit the kaniko job to build the service api image image
-        kaniko_job_name = k8s_interface.submit_kaniko_build(
-            image_name=os.getenv('SERVICE_API_NAME')
-        )
-        
-        if k8s_interface.get_kaniko_build_status(kaniko_job_name):
-            # Successfully built the service api image and pushed the image to the local registry
-            # Trigger rolling updates - currently assuming default namespace
-            k8s_interface.submit_rolling_update(
-                image_name=os.getenv('SERVICE_API_NAME'),
-                service_api_deployment_name=os.getenv('SERVICE_API_NAME')
-            )
-        else:
-            logging.error("Failed to build the service api image")
-
-           
-    else:
-        logging.error("Failed to create the docker context")
-
-
     
 
 @app.on_event("startup")
@@ -160,11 +72,15 @@ async def startup_event():
     
     
     # Depending on the health of the service-api and the local registry, we can decide whether to rebuild the service-api
-    if service_deployment_health_check and container_registry_health_check:
-
+    # also if the local state exists
+    if service_deployment_health_check and container_registry_health_check and handlers.check_if_local_state_exists():
         # If conditions are met, trigger the rebuild of the service-api
-        
-        rebuild_service_api(dh_namespace=os.getenv('DOCKER_HUB_NAMESPACE'))
+        if handlers.initial_build_service_api(dh_namespace=os.getenv('DOCKER_HUB_NAMESPACE')):
+            ...
+        else:
+            # Failure - for some reason the service-api deployment failed
+            # Need to log this and raise an error
+            logging.error(f"Failed to build the service-api image")
     else:
         # Failure - for some reason the service-api deployment failed
         # Need to log this and raise an error
@@ -199,17 +115,63 @@ def get_uninstalled_sibs():
     
 
 # This is the front end for the SIB Manager
-@app.get("/sib-manager")
+@app.get("/")
 def sib_manager(request: Request):
-    template = env.get_template("sib-manager.html.j2")
+    template = JINJA_ENV.get_template("sib-manager.html.j2")
     return template.render(request=request)
 
 
-@app.get("/update-installed-sibs")
+@app.post("/update-installed-sibs")
 def update_installed_sibs(request: Request, background_task: BackgroundTasks):
+
+    # need to implement the logic to update the installed sibs
 
     # state_path = pathlib.Path(PERSISTENT_STATE_MOUNT_PATH)
     # with open(state_path / INSTALLED_SIBS, "w") as f:
     #     json.dump(latest,f)
-
     ...
+
+    if handlers.update_service_api_and_sibs():
+        return {"status": "success"}, 200
+    else:
+        return {"status": "failure"}, 500
+
+
+
+# ALL KEYS MUST BE STRINGS
+
+# for use with the IME, it will compare the hash of the sib file
+# with the hash of the up to date sib file stored in the SIB Manager
+    
+
+# --- ENDPOINTS FOR THE ECLIPSE BASED IME ---
+
+@app.post("/sib-manager/check-sib-file-hash")
+async def check_sib_file_hash(body: CheckSibFileHashRequest):
+    
+    local_hash, local_hash_nl = compute_local_hash()
+    logging.warning(f"Local hash: {local_hash}, {local_hash_nl}")
+    logging.warning(f"File hash received: {body}")
+    # if hash is equal to neither, it's incorrect
+    if body.fileHash != local_hash and body.fileHash != local_hash_nl: 
+        return HashValid.INVALID
+    
+    return HashValid.VALID
+
+
+@app.get("/sib-manager/get-utd-sib-file")
+def get_utd_sib_file(request: Request):
+    user_agent = request.headers.get('User-Agent', '')
+    logging.warning(f"User-Agent: {user_agent}")
+    
+    # check if user is using Windows (then convert newlines to CRLF)
+    if check_if_windows(user_agent):
+        
+        return UtdSibFileResponse(
+                file=convert_newlines('lib.sibs')
+            )
+            
+    with open('lib.sibs', 'r') as f:
+        return UtdSibFileResponse(
+                file=f.read()
+            )

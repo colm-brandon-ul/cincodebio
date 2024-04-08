@@ -134,7 +134,10 @@ async def handles_callbacks(workflow_id: str, job: JobState):
 
 @app.post("/control/update-workflow/{workflow_id}")
 async def update_workflow_state(workflow_id: str, workflow_update: UpdateWorkflow):
-    update_workflow_in_db(workflow_id=workflow_id,workflow=workflow_update)
+
+    update_workflow_in_db(
+        workflow_id=workflow_id,
+        workflow=workflow_update)
 
 @app.get("/frontend/{workflow_id}", response_class=HTMLResponse)
 async def render_front_end(request: Request, workflow_id: str):
@@ -237,7 +240,11 @@ async def root(request: Request, background_tasks: BackgroundTasks, model: Uploa
     
     
     # Dispatch the model to the code generator
-    background_tasks.add_task(test_code_submission_handler, workflow_id = uuid, model = model_file.decode("utf-8"))
+    background_tasks.add_task(
+        test_code_submission_handler, 
+        workflow_id = uuid, 
+        model = model_file.decode("utf-8"))
+    
     logging.info(f"Dispatched model to Code Generator for Workflow: {uuid}") 
     
     

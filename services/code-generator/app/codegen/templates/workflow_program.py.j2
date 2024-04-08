@@ -1,0 +1,198 @@
+# Shared functions
+import time, os, requests, json
+WORKFLOW_LOG_PATH = os.getenv('WORKFLOW_LOG_PATH')
+WORKFLOW_ID = '{{ workflow_id }}'
+# Keyword for killing the workflow
+KILL_WORFLOW = 'KWORKFLOW'
+TIMEOUT = 60
+
+
+# Global Environment variables - same across all workflow programs
+SERVICE_API = os.environ.get('SERVICE_API_SERVICE_HOST')
+WORKFLOW_LOG_PATH = os.environ.get('WORKFLOW_LOGS_PATH')
+EXECUTION_API_SOCKET_ADDRESS = os.environ.get('EXECUTION_API_SERVICE_HOST')
+
+# specific to each workflow program
+CDB_EXTERNAL_URL = '{{ cdb_external_url }}'
+# Does this depend on automated or interactive?
+HEADERS = {
+    "cdb-workflow-id": WORKFLOW_ID,
+    "cdb-external-url": CDB_EXTERNAL_URL 
+    }
+
+# --- Shared API handling functions ---
+def monitor_logs_{{ workflow_id }}(
+        job_id: str) -> bool:
+    
+    """
+    Monitors the logs for a workflow, to see if flag for current submitted job is completed.
+    
+    Args:
+        job_id (str): The ID of the job to monitor.
+    
+    
+    Returns:
+        bool: True if the job is still running, False if the job has completed or been killed.
+    """
+
+    continue_wf = True
+    # Get logs
+    while True:
+        # Get logs file
+        f = open(f"{WORKFLOW_LOG_PATH}/{WORKFLOW_ID}.txt", "r")
+
+        if job_id in f.readlines()[-1]:
+        # The execution API has written to the logs that the job with that id has been completed
+            f.close()
+            break
+
+        elif KILL_WORFLOW in f.readlines()[-1]:
+            # The execution API has written to the logs that the job with that id has been killed
+            f.close()
+            continue_wf = False
+            break
+
+        
+        f.close()
+        # Wait for 1 second 
+        time.sleep(1)
+
+    return continue_wf
+
+def submit_job_{{ workflow_id }}(url: str, headers: dict, data: dict) -> str:
+    """
+    Submits a job to the specified URL with the given headers and data.
+
+    Args:
+        url (str): The URL to submit the job to.
+        headers (dict): The headers to include in the request.
+        data (dict): The data to include in the request body.
+
+    Returns:
+        str: The ID of the submitted job.
+
+    Raises:
+        requests.HTTPError: If the request was not successful.
+        requests.Timeout: If the request timed out.
+    """
+    while True:
+        res = requests.post(
+            url=url,
+            headers=headers,
+            json=data,
+            timeout=TIMEOUT
+        )
+
+        # rolling update case
+        if res.status_code in [502, 503, 504]:
+            # wait for 1 second and try again
+            time.sleep(1)
+            continue
+
+        else:
+            # raise an error if the request was not successful
+            res.raise_for_status()
+            # else break loop
+            break
+    
+    # return the job id
+    return json.loads(res.content)['id']
+
+
+
+def get_results_{{ workflow_id }}(url: str) -> dict:
+    """
+    Sends a GET request to the specified URL and returns the response content as a dictionary.
+    
+    Args:
+        url (str): The URL to send the GET request to.
+        
+    Returns:
+        dict: The response content as a dictionary.
+        
+    Raises:
+        requests.exceptions.HTTPError: If the request was not successful (status code >= 400).
+        requests.exceptions.Timeout: If the request timed out.
+    """
+
+    while True:
+        res = requests.get(
+            url=url,
+            timeout=TIMEOUT
+        )
+
+        # rolling update case
+        if res.status_code in [502, 503, 504]:
+            # wait for 1 second and try again
+            time.sleep(1)
+            continue
+
+        else:
+            # raise an error if the request was not successful
+            res.raise_for_status()
+            # else break loop
+            break
+    
+    return json.loads(res.content)
+# --- --- --- --- --- --- --- --- --- ---
+{%- macro formatDataForJSON(value) %}{%- set ns = namespace(latch=0) %}{%- for key, value in value.items() %}{%- if value.parent_key == "data"%}{%- if ns.latch == 0 %}{%- set ns.latch = 1 %},
+'data': { {%- endif %}
+    '{{ key }}': sib_id_{{ value.source_sib }}['{{ value.source_parent_key }}']['{{ value.source_key }}'],
+    {%- endif %}
+{%- endfor -%}
+{%- if ns.latch == 1%} }{% endif %}{% endmacro %}
+{%- macro formatWorkflowParametersForJSON(value) %}{%- set ns = namespace(latch=0) %}{%- for key, value in value.items() %}{%- if value.parent_key == "workflow_parameters"%}{%- if ns.latch == 0 %}{%- set ns.latch = 1 %},
+'workflow_parameters': { 
+        {%- endif %}
+    '{{ key }}': sib_id_{{ value.source_sib }}['{{ value.source_parent_key }}']['{{ value.source_key }}'],
+    {%- endif %}
+{%- endfor -%}
+{%- if ns.latch == 1%} }{% endif %}{% endmacro %}
+{%- macro formatServiceParametersForJSON(value) %}{%- set ns = namespace(latch=0) %}{%- for key, value in value.items() %}{%- if value.parent_key == "service_parameters"%}{%- if ns.latch == 0 %}{%- set ns.latch = 1 %},
+'service_parameters': { 
+        {%- endif %}
+    '{{ key }}': sib_id_{{ value.source_sib }}['{{ value.source_parent_key }}']['{{ value.source_key }}'],
+    {%- endif %}
+{%- endfor -%}
+{%- if ns.latch == 1%} }{% endif %}{% endmacro %}
+# --- Workflow specific functions ---
+{%- macro formatdata(_DATA) %}{ 'system_parameters': {'dataflow': {{ _DATA.dataflow }} }
+{{- formatDataForJSON(_DATA.data)|indent(12) -}}
+{{- formatWorkflowParametersForJSON(_DATA.data)|indent(12) -}}
+{{- formatServiceParametersForJSON(_DATA.data)|indent(12) -}}
+}{% endmacro %}
+{# This is where the bespoke wf code is generated #}
+{% macro sibrequest(_SIBID,_CONCEPT, _SIBNAME, _DATA) %}
+sib_api_submit_endpoint = f'http://{SERVICE_API}/{{ _CONCEPT | to_kebab  }}/{{ _SIBNAME  | to_kebab  }}'
+job_id_{{ _SIBID|replace("-", "_") }} = submit_job_{{ workflow_id|replace("-", "_") }}(
+    url = sib_api_submit_endpoint,
+    headers = HEADERS,
+    data = {{- formatdata(_DATA) }}) # this is what needs to be populated
+# Monitor logs
+continue_wf = monitor_logs_{{ workflow_id|replace("-", "_") }}(job_id=job_id_{{ _SIBID|replace("-", "_")  }})
+if not continue_wf: exit() ; # Kill the workflow
+# Get results
+{# had to use raw/endraw to add rendered variable name to format string #}
+sib_api_result_endpoint = f'http://{SERVICE_API}/{{ _CONCEPT | to_kebab  }}/{{ _SIBNAME | to_kebab  }}/{% raw %}{{% endraw %}job_id_{{ _SIBID|replace("-", "_") }}{% raw %}}{% endraw %}'
+# will throw exception if not successful
+sib_id_{{ _SIBID|replace("-", "_") }} =  get_results_{{ workflow_id|replace("-", "_") }}(url=sib_api_result_endpoint)
+{% endmacro %}
+
+{% macro generate_computational_graph(graph) %}
+{{- sibrequest(graph.sib, graph.concept, graph.name, graph.data)|indent(4*graph.bd)  }}
+{% for child in graph.children %}
+{% if loop.index0 == 0%}
+{% if graph.children|length > 1 %}
+if sib_id_{{ graph.sib|replace("-", "_") }} == '{{child[0]}}':
+{% endif%}
+{{- generate_computational_graph(child[1])}}
+{% else %}
+{% if graph.children|length > 1 %}
+elif sib_id_{{ graph.sib|replace("-", "_") }} == '{{child[0]}}':
+{% endif %}
+{{- generate_computational_graph(child[1])}}
+{% endif %}
+{% endfor %}
+{% endmacro %}
+{{ generate_computational_graph(computational_graph) }}
+

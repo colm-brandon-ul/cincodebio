@@ -21,7 +21,7 @@ logging.warning(res.content)
 # Submit Second Job to Service
 res = requests.post(f"http://{SERVICE_API}/start/init-tma", 
                     json={'system_parameters' : {
-                          'data_flow': {"tissue_micro_array" : True,
+                          'data_flow': {"whole_slide_image" : True,
                            "protein_channel_markers" : True,
                            "nuclear_stain": True,
                            "nuclear_markers" : True,
@@ -42,11 +42,16 @@ while True:
         # The execution API has written to the logs that the job with that id has been completed
         break
 
+f.close()
+
 logging.info(f"Job {job_details['id']} is completed")
 
 # Get Results
-res = requests.get(f"http://{SERVICE_API}/init/init-tma/{job_details['id']}")
+res = requests.get(f"http://{SERVICE_API}/start/init-tma/{job_details['id']}")
 result_1 = json.loads(res.content)
 
 logging.warning(result_1)
 
+
+# Finish Workflow
+res = requests.post(f"http://{EXECUTION_API_SOCKET_ADDRESS}/control/update-workflow/{workflow_id}", json={"status": "completed"})

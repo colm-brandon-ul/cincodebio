@@ -67,6 +67,13 @@ spec:
                 name: {{ .Values.nginxProxy.name }}
                 port:
                   number: 80
-
+          # Definitely needs to be available outside the cluster
+          - path: /sib-manager/(.*)$
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Values.sibManager.name }}
+                port:
+                  number: 80
 
      
