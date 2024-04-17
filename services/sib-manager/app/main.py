@@ -1,4 +1,6 @@
+from typing import List
 from fastapi import FastAPI, Request, BackgroundTasks
+from fastapi.responses import HTMLResponse
 
 # from minio import Minio
 from kubernetes import client, config
@@ -35,6 +37,24 @@ CURRENT_SIBS_IME_JSON = "current_ime_sibs.json"
 UTD_SIB_FILE = "lib.sibs"
 SIB_MAP_FILE = "sib_map.json"
 
+# K8S ENVIRONMENT VARIABLES (used in app)
+#     - CONTAINER_REGISTRY_DOMAIN_ON_HOST
+#     - DOCKER_BUILD_CONTEXT_VOLUME
+#     - DOCKER_BUILD_CONTEXT_MOUNT_PATH
+#     - DOCKER_HUB_NAMESPACE
+#     - KANIKO_IMAGE
+#     - KANIKO_BUILD_NAMESPACE
+#     - REGISTRY_NAME
+#     - REGISTRY_NAMESPACE
+#     - REGISTRY_PORT
+#     - SERVICE_API_SERVICE_HOST
+#     - SERVICE_API_SERVICE_PORT
+#     - SERVICE_API_NAME (for rolling update submission)
+#     - SIB_MANAGER_API_INGRESS_PATH
+
+
+    
+
 JINJA_ENV = jinja2.Environment(
     loader=jinja2.FileSystemLoader(TEMPLATE_DIR), 
     extensions=['jinja2_strcase.StrcaseExtension'])
@@ -42,30 +62,17 @@ JINJA_ENV = jinja2.Environment(
 app = FastAPI()
 
 
-def health_check_with_timeout(url, timeout):
-    start_time = time.time()
-    
-    while time.time() - start_time < timeout:
-        try:
-            response = requests.get(url)
-            if response.status_code == 200:
-                return True
-        except requests.exceptions.RequestException:
-            pass
-
-    return False
-
     
 
 @app.on_event("startup")
 async def startup_event():
     config.load_incluster_config()
     # Check if the service-api is available (i.e. deplyoment successful.)
-    service_deployment_health_check = health_check_with_timeout(
+    service_deployment_health_check = handlers.health_check_with_timeout(
         url =f"http://{os.getenv('SERVICE_API_SERVICE_HOST')}:{os.getenv('SERVICE_API_SERVICE_PORT')}/health",
         timeout=300)
     
-    container_registry_health_check = health_check_with_timeout(
+    container_registry_health_check = handlers.health_check_with_timeout(
         url=f"http://{os.getenv('REGISTRY_NAME')}.{os.getenv('REGISTRY_NAMESPACE')}.svc.cluster.local:{os.getenv('REGISTRY_PORT')}",
         timeout=300)
     
@@ -116,21 +123,46 @@ def get_uninstalled_sibs():
 # This is the front end for the SIB Manager
 @app.get("/")
 def sib_manager(request: Request):
-    template = JINJA_ENV.get_template("sib-manager.html.j2")
-    return template.render(request=request)
+
+    state_path = pathlib.Path(PERSISTENT_STATE_MOUNT_PATH)
+
+
+    with open(state_path / LATEST_SIBS ) as f:
+        latest_sibs = json.load(f)
+
+    with open(state_path / INSTALLED_SIBS ) as f:
+        installed_sibs = json.load(f)
+    
+    with open(state_path / OTHER_SIBS ) as f:
+        other_sibs = json.load(f)
+    
+    # get the sib names 
+    latest = [sib['cincodebio.schema']['service_name'] for sib in latest_sibs if sib] 
+    rest = [sib['cincodebio.schema']['service_name'] for sib in other_sibs if sib]
+    installed = [sib['cincodebio.schema']['service_name'] for sib in installed_sibs if sib]
+
+    # sort the lists so they are displayed in a alphabetical order
+    latest.sort(),rest.sort(),installed.sort()
+
+    submit_url = f'{request.base_url.__str__()}{os.getenv("SIB_MANAGER_API_INGRESS_PATH")}/update-installed-sibs'
+
+    
+    return HTMLResponse(content=JINJA_ENV.get_template("sib-manager.html.j2").render(**{
+        "submit_url": submit_url,
+        "latest": latest,
+        "rest": rest,
+        "installed": installed
+        }))
+
 
 
 @app.post("/update-installed-sibs")
-def update_installed_sibs(request: Request, background_task: BackgroundTasks):
+def update_installed_sibs(body: List, request: Request, background_task: BackgroundTasks):
 
-    # need to implement the logic to update the installed sibs
+    # get the list of sibs to be installed from the request body
+    tbi_sib_list = handlers.resolve_to_be_installed_sibs(body)
 
-    # state_path = pathlib.Path(PERSISTENT_STATE_MOUNT_PATH)
-    # with open(state_path / INSTALLED_SIBS, "w") as f:
-    #     json.dump(latest,f)
-    ...
-
-    if handlers.update_service_api_and_sibs():
+    if handlers.update_service_api_and_sibs(tbi_sib_list):
         return {"status": "success"}, 200
     else:
         return {"status": "failure"}, 500
@@ -152,32 +184,32 @@ def get_sib_map(request: Request):
 
 # --- ENDPOINTS FOR THE ECLIPSE BASED IME ---
 
-@app.post("/check-sib-file-hash")
+@app.post("/check-sib-file-hash", response_model=HashValid)
 async def check_sib_file_hash(body: CheckSibFileHashRequest):
     
     local_hash, local_hash_nl = compute_local_hash()
     logging.info(f"Local hash: {local_hash}, {local_hash_nl}")
     logging.info(f"File hash received: {body}")
-    # if hash is equal to neither, it's incorrect
+    # if hash is equal to nither, it's incorrect
     if body.fileHash != local_hash and body.fileHash != local_hash_nl: 
         return HashValid.INVALID
-    
     return HashValid.VALID
 
 
-@app.get("/get-utd-sib-file")
+@app.get("/get-utd-sib-file", response_model=UtdSibFileResponse)
 def get_utd_sib_file(request: Request):
     user_agent = request.headers.get('User-Agent', '')
+    state_path = pathlib.Path(PERSISTENT_STATE_MOUNT_PATH)
     logging.info(f"User-Agent: {user_agent}")
     
     # check if user is using Windows (then convert newlines to CRLF)
     if check_if_windows(user_agent):
         
         return UtdSibFileResponse(
-                file=convert_newlines('lib.sibs')
+                file=convert_newlines(state_path / UTD_SIB_FILE)
             )
             
-    with open('lib.sibs', 'r') as f:
+    with open(state_path / UTD_SIB_FILE , 'r') as f:
         return UtdSibFileResponse(
                 file=f.read()
             )

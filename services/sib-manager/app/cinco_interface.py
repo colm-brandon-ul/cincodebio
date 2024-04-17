@@ -4,36 +4,11 @@ from typing import Dict, List, Tuple
 import uuid
 
 import jinja2
+import pathlib
+from main import (STATIC_CODE_DIR,PERSISTENT_STATE_MOUNT_PATH,LATEST_SIBS,UTD_SIB_FILE)
 
 OS_REGEX = re.compile(r'\((.*?)\;')
 EXCLUDED_LABELS = ['id','label_id']
-
-def compute_local_hash() -> tuple[str, str]:
-    """
-    Compute the SHA-256 hash of a the locally stored sib fiel and return the hash values.
-    Computes two hash values, one with and one without a newline character at the end of the file (as the local IDE may add it).
-
-    Returns:
-        A tuple of two strings representing the SHA-256 hash values.
-    """
-    # read the file
-    with open('lib.sibs', 'rb') as f:
-        og_str = f.read()
-    
-    # some OS's / IDE may add a newline at the end of the file
-    
-    encoded_str = og_str + b"\n"    
-    
-    sha_256 = hashlib.sha256()
-    sha_256.update(og_str)
-    hex_dig = sha_256.hexdigest()
-    
-    sha_256_nl = hashlib.sha256()
-    sha_256_nl.update(encoded_str)
-    hex_dig_nl = sha_256_nl.hexdigest()
-    
-    return hex_dig, hex_dig_nl
-
 
 def check_if_windows(user_agent: str) -> bool:
     """
@@ -52,8 +27,35 @@ def check_if_windows(user_agent: str) -> bool:
             return True
     return False
 
+def compute_local_hash() -> tuple[str, str]:
+    """
+    Compute the SHA-256 hash of a the locally stored sib fiel and return the hash values.
+    Computes two hash values, one with and one without a newline character at the end of the file (as the local IDE may add it).
 
-def convert_newlines(input_file: str) -> str:
+    Returns:
+        A tuple of two strings representing the SHA-256 hash values.
+    """
+    # read the file
+    state_path = pathlib.Path(PERSISTENT_STATE_MOUNT_PATH)
+    with open(state_path / UTD_SIB_FILE, 'rb') as f:
+        og_str = f.read()
+    
+    # some OS's / IDE may add a newline at the end of the file
+    
+    encoded_str = og_str + b"\n"    
+    
+    sha_256 = hashlib.sha256()
+    sha_256.update(og_str)
+    hex_dig = sha_256.hexdigest()
+    
+    sha_256_nl = hashlib.sha256()
+    sha_256_nl.update(encoded_str)
+    hex_dig_nl = sha_256_nl.hexdigest()
+    
+    return hex_dig, hex_dig_nl
+
+
+def convert_newlines(input_file: pathlib.Path) -> str:
     """
     Convert newlines in a file to the appropriate format, i.e. CRLF for Windows.
 

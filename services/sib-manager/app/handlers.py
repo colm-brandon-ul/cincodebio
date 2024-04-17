@@ -1,6 +1,6 @@
 from typing import List
 from main import (STATIC_CODE_DIR,PERSISTENT_STATE_MOUNT_PATH,LATEST_SIBS,
-                  OTHER_SIBS,INSTALLED_SIBS, JINJA_ENV, CURRENT_SIBS_IME_JSON, SIB_MAP_FILE)
+                  OTHER_SIBS,INSTALLED_SIBS, JINJA_ENV, CURRENT_SIBS_IME_JSON, SIB_MAP_FILE, UTD_SIB_FILE)
 import pathlib
 import utils
 import k8s_interface, cinco_interface
@@ -9,7 +9,20 @@ import json
 import logging
 
 import requests
+import time
 
+def health_check_with_timeout(url, timeout):
+    start_time = time.time()
+    
+    while time.time() - start_time < timeout:
+        try:
+            response = requests.get(url)
+            if response.status_code == 200:
+                return True
+        except requests.exceptions.RequestException:
+            pass
+
+    return False
 
 def update_code_gen_maps(new_sib_maps: dict) -> bool:
     """
@@ -126,7 +139,7 @@ def initial_build_service_api(dh_namespace: str) -> bool:
             new_lib_dot_sibs = cinco_interface.code_gen(JINJA_ENV,new_ime_sib_library_schema)
 
             # Write the new lib.sibs to the static code dir
-            with open(static_path / 'lib.sibs', "w") as f:
+            with open(static_path / UTD_SIB_FILE, "w") as f:
                 f.write(new_lib_dot_sibs)
 
             # Write the new sib schema to the current sib schema file
@@ -180,10 +193,37 @@ def check_if_local_state_exists() -> bool:
         return False
 
 
+def resolve_to_be_installed_sibs(new_installed_list: List) -> List:
+    """
+        This function resolves the installed SIBs from the set of available (latest and other) SIBs and returns a list of the full service schema for those SIBs.
+
+        Args:
+            new_installed_list (List): The list of to be installed SIBs (service names only)
+        
+        Returns:
+            List: The list of to be installed SIBs (full service schema format (image, cincodebio.schema, cincodebio.ontology_version, etc..))
+
+    """
+
+    state_path = pathlib.Path(PERSISTENT_STATE_MOUNT_PATH)
+    with open(state_path / LATEST_SIBS, "r") as f:
+        # opens the list of latest sibs
+        latest_sibs = json.load(f)
+
+    with open(state_path / OTHER_SIBS, "r") as f:
+        # opens the list of latest sibs
+        other_sibs = json.load(f)
+
+    sib_latest_tbi = [sib for sib in latest_sibs if sib['cincodebio.schema']['service_name'] in new_installed_list]
+    sib_rest_tbi = [sib for sib in other_sibs if sib['cincodebio.schema']['service_name'] in new_installed_list]
+
+    all_sibs_tbi = sib_latest_tbi + sib_rest_tbi
+
+    return all_sibs_tbi
 
 
 # There's alot of redundancy in the code below w.r.t initial_build_service_api. I think we can refactor them into a single function (or similar)
-def update_service_api_and_sibs() -> bool:
+def update_service_api_and_sibs(to_be_installed_sibs: List) -> bool:
     """
     Updates the service API and SIBs by generating code, building Docker images, and updating schemas and maps.
 
@@ -196,14 +236,14 @@ def update_service_api_and_sibs() -> bool:
 
 
 
-    with open(state_path / INSTALLED_SIBS, "r") as f:
-        # opens the list of installed sibs
-        installed_sibs = json.load(f)
+    # with open(state_path / INSTALLED_SIBS, "r") as f:
+    #     # opens the list of installed sibs
+    #     installed_sibs = json.load(f)
 
     # Generate the code for the service-api
     api_code, model_code = utils.code_gen(
         template_env=JINJA_ENV,
-        service_models=installed_sibs,   
+        service_models=to_be_installed_sibs,   
     )
 
     # Read the Dockerfile, k8s jobs and requirements.txt from static_code dir
@@ -245,7 +285,7 @@ def update_service_api_and_sibs() -> bool:
             # If the service api image was successfully built, update the sib maps and code gen schema
 
             # from the new set of installed sibs, generate the new sib maps and code gen schema
-            sib_i_map, sib_o_map, sib_ab_map, utd_sib_schemas = cinco_interface.cincodebio_schema_to_sibfile_format(installed_sibs)
+            sib_i_map, sib_o_map, sib_ab_map, utd_sib_schemas = cinco_interface.cincodebio_schema_to_sibfile_format(to_be_installed_sibs)
 
             # Read the schema of the last ime sib library that was generated (from file)
             with open(state_path / CURRENT_SIBS_IME_JSON, "r") as f:
@@ -254,15 +294,21 @@ def update_service_api_and_sibs() -> bool:
             # resolve differences between the new and old sib schemas
             new_ime_sib_library_schema = cinco_interface.get_new_ime_sib_library(current_ime_sib_schema["services"],utd_sib_schemas)
 
-            new_lib_dot_sibs = cinco_interface.code_gen(JINJA_ENV,new_ime_sib_library_schema)
+            new_lib_dot_sibs = cinco_interface.code_gen(
+                JINJA_ENV,
+                new_ime_sib_library_schema)
 
             # Write the new lib.sibs to the static code dir
-            with open(static_path / 'lib.sibs', "w") as f:
+            with open(static_path / UTD_SIB_FILE, "w") as f:
                 f.write(new_lib_dot_sibs)
 
             # Write the new sib schema to the current sib schema file
             with open(state_path / CURRENT_SIBS_IME_JSON, "w") as f:
                 json.dump(new_ime_sib_library_schema,f)
+
+            # update the installed sibs json file
+            with open(state_path / INSTALLED_SIBS, "w") as f:
+                json.dump(to_be_installed_sibs,f)
 
             
             if update_code_gen_maps(cinco_interface.formatSibMap(sib_i_map, sib_o_map, sib_ab_map)):

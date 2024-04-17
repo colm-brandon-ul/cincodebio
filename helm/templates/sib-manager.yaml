@@ -83,6 +83,8 @@ spec:
             value: {{ .Values.serviceApi.name }}
           - name: DOCKER_HUB_NAMESPACE
             value: {{ .Values.global.docker_hub_namespace}}
+          - name: SIB_MANAGER_API_INGRESS_PATH
+            value: {{ .Values.global.sib_manager_ingress_path }}
           - name: CINCO_DE_BIO_NAMESPACE
             valueFrom:
               fieldRef:

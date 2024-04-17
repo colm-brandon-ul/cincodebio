@@ -38,7 +38,6 @@ This function prepares the build context for kaniko
 """
 
 
-
 try:
     config.load_incluster_config()  
 except:

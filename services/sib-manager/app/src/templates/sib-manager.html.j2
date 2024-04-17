@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>SIB Installation Manager</title>
+    <style>
+        /* Global Styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        /* Loading Modal Style */
+        .loading {
+            display: none;
+            position: fixed;
+            top: 0vh;
+            left: 0vw;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 9999;
+            text-align: center;
+            text-transform: uppercase; 
+            font-size: 60px;
+            line-height: 100vh;
+        }
+
+
+        /* Container Styles */
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        /* Lists Styles */
+        .lists {
+            display: flex;
+            justify-content: space-between;
+            width: 60vw;
+        }
+
+        .list {
+            width: 20vw;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f5f5f5;
+        }
+
+        .list h3 {
+            margin: 0;
+            padding: 5px 0;
+            font-size: 16px;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        /* List Item Styles */
+        .list-item {
+            margin-bottom: 5px;
+            padding: 5px;
+            cursor: pointer;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            transition: background-color 0.3s ease;
+        }
+
+        .list-item:hover {
+            background-color: #f0f0f0;
+        }
+
+        .list-item.selected {
+            background-color: #ccc;
+        }
+
+        /* Button Styles */
+        .button {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="lists">
+            <div class="list">
+                <h3>Latest Version</h3>
+                {% for item in latest %}
+                    <div class="list-item" onclick="moveItem(this, 'installed')" data-item="{{ item }}">{{ item }}</div>
+                {% endfor %}
+            </div>
+            <div class="list">
+                <h3>Older Version (s)</h3>
+                {% for item in rest %}
+                    <div class="list-item" onclick="moveItem(this, 'installed')" data-item="{{ item }}">{{ item }}</div>
+                {% endfor %}
+            </div>
+            <div class="list" id="installed">
+                <h3>Installed</h3>
+                {% for item in installed %}
+                    <div class="list-item" onclick="removeItem(this)" data-item="{{ item }}">{{ item }}</div>
+                {% endfor %}
+            </div>
+        </div>
+        <button onclick="submit()">Submit</button>
+    </div>
+    <div class="loading">Loading...</div>
+
+    
+
+    <script>
+
+        function showLoading() {
+            document.querySelector('.loading').style.display = 'block';
+        }
+
+        function hideLoading() {
+            document.querySelector('.loading').style.display = 'none';
+        }
+
+        function moveItem(item, targetList) {
+            var target = document.getElementById(targetList);
+            var itemData = item.getAttribute('data-item');
+            var existingItems = target.querySelectorAll('.list-item[data-item="' + itemData + '"]');
+            
+            if (existingItems.length === 0) {
+                if (!item.classList.contains('selected')) {
+                    var clonedItem = item.cloneNode(true);
+                    clonedItem.onclick = function() {
+                        removeItem(this);
+                    };
+                    target.appendChild(clonedItem);
+
+
+                    //clonedItem.classList.add('selected');
+                } else {
+                    target.removeChild(item);
+                    item.classList.remove('selected');
+                }
+            }
+        }
+
+        function removeItem(item) {
+            console.log("removeItem function called");
+            var target = item.parentNode;
+            target.removeChild(item);
+        }
+
+        function submit() {
+            showLoading();
+            var installedItems = document.querySelectorAll('#installed .list-item');
+            var dataArray = [];
+            installedItems.forEach(function(item) {
+                dataArray.push(item.getAttribute('data-item'));
+            });
+            console.log(dataArray);
+
+            fetch('{{ submit_url }}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(dataArray),
+            })
+            .then(response => response.json())
+            .then(data => {
+                hideLoading();
+                console.log('Success:', data.status);
+                if (data.status === 'success') {
+                    alert('Software Installation Successful');
+                    location.reload();
+                } else {
+                    alert('Software Installation Failed');
+                }
+             
+            })
+            .catch((error) => {
+                hideLoading();
+                console.error('Error:', error);
+            });
+
+        }
+        
+
+    </script>
+</body>
+</html>

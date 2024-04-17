@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Experiment Form</title>
+</head>
+<body>
+    <h1>Experiment Form</h1>
+    
+    <form id="main-form">
+        <label for="experiment-type">Experiment Type:</label>
+        <select id="experiment-type" name="experiment-type">
+            <option value="TMA">TMA</option>
+            <option value="WSI">WSI</option>
+        </select>
+        
+        <br><br>
+        
+        <label for="image-file">Image File:</label>
+        <input type="file" id="image-file" name="image-file" accept="" onchange="updateAcceptAttribute('image-file')">
+        
+        <br><br>
+        
+        <label for="channel-markers-file">Channel Markers File:</label>
+        <input type="file" id="channel-markers-file" name="channel-markers-file" accept="" onchange="updateAcceptAttribute('channel-markers-file')">
+        
+        <br><br>
+    </form>
+    
+    <button onclick="addForm()">Add Form</button>
+    <button onclick="removeForm()">Remove Form</button>
+    <button onclick="submitForms()">Submit</button>
+    
+    <script>
+        function updateAcceptAttribute(fileInputId) {
+            var experimentType = document.getElementById("experiment-type").value;
+            var fileInput = document.getElementById(fileInputId);
+            
+            if (experimentType === "TMA") {
+                if (fileInputId === "image-file") {
+                    fileInput.accept = "image/*";
+                } else if (fileInputId === "channel-markers-file") {
+                    fileInput.accept = ".txt";
+                }
+            } else if (experimentType === "WSI") {
+                if (fileInputId === "image-file") {
+                    fileInput.accept = "image/*";
+                } else if (fileInputId === "channel-markers-file") {
+                    fileInput.accept = ".csv";
+                }
+            }
+        }
+        
+        document.getElementById("experiment-type").addEventListener("change", function() {
+            updateAcceptAttribute("image-file");
+            updateAcceptAttribute("channel-markers-file");
+        });
+        
+        function addForm() {
+            var form = document.createElement("form");
+            
+            var label1 = document.createElement("label");
+            label1.setAttribute("for", "experiment-type");
+            label1.textContent = "Experiment Type:";
+            form.appendChild(label1);
+            
+            var select = document.createElement("select");
+            select.setAttribute("id", "experiment-type");
+            select.setAttribute("name", "experiment-type");
+            select.addEventListener("change", function() {
+            });
+            
+            var option1 = document.createElement("option");
+            option1.setAttribute("value", "TMA");
+            option1.textContent = "TMA";
+            select.appendChild(option1);
+                
+            var option2 = document.createElement("option");
+            option2.setAttribute("value", "WSI");
+            option2.textContent = "WSI";
+            select.appendChild(option2);
+            
+            form.appendChild(select);
+            
+            var br0 = document.createElement("br");
+            var br0_ = document.createElement("br");
+            form.appendChild(br0);
+            form.appendChild(br0_);
+            
+            var label2 = document.createElement("label");
+            label2.setAttribute("for", "image-file");
+            label2.textContent = "Image File:";
+            form.appendChild(label2);
+            
+            var input1 = document.createElement("input");
+            input1.setAttribute("type", "file");
+            input1.setAttribute("id", "image-file");
+            input1.setAttribute("name", "image-file");
+            input1.setAttribute("accept", "");
+            input1.setAttribute("onchange", "updateAcceptAttribute('image-file')");
+            form.appendChild(input1);
+            
+            var br1 = document.createElement("br");
+            form.appendChild(br1);
+            form.appendChild(br1);
+            
+            var label3 = document.createElement("label");
+            label3.setAttribute("for", "channel-markers-file");
+            label3.textContent = "Channel Markers File:";
+            form.appendChild(label3);
+            
+            var input2 = document.createElement("input");
+            input2.setAttribute("type", "file");
+            input2.setAttribute("id", "channel-markers-file");
+            input2.setAttribute("name", "channel-markers-file");
+            input2.setAttribute("accept", "");
+            input2.setAttribute("onchange", "updateAcceptAttribute('channel-markers-file')");
+            form.appendChild(input2);
+            
+            var br2 = document.createElement("br");
+            form.appendChild(br2);
+            form.appendChild(br2);
+            
+            document.body.appendChild(form);
+        }
+        
+        function removeForm() {
+            var forms = document.getElementsByTagName("form");
+            
+            if (forms.length > 1) {
+                forms[forms.length - 1].remove();
+            }
+        }
+        
+        function submitForms() {
+            var forms = document.getElementsByTagName("form");
+            
+            for (var i = 0; i < forms.length; i++) {
+                forms[i].submit();
+            }
+        }
+    </script>
+</body>
+</html>

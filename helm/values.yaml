@@ -84,4 +84,5 @@ global:
     domain_on_host: "localhost:32000"
   execution_api_ingress_path: 'execution-api'
   services_api_ingress_path: 'services-api'
+  sib_manager_ingress_path: 'sib-manager'
   

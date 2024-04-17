@@ -1,0 +1,58 @@
+<!-- Ability to select and upload Images (with appropriate file types ) -->
+<!-- This needs to be extracted from the ontology (i.e. Cellmaps) -->
+    <!-- i.e. the allowed filetypes  -->
+<!-- Deposit them in a minio bucket and tag them (i.e. TMA/WSI/etc..) -->
+
+<!-- 
+    Upload an experiment -> what is the experiment? TMA -> TMA + Marker List (etc..)
+
+ -->
+
+
+ <html>
+<head>
+    <title>Upload Files</title>
+</head>
+<body>
+<div>
+<form id="uploadForm" action="/upload" method="post" enctype="multipart/form-data">
+    <select id="fileTypeSelect">
+        <option value="TMA">TMA</option>
+        <option value="WSI">WSI</option>
+    </select>
+    <input type="file" name="files[]" accept=".jpg, .jpeg, .png">
+    <button type="button" onclick="addFileInput()">Add File</button>
+    <button type="button" onclick="removeFileInput()">Remove File</button>
+    <button type="submit">Upload</button>
+</form>
+</div>
+<script>
+    document.getElementById("fileTypeSelect").addEventListener("change", function() {
+        var selectedOption = this.value;
+        console.log("You selected: ", selectedOption);
+        // You can add more code here to perform actions based on the selected x§x§option
+    });
+
+    function addFileInput() {
+        var input = document.createElement("input");
+        input.type = "file";
+        input.name = "files[]";
+        document.getElementById("uploadForm").appendChild(input);
+    }
+
+    function removeFileInput() {
+        var form = document.getElementById("uploadForm");
+        var inputs = form.getElementsByTagName("input");
+        if (inputs.length > 1) {
+            form.removeChild(inputs[inputs.length - 1]);
+        }
+    }
+</script>
+</body>
+</html>
+
+<!-- Experiment (1 form per experiment)
+        Files -->
+
+
+<!-- Retrieve Upload URL from Minio -->
