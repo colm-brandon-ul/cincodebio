@@ -73,7 +73,7 @@
             option1.setAttribute("value", "TMA");
             option1.textContent = "TMA";
             select.appendChild(option1);
-                
+
             var option2 = document.createElement("option");
             option2.setAttribute("value", "WSI");
             option2.textContent = "WSI";
@@ -138,6 +138,28 @@
                 forms[i].submit();
             }
         }
+
+        ocument.getElementById('upload-form').addEventListener('submit', function(event) {
+        event.preventDefault(); // Prevent the form from submitting normally
+
+        var fileInput = document.getElementById('file-upload');
+        var file = fileInput.files[0]; // Get the selected file
+
+        if (file) {
+            var formData = new FormData();
+            formData.append('file', file);
+
+            fetch('http://localhost:8080/upload', { // Replace with your server URL
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => console.log(data))
+            .catch(error => console.error(error));
+        }
+    });
+
+
     </script>
 </body>
 </html>
