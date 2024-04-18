@@ -75,5 +75,13 @@ spec:
                 name: {{ .Values.sibManager.name }}
                 port:
                   number: 80
+          
+          - path: /data-manager/(.*)$
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Values.dataManager.name }}
+                port:
+                  number: 80
 
      

@@ -1,13 +1,16 @@
 from fastapi import FastAPI, Request
-from fastapi.responses import HTMLResponse
+from fastapi.responses import FileResponse, HTMLResponse
+from fastapi.staticfiles import StaticFiles
 from jinja2 import Environment, FileSystemLoader
 from minio import Minio
 from minio.commonconfig import Tags
 import logging, os
 
+
 from urllib.parse import urlparse
 
 app = FastAPI()
+app.mount("/static", StaticFiles(directory="static"), name="static")
 
 # to be populated - do I want a seperate namespace for jobs?
 MINIO_ACCESS_KEY = os.environ.get('MINIO_ACCESS_KEY')
@@ -68,9 +71,7 @@ def make_external_url(request_base_url: str, presigned_url: str) -> str:
 @app.get("/")
 def read_root():
     # This will need to be generated based on the ontology version installed
-    with open("static/index.html") as f:
-        content = f.read()
-    return HTMLResponse(content=content)
+    return FileResponse('static/index.html')
 
     
 

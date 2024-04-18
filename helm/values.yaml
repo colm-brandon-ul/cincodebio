@@ -34,6 +34,10 @@ jobsApi:
   image: sccecincodebio/jobs-api:latest
   name: jobs-api
 
+dataManager:
+  image: sccecincodebio/data-manager:latest
+  name: data-manager
+
 executionApi:
   image: sccecincodebio/execution-api:latest
   name: execution-api
