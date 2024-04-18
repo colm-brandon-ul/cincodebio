@@ -135,9 +135,9 @@
 
             var fileInputs = document.querySelectorAll('input[type="file"]');
             
+            
 
-
-            let fetchP = fetch('/check-prefix?prefix=' + fileInput.id.value)
+            let fetchP = fetch('/data-manager/check-prefix?prefix=' + fileInput.id.value)
                 .then(response => response.json())
                 .then(data => {
                     if (data) {
@@ -145,7 +145,7 @@
                             var file = input.files[0];
                             console.log(file);
                             // Perform actions with the file here
-                            let fetchp2 = fetch('/get-presigned-upload-url?prefix=' + fileInput.id.value + '&object_name=' + file.name + '&content_type=' + file.type)
+                            let fetchp2 = fetch('/data-manager/get-presigned-upload-url?prefix=' + fileInput.id.value + '&object_name=' + file.name + '&content_type=' + file.type)
                                 .then(response => response.json())
                                 .then(data => {
                                     if (file) {
@@ -157,7 +157,7 @@
                                             .then(response => response)
                                             .then(data => {
                                                 console.log(data);
-                                                let fetchp4 = fetch('/add-tags?prefix=' + fileInput.id.value + '&object_name=' + file.name + '&content_type=' + file.type + '&experimental_tag=' + fileInput.fileTypeSelect.value)
+                                                let fetchp4 = fetch('/data-manager/add-tags?prefix=' + fileInput.id.value + '&object_name=' + file.name + '&content_type=' + file.type + '&experimental_tag=' + fileInput.fileTypeSelect.value)
                                                     .then(response => response.json())
                                                     .then(data => {
                                                         //console.log("Files uploaded successfully!");
