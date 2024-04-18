@@ -10,7 +10,7 @@ import logging, os
 from urllib.parse import urlparse
 
 app = FastAPI()
-app.mount("/static", StaticFiles(directory="/static"), name="static")
+app.mount("/static", StaticFiles(directory="static"), name="static")
 
 # to be populated - do I want a seperate namespace for jobs?
 MINIO_ACCESS_KEY = os.environ.get('MINIO_ACCESS_KEY')
