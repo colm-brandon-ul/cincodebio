@@ -23,4 +23,5 @@
 .vscode/
 
 # Files to not include in the package (currently)
-# code-generator.yaml
+code-generator.yaml
+sib-manager.yaml
