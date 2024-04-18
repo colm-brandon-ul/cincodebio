@@ -10,7 +10,7 @@ import logging, os
 from urllib.parse import urlparse
 
 app = FastAPI()
-app.mount("/static", StaticFiles(directory="static"), name="static")
+app.mount("/static", StaticFiles(directory="/static"), name="static")
 
 # to be populated - do I want a seperate namespace for jobs?
 MINIO_ACCESS_KEY = os.environ.get('MINIO_ACCESS_KEY')
@@ -143,7 +143,7 @@ def presigned_upload_url(prefix: str, object_name: str , content_type: str, requ
     TEST_BUCKET,
     object_name=f'{prefix}/{object_name}',)
 
-    return url
+    return make_external_url(request.base_url.__str__(),url)
 
 
 @app.get("/add-tags")
