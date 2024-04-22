@@ -78,7 +78,7 @@ async def startup_event():
     
     # Depending on the health of the service-api and the local registry, we can decide whether to rebuild the service-api
     # also if the local state exists
-    if service_deployment_health_check and container_registry_health_check and handlers.check_if_local_state_exists():
+    if service_deployment_health_check and container_registry_health_check and not handlers.check_if_local_state_exists():
         # If conditions are met, trigger the rebuild of the service-api
         if handlers.initial_build_service_api(dh_namespace=os.getenv('DOCKER_HUB_NAMESPACE')):
             ...
