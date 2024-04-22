@@ -17,6 +17,13 @@ minio:
       - name: MINIO_BROWSER_REDIRECT_URL
         value: "http://192.168.64.2/minio-console/"
 
+rabbitmq:
+  nameOverride: "rabbitmq"
+  fullnameOverride: "rabbitmq"
+  auth:
+    username: "myuser"
+    password: "mypassword"
+
 mongodb:
   image: mongo:latest
   workflowdb:
@@ -65,13 +72,6 @@ executionEnvironment:
   image: sccecincodebio/execution-environment:latest
   name: execution-environment
 
-rabbitmq:
-  nameOverride: "rabbitmq"
-  fullnameOverride: "rabbitmq"
-  # Need to be updated, but are fine for now
-  auth:
-    user: "guest"
-    password: "guest"
 
 global:
   ontology_url: "http://"
@@ -89,4 +89,5 @@ global:
   execution_api_ingress_path: 'execution-api'
   services_api_ingress_path: 'services-api'
   sib_manager_ingress_path: 'sib-manager'
+  application_namespace: "default"
   

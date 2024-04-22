@@ -52,9 +52,9 @@ async def startup_event():
 
 
 @app.post("/model/submit")
-async def root(model: UploadFile, request: Request, background_tasks: BackgroundTasks):
+async def root(request: Request, background_tasks: BackgroundTasks, model: UploadFile = File(...)):
     # Let the full file upload
-    model_file = await model.read()
+    model_file = model.file.read()
 
     # Create Workflow Object
     wf_obj = Workflow(status="submitted", state=[])

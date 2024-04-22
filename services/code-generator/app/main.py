@@ -22,7 +22,7 @@ SIB_MANAGER_ADDRESS = f'http://{os.environ.get("SIB_MANAGER_SERVICE_HOST")}:{os.
 
 # RabbitMQ ENV Variables
 RABBIT_MQ_HOST = os.environ.get('RABBITMQ_SERVICE_HOST')
-RABBIT_MQ_PORT = os.environ.get('RABBITMQ_SERVICE_PORT')
+RABBIT_MQ_PORT = int(os.environ.get('RABBITMQ_SERVICE_PORT'))
 
 EXCHANGE_NAME = os.environ.get('CODE_GENERATOR_EXCHANGE_NAME')
 EXCHANGE_TYPE = ExchangeType.direct

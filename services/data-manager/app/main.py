@@ -6,11 +6,10 @@ from minio import Minio
 from minio.commonconfig import Tags
 import logging, os
 
-
 from urllib.parse import urlparse
 
-app = FastAPI()
-app.mount("/static", StaticFiles(directory="static"), name="static")
+
+
 
 # to be populated - do I want a seperate namespace for jobs?
 MINIO_ACCESS_KEY = os.environ.get('MINIO_ACCESS_KEY')
@@ -23,9 +22,8 @@ MINIO_FQDN = f'{os.environ.get("MINIO_SERVICE_HOSTNAME")}.{os.environ.get("CINCO
 MINIO_SERVICE_PORT = os.environ.get('MINIO_SERVICE_PORT')
 MINIO_PRESIGNED_EXTERNAL_PATH = 'minio-presigned'
 
-TEMP_MIN_CRED = "Q3AM3UQ867SPQQA43P2F"
-TEMP_MIN_PASS = 'zuf+tfteSlswRu7BJ86wekitnifILbZam1KYY3TG'
-TEST_BUCKET = "cdbtest"
+app = FastAPI()
+app.mount("/static", StaticFiles(directory="static"), name="static")
 
 
 def get_minio_client():
@@ -46,20 +44,21 @@ def get_minio_client():
         secure=False,
     )
 
-    # return Minio(
-    #     "play.min.io",
-    #     access_key=TEMP_MIN_CRED,
-    #     secret_key=TEMP_MIN_PASS,
-    #     secure=True,
-    # )
 
-# def get_external_url(self) -> str:
-#         target = _os.environ.get('REVERSE-PROXY-HOST')
-#         port = _os.environ.get('REVERSE-PROXY-PORT')
-#         parsed_url = _urlparse(self.url)
-#         return parsed_url._replace(netloc=f"{target}:{port}").geturl()
+
 
 def make_external_url(request_base_url: str, presigned_url: str) -> str:
+    """
+    Constructs an presigned URL for accessing minio outside the cluster by replacing the netloc and path of the presigned URL with the base URL.
+
+    Args:
+        request_base_url (str): The base URL to be used as the netloc for the external URL.
+        presigned_url (str): The presigned URL to be modified.
+
+    Returns:
+        str: The modified external URL.
+
+    """
     # Get the base url
     base_url = urlparse(request_base_url)
     # Get the presigned url
@@ -88,12 +87,12 @@ def check_prefix(prefix: str):
     """
     client = get_minio_client()
 
-    found = client.bucket_exists(TEST_BUCKET)
+    found = client.bucket_exists(MINIO_EXPERIMENT_BUCKET)
     if not found:
         return True
 
     # List objects with the prefix (list_objects returns partial matches as well, so we need to check if the object is a directory and the name matches the prefix exactly)
-    objects = [c._object_name for c in client.list_objects(TEST_BUCKET, prefix) if c._object_name == prefix and c.is_dir == True]
+    objects = [c._object_name for c in client.list_objects(MINIO_EXPERIMENT_BUCKET, prefix) if c._object_name == prefix and c.is_dir == True]
 
     # If the iterator has at least one object, the prefix exists
     try:
@@ -128,10 +127,10 @@ def presigned_upload_url(prefix: str, object_name: str , content_type: str, requ
     logging.warning(f"Creating a presigned URL for PUT operation, {request.base_url}")
 
     # Make 'asiatrip' bucket if not exist.
-    found = client.bucket_exists(TEST_BUCKET)
+    found = client.bucket_exists(MINIO_EXPERIMENT_BUCKET)
     if not found:
         try: 
-            client.make_bucket(TEST_BUCKET)
+            client.make_bucket(MINIO_EXPERIMENT_BUCKET)
         except Exception as err:
             logging.warning(err)
     else:
@@ -140,14 +139,14 @@ def presigned_upload_url(prefix: str, object_name: str , content_type: str, requ
     # Generate presigned URL for upload
     url = client.get_presigned_url(
     "PUT",
-    TEST_BUCKET,
+    MINIO_EXPERIMENT_BUCKET,
     object_name=f'{prefix}/{object_name}',)
 
     return make_external_url(request.base_url.__str__(),url)
 
 
 @app.get("/add-tags")
-def add_tags(prefix: str, object_name: str, experimental_tag: str):
+def add_tags(prefix: str, object_name: str, experimental_tag: str, file_tag: str):
     """
     Adds tags to an object in a Minio bucket.
 
@@ -162,9 +161,12 @@ def add_tags(prefix: str, object_name: str, experimental_tag: str):
     client = get_minio_client()
 
     tags = Tags.new_bucket_tags()
+    # This is prefix specific (i.e. all files under the one prefix will share the same value of this)
     tags["cdb_experiment_type"] = experimental_tag
+    # this is file specific 
+    tags["cdb_file_tag"] = file_tag
 
     # Add tags to object
-    client.set_object_tags(TEST_BUCKET, f'{prefix}/{object_name}', tags)
+    client.set_object_tags(MINIO_EXPERIMENT_BUCKET, f'{prefix}/{object_name}', tags)
 
     return {"message": "Tags added successfully"}

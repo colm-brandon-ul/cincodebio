@@ -100,6 +100,7 @@
             </select>
 
             <label for="id">Experiment ID:</label>
+            <!-- Need to do some form validation on input (needs to a valid prefix for Minio/filepath) -->
             <input type="text" id="id" name="id" required placeholder="Enter experiment ID">
 
             <label for="image">Image:</label>
@@ -135,7 +136,7 @@
 
             var fileInputs = document.querySelectorAll('input[type="file"]');
             
-            
+            console.log(fileInputs[1].name);
 
             let fetchP = fetch('/data-manager/check-prefix?prefix=' + fileInput.id.value)
                 .then(response => response.json())
@@ -143,6 +144,7 @@
                     if (data) {
                         fileInputs.forEach(function (input,index) {
                             var file = input.files[0];
+                            console.log(input);
                             console.log(file);
                             // Perform actions with the file here
                             let fetchp2 = fetch('/data-manager/get-presigned-upload-url?prefix=' + fileInput.id.value + '&object_name=' + file.name + '&content_type=' + file.type)
@@ -157,7 +159,7 @@
                                             .then(response => response)
                                             .then(data => {
                                                 console.log(data);
-                                                let fetchp4 = fetch('/data-manager/add-tags?prefix=' + fileInput.id.value + '&object_name=' + file.name + '&content_type=' + file.type + '&experimental_tag=' + fileInput.fileTypeSelect.value)
+                                                let fetchp4 = fetch('/data-manager/add-tags?prefix=' + fileInput.id.value + '&object_name=' + file.name + '&content_type=' + file.type + '&experimental_tag=' + fileInput.fileTypeSelect.value + '&file_tag=' + input.name)
                                                     .then(response => response.json())
                                                     .then(data => {
                                                         //console.log("Files uploaded successfully!");
