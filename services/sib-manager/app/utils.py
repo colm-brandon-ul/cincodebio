@@ -13,10 +13,12 @@ from k8s_interface import get_available_architectures
 # System ENV
 ALLOW_EMULATION = False
 
-# Common constants
-DH_ENDPOINT = "hub.docker.com"
-DH_AUTH_ENDPOINT = "auth.docker.io"
-DH_API_ENDPOINT = "registry-1.docker.io"
+from config import (
+    DH_ENDPOINT,
+    DH_AUTH_ENDPOINT,
+    DH_API_ENDPOINT
+)
+
 
 
 # DOCKER HUB REGISTRY FNS

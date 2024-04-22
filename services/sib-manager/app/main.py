@@ -25,17 +25,15 @@ import handlers
 # Set up the Jinja environment
 # This is relative to the working directorty not where the python script is.
 # workdir needs to be set to the root of the project (i.e. app)
-TEMPLATE_DIR = "./src/templates/"
-STATIC_CODE_DIR = "./src/static-code/"
-PERSISTENT_STATE_MOUNT_PATH = "/sib-manager-state"
-
-LATEST_SIBS = "latest_sibs.json"
-OTHER_SIBS = "other_sibs.json"
-INSTALLED_SIBS = "installed_sibs.json"
-
-CURRENT_SIBS_IME_JSON = "current_ime_sibs.json"
-UTD_SIB_FILE = "lib.sibs"
-SIB_MAP_FILE = "sib_map.json"
+from config import (
+    TEMPLATE_DIR,
+    PERSISTENT_STATE_MOUNT_PATH,
+    LATEST_SIBS,
+    OTHER_SIBS,
+    INSTALLED_SIBS,
+    SIB_MAP_FILE,
+    UTD_SIB_FILE
+)
 
 # K8S ENVIRONMENT VARIABLES (used in app)
 #     - CONTAINER_REGISTRY_DOMAIN_ON_HOST
