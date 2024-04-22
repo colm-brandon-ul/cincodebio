@@ -1,3 +1,5 @@
+import jinja2
+
 TEMPLATE_DIR = "./src/templates/"
 STATIC_CODE_DIR = "./src/static-code/"
 PERSISTENT_STATE_MOUNT_PATH = "/sib-manager-state"
@@ -14,3 +16,8 @@ SIB_MAP_FILE = "sib_map.json"
 DH_ENDPOINT = "hub.docker.com"
 DH_AUTH_ENDPOINT = "auth.docker.io"
 DH_API_ENDPOINT = "registry-1.docker.io"
+
+
+JINJA_ENV = jinja2.Environment(
+    loader=jinja2.FileSystemLoader(TEMPLATE_DIR), 
+    extensions=['jinja2_strcase.StrcaseExtension'])

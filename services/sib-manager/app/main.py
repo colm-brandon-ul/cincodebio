@@ -32,7 +32,8 @@ from config import (
     OTHER_SIBS,
     INSTALLED_SIBS,
     SIB_MAP_FILE,
-    UTD_SIB_FILE
+    UTD_SIB_FILE,
+    JINJA_ENV
 )
 
 # K8S ENVIRONMENT VARIABLES (used in app)
@@ -53,9 +54,9 @@ from config import (
 
     
 
-JINJA_ENV = jinja2.Environment(
-    loader=jinja2.FileSystemLoader(TEMPLATE_DIR), 
-    extensions=['jinja2_strcase.StrcaseExtension'])
+# JINJA_ENV = jinja2.Environment(
+#     loader=jinja2.FileSystemLoader(TEMPLATE_DIR), 
+#     extensions=['jinja2_strcase.StrcaseExtension'])
 
 app = FastAPI()
 
