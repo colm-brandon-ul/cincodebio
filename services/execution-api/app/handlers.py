@@ -9,7 +9,8 @@ from bson.objectid import ObjectId
 EXCHANGE_NAME = os.environ.get('CODE_GENERATOR_EXCHANGE_NAME')
 EXCHANGE_TYPE = ExchangeType.direct
 ROUTING_KEY = os.environ.get('CODE_GENERATOR_ROUTING_KEY')
-RABBIT_MQ_HOST = f"{os.environ.get('RABBITMQ_SERVICE_HOST')}:{os.environ.get('RABBITMQ_SERVICE_PORT')}"
+RABBIT_MQ_HOST = os.environ.get('RABBITMQ_SERVICE_HOST')
+RABBIT_MQ_PORT = int(os.environ.get('RABBITMQ_SERVICE_PORT'))
 
 from models import JobState, UpdateWorkflow, Workflow
 from db import get_db_client
@@ -18,7 +19,8 @@ from db import get_db_client
 def model_submission_handler(workflow_id, model):
     logging.warning(workflow_id)
     # Add model to queue
-    connection_params = pika.ConnectionParameters(host=RABBIT_MQ_HOST)
+    credentials = pika.PlainCredentials(os.getenv('RABBITMQ_USERNAME'), os.getenv('RABBITMQ_PASSWORD'))
+    connection_params = pika.ConnectionParameters(host=RABBIT_MQ_HOST,port=RABBIT_MQ_PORT, credentials=credentials)
     connection = pika.BlockingConnection(connection_params)
     channel = connection.channel()
     channel.exchange_declare(exchange=EXCHANGE_NAME, exchange_type=EXCHANGE_TYPE)
