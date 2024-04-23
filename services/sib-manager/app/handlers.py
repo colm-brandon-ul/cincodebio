@@ -292,7 +292,8 @@ def update_service_api_and_sibs(to_be_installed_sibs: List) -> bool:
                 current_ime_sib_schema = json.load(f)
 
             # resolve differences between the new and old sib schemas
-            new_ime_sib_library_schema = cinco_interface.get_new_ime_sib_library(current_ime_sib_schema["services"],utd_sib_schemas)
+            logging.warning("Current IME SIB Schema: {}".format(current_ime_sib_schema))
+            new_ime_sib_library_schema = cinco_interface.get_new_ime_sib_library(current_ime_sib_schema,utd_sib_schemas)
 
             new_lib_dot_sibs = cinco_interface.code_gen(
                 JINJA_ENV,
@@ -304,7 +305,7 @@ def update_service_api_and_sibs(to_be_installed_sibs: List) -> bool:
 
             # Write the new sib schema to the current sib schema file
             with open(state_path / CURRENT_SIBS_IME_JSON, "w") as f:
-                json.dump(new_ime_sib_library_schema,f)
+                json.dump(new_ime_sib_library_schema["services"],f)
 
             # update the installed sibs json file
             with open(state_path / INSTALLED_SIBS, "w") as f:
