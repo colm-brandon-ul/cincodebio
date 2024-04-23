@@ -231,12 +231,12 @@ def cincodebio_schema_to_sibfile_format(lsibs: List[Dict], include_services_para
         if 'Data' in sib['cincodebio.schema'][input_key].keys():
             for f in sib['cincodebio.schema'][input_key]['Data']['FIELDS']:
                 sib_inputs.append((f['name'], f['type'], f['default_value'], f['metadata'], f['optional']))
-                sibInputMappings[sname][(f['name'], f['type'])] = 'Data'
+                sibInputMappings[sname][f"{f['name']}:{f['type']}"] = 'Data'
 
         if 'WorkflowParameters'in sib['cincodebio.schema'][input_key].keys():
             for f in sib['cincodebio.schema'][input_key]['WorkflowParameters']['FIELDS']:
                 sib_inputs.append((f['name'], f['type'], f['default_value'], f['metadata'], f['optional']))
-                sibInputMappings[sname][(f['name'], f['type'])] = 'WorkflowParameters'
+                sibInputMappings[sname][f"{f['name']}:{f['type']}"] = 'WorkflowParameters'
         
         # the modelling language does not support service parameters yet - it is a future feature 
         if include_services_params and 'ServiceParameters'in sib['cincodebio.schema'][input_key].keys():
@@ -248,12 +248,12 @@ def cincodebio_schema_to_sibfile_format(lsibs: List[Dict], include_services_para
         if 'Data' in sib['cincodebio.schema'][output_key].keys():
             for f in sib['cincodebio.schema'][output_key]['Data']['FIELDS']:
                 sib_outputs.append((f['name'], f['type'], f['default_value'], f['metadata'], f['optional']))
-                sibOutputMappings[sname][(f['name'], f['type'])] = 'Data'
+                sibOutputMappings[sname][f"{f['name']}:{f['type']}"] = 'Data'
 
         if 'WorkflowParameters'in sib['cincodebio.schema'][output_key].keys():
             for f in sib['cincodebio.schema'][output_key]['WorkflowParameters']['FIELDS']:
                 sib_outputs.append((f['name'], f['type'], f['default_value'], f['metadata'], f['optional']))
-                sibOutputMappings[sname][(f['name'], f['type'])] = 'WorkflowParameters'
+                sibOutputMappings[sname][f"{f['name']}:{f['type']}"] = 'WorkflowParameters'
 
         if 'Control'in sib['cincodebio.schema'][output_key].keys():
             for f in sib['cincodebio.schema'][output_key]['Control']['FIELDS']:

@@ -35,6 +35,7 @@ def update_code_gen_maps(new_sib_maps: dict) -> bool:
             bool: True if the update is successful, False otherwise
     """
     state_path = pathlib.Path(PERSISTENT_STATE_MOUNT_PATH)
+    logging.warning('New SIB Maps: {}'.format(new_sib_maps))
 
     try:
         with open(state_path / SIB_MAP_FILE, "w") as f:
