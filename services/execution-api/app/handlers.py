@@ -16,7 +16,7 @@ from models import JobState, UpdateWorkflow, Workflow
 from db import get_db_client
 
 # Function to dispatch model to code generator
-def model_submission_handler(workflow_id, model):
+def model_submission_handler(workflow_id: str, model: str, external_url: str):
     logging.warning(workflow_id)
     # Add model to queue
     credentials = pika.PlainCredentials(os.getenv('RABBITMQ_USERNAME'), os.getenv('RABBITMQ_PASSWORD'))
@@ -28,7 +28,7 @@ def model_submission_handler(workflow_id, model):
     channel.basic_publish(
         exchange=EXCHANGE_NAME,
         routing_key=ROUTING_KEY,
-        body=json.dumps(jsonable_encoder({"model": model, "workflow_id" : workflow_id }))
+        body=json.dumps(jsonable_encoder({"model": model, "workflow_id" : workflow_id, "external_url": external_url}))
         )
     
     connection.close()
