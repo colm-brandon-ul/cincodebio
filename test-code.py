@@ -1,7 +1,6 @@
-# Shared functions
-import time, os, requests, json
+code = """import time, os, requests, json
 WORKFLOW_LOG_PATH = os.getenv('WORKFLOW_LOG_PATH')
-WORKFLOW_ID = '6628ed000c5f81e7bbb8eb30'
+WORKFLOW_ID = '6628f6bd3544c25ec984303c'
 # Keyword for killing the workflow
 KILL_WORFLOW = 'KWORKFLOW'
 TIMEOUT = 60
@@ -21,19 +20,9 @@ HEADERS = {
     }
 
 # --- Shared API handling functions ---
-def monitor_logs_6628ed000c5f81e7bbb8eb30(
+def monitor_logs_6628f6bd3544c25ec984303c(
         job_id: str) -> bool:
-    
-    """
-    Monitors the logs for a workflow, to see if flag for current submitted job is completed.
-    
-    Args:
-        job_id (str): The ID of the job to monitor.
-    
-    
-    Returns:
-        bool: True if the job is still running, False if the job has completed or been killed.
-    """
+
 
     continue_wf = True
     # Get logs
@@ -59,22 +48,8 @@ def monitor_logs_6628ed000c5f81e7bbb8eb30(
 
     return continue_wf
 
-def submit_job_6628ed000c5f81e7bbb8eb30(url: str, headers: dict, data: dict) -> str:
-    """
-    Submits a job to the specified URL with the given headers and data.
+def submit_job_6628f6bd3544c25ec984303c(url: str, headers: dict, data: dict) -> str:
 
-    Args:
-        url (str): The URL to submit the job to.
-        headers (dict): The headers to include in the request.
-        data (dict): The data to include in the request body.
-
-    Returns:
-        str: The ID of the submitted job.
-
-    Raises:
-        requests.HTTPError: If the request was not successful.
-        requests.Timeout: If the request timed out.
-    """
     while True:
         res = requests.post(
             url=url,
@@ -100,20 +75,8 @@ def submit_job_6628ed000c5f81e7bbb8eb30(url: str, headers: dict, data: dict) -> 
 
 
 
-def get_results_6628ed000c5f81e7bbb8eb30(url: str) -> dict:
-    """
-    Sends a GET request to the specified URL and returns the response content as a dictionary.
-    
-    Args:
-        url (str): The URL to send the GET request to.
-        
-    Returns:
-        dict: The response content as a dictionary.
-        
-    Raises:
-        requests.exceptions.HTTPError: If the request was not successful (status code >= 400).
-        requests.exceptions.Timeout: If the request timed out.
-    """
+def get_results_6628f6bd3544c25ec984303c(url: str) -> dict:
+
 
     while True:
         res = requests.get(
@@ -142,58 +105,58 @@ def get_results_6628ed000c5f81e7bbb8eb30(url: str) -> dict:
 
 
 sib_api_submit_endpoint = f'http://{SERVICE_API}/start/init-tma'
-job_id__Zop_IQGHEe_VG6OBafcrYg = submit_job_6628ed000c5f81e7bbb8eb30(
+job_id__Zop_IQGHEe_VG6OBafcrYg = submit_job_6628f6bd3544c25ec984303c(
     url = sib_api_submit_endpoint,
     headers = HEADERS,
     data ={ 'system_parameters': {'dataflow': {'tissue_micro_array': True, 'nuclear_stain': True, 'nuclear_markers': False, 'membrane_markers': False, 'protein_channel_markers': False} }}) # this is what needs to be populated
 # Monitor logs
-continue_wf = monitor_logs_6628ed000c5f81e7bbb8eb30(job_id=job_id__Zop_IQGHEe_VG6OBafcrYg)
+continue_wf = monitor_logs_6628f6bd3544c25ec984303c(job_id=job_id__Zop_IQGHEe_VG6OBafcrYg)
 if not continue_wf: exit() ; # Kill the workflow
 # Get results
 
 sib_api_result_endpoint = f'http://{SERVICE_API}/start/init-tma/{job_id__Zop_IQGHEe_VG6OBafcrYg}'
 # will throw exception if not successful
-sib_id__Zop_IQGHEe_VG6OBafcrYg =  get_results_6628ed000c5f81e7bbb8eb30(url=sib_api_result_endpoint)
+sib_id__Zop_IQGHEe_VG6OBafcrYg =  get_results_6628f6bd3544c25ec984303c(url=sib_api_result_endpoint)
 
 
 
 
 sib_api_submit_endpoint = f'http://{SERVICE_API}/de-array/seg-array-tma'
-job_id__cFM6EQGHEe_VG6OBafcrYg = submit_job_6628ed000c5f81e7bbb8eb30(
+job_id__cFM6EQGHEe_VG6OBafcrYg = submit_job_6628f6bd3544c25ec984303c(
     url = sib_api_submit_endpoint,
     headers = HEADERS,
     data ={ 'system_parameters': {'dataflow': {'predicted_rois': True} },
             'data': {
-                'tissue_micro_array': sib_id__Zop_IQGHEe-VG6OBafcrYg['data']['tissue_micro_array'], },
+                'tissue_micro_array': sib_id__Zop_IQGHEe_VG6OBafcrYg['data']['tissue_micro_array'], },
             'workflow_parameters': {
-                'nuclear_stain': sib_id__Zop_IQGHEe-VG6OBafcrYg['workflow_parameters']['nuclear_stain'], }}) # this is what needs to be populated
+                'nuclear_stain': sib_id__Zop_IQGHEe_VG6OBafcrYg['workflow_parameters']['nuclear_stain'], }}) # this is what needs to be populated
 # Monitor logs
-continue_wf = monitor_logs_6628ed000c5f81e7bbb8eb30(job_id=job_id__cFM6EQGHEe_VG6OBafcrYg)
+continue_wf = monitor_logs_6628f6bd3544c25ec984303c(job_id=job_id__cFM6EQGHEe_VG6OBafcrYg)
 if not continue_wf: exit() ; # Kill the workflow
 # Get results
 
 sib_api_result_endpoint = f'http://{SERVICE_API}/de-array/seg-array-tma/{job_id__cFM6EQGHEe_VG6OBafcrYg}'
 # will throw exception if not successful
-sib_id__cFM6EQGHEe_VG6OBafcrYg =  get_results_6628ed000c5f81e7bbb8eb30(url=sib_api_result_endpoint)
+sib_id__cFM6EQGHEe_VG6OBafcrYg =  get_results_6628f6bd3544c25ec984303c(url=sib_api_result_endpoint)
 
 
 
 
 sib_api_submit_endpoint = f'http://{SERVICE_API}/de-array/edit-predicted-rois-tma'
-job_id__gDetgQGHEe_VG6OBafcrYg = submit_job_6628ed000c5f81e7bbb8eb30(
+job_id__gDetgQGHEe_VG6OBafcrYg = submit_job_6628f6bd3544c25ec984303c(
     url = sib_api_submit_endpoint,
     headers = HEADERS,
     data ={ 'system_parameters': {'dataflow': {'rois': False} },
             'data': {
-                'tissue_micro_array': sib_id__Zop_IQGHEe-VG6OBafcrYg['data']['tissue_micro_array'], },
+                'tissue_micro_array': sib_id__Zop_IQGHEe_VG6OBafcrYg['data']['tissue_micro_array'], },
             'workflow_parameters': {
-                'nuclear_stain': sib_id__Zop_IQGHEe-VG6OBafcrYg['workflow_parameters']['nuclear_stain'],
-                'predicted_rois': sib_id__cFM6EQGHEe-VG6OBafcrYg['workflow_parameters']['predicted_rois'], }}) # this is what needs to be populated
+                'nuclear_stain': sib_id__Zop_IQGHEe_VG6OBafcrYg['workflow_parameters']['nuclear_stain'],
+                'predicted_rois': sib_id__cFM6EQGHEe_VG6OBafcrYg['workflow_parameters']['predicted_rois'], }}) # this is what needs to be populated
 # Monitor logs
-continue_wf = monitor_logs_6628ed000c5f81e7bbb8eb30(job_id=job_id__gDetgQGHEe_VG6OBafcrYg)
+continue_wf = monitor_logs_6628f6bd3544c25ec984303c(job_id=job_id__gDetgQGHEe_VG6OBafcrYg)
 if not continue_wf: exit() ; # Kill the workflow
 # Get results
 
 sib_api_result_endpoint = f'http://{SERVICE_API}/de-array/edit-predicted-rois-tma/{job_id__gDetgQGHEe_VG6OBafcrYg}'
 # will throw exception if not successful
-sib_id__gDetgQGHEe_VG6OBafcrYg =  get_results_6628ed000c5f81e7bbb8eb30(url=sib_api_result_endpoint)
+sib_id__gDetgQGHEe_VG6OBafcrYg =  get_results_6628f6bd3544c25ec984303c(url=sib_api_result_endpoint)"""
