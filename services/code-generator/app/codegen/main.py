@@ -26,6 +26,8 @@ class HippoFlowCodegenrator:
         # Parse the model - returns a dictionary of all the parsed data
         parsed_model = HippoFlowParser.parse_model_file(model)
 
+        logging.warning(f"Model: \n \n {parsed_model}")
+
         # Transform the parsed model into a computational graph
         graph = ComputationalGraphTransformer.transform_graph(
             model_dict=parsed_model,

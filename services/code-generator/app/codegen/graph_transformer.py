@@ -2,6 +2,7 @@ import json
 from enum import Enum
 import networkx as nx
 from typing import List, Tuple, Any, Dict
+import logging
 
 class EdgeType(Enum):
     """Enumeration representing different types of edges."""
@@ -152,6 +153,7 @@ class ComputationalGraphTransformer:
 
     @classmethod
     def get_comp_graph_datastructure(cls,dg, root, sib_map, branch_depth=0):
+        logging.warning(f"Branch Depth: {branch_depth}")
         SPACER = "    "
         # current node in comp graph
         current_node = dg.nodes[root]
@@ -192,7 +194,7 @@ class ComputationalGraphTransformer:
             'data' : fn_inputs
         }
         # print(SPACER*branch_depth, f"{current_node['name']} - \n{SPACER*(branch_depth+1)}dataflow bools {df_bools}, \n{SPACER*(branch_depth+1)}fn input f{fn_inputs}, \n{SPACER*(branch_depth+1)}fn output {root}\n")
-
+        logging.warning(f"CF EDGES {cf_out_edges}")
         # there is no branch, simply recurse
         if len(cf_out_edges) == 1:
             graph['children'].append((cf_out_edges[0][2]['branch_condition'],ComputationalGraphTransformer.get_comp_graph_datastructure(dg, cf_out_edges[0][1],sib_map, branch_depth)))
@@ -213,10 +215,13 @@ class ComputationalGraphTransformer:
     def transform_graph(model_dict: Dict, concept_map: Dict) -> Dict:
         # convert the parsed model into a nx multograph
         DG, root_node = ComputationalGraphTransformer.flow_2_nx_graph(model_dict)
+        logging.warning(f"DG : {DG.__dict__}")
+        
 
         # convert the nx multigraph into a computational graph data structure for code generation
 
         cg = ComputationalGraphTransformer.get_comp_graph_datastructure(DG, root_node, concept_map)
+
 
         return cg
 

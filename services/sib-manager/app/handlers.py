@@ -148,7 +148,7 @@ def initial_build_service_api(dh_namespace: str) -> bool:
                 json.dump(utd_sib_schemas,f)
 
             
-            if update_code_gen_maps(cinco_interface.formatSibMap(sib_i_map, sib_o_map, sib_ab_map)):
+            if update_code_gen_maps(cinco_interface.formatSibMap(sib_ab_map2=sib_ab_map, sib_i_map2=sib_i_map, sib_o_map2=sib_o_map, )):
                 return True
             else:
                 return False
@@ -313,7 +313,7 @@ def update_service_api_and_sibs(to_be_installed_sibs: List) -> bool:
                 json.dump(to_be_installed_sibs,f)
 
             
-            if update_code_gen_maps(cinco_interface.formatSibMap(sib_i_map, sib_o_map, sib_ab_map)):
+            if update_code_gen_maps(cinco_interface.formatSibMap(sib_ab_map2=sib_ab_map, sib_i_map2=sib_i_map, sib_o_map2=sib_o_map)):
                 return True
             else:
                 return False
