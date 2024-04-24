@@ -4,6 +4,7 @@ from codegen.parser import HippoFlowParser
 import os
 from jinja2 import Template
 import json
+import logging
 
 
 class HippoFlowCodegenrator:
