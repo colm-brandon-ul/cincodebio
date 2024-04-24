@@ -1,12 +1,12 @@
-SIBLibrary _1548d93a_ef61_4fe5_9e80_5e67bc223750 {
+SIBLibrary _717fa104_1c71_485c_95c1_739707c7cc55 {
     
     
-    Service _ecf206e7_f460_46e5_8d02_99b0bb38b921 at 0, 0 size 100,100 {
+    Service _c9bf4f65_846d_4ae2_816c_7d5d581a35b8 at 0, 0 size 100,100 {
         name "AceWSI"
         label "AceWSI"
         
         
-        Input _57cc8d8d_900e_469b_bac7_fef9d794e905 at 0,0 size 100,100 {
+        Input _dfa41f62_e28c_4559_ba9b_700aaed4bd31 at 0,0 size 100,100 {
             name "whole_slide_image"
             typeName "WholeSlideImage"
             isList false
@@ -14,14 +14,14 @@ SIBLibrary _1548d93a_ef61_4fe5_9e80_5e67bc223750 {
 
 
         
-        Label _49408f8c_ffa4_4bce_97b5_ab9e5e8259d0 at 0,0 size 100, 100 {
+        Label _22fe5a8f_bd33_4057_ab1f_a21f970017ea at 0,0 size 100, 100 {
             name "AceWSI"
             label "AceWSI"
         }
 
         
         
-        Output _f36b756c_80ea_4b39_b3a9_e29b9a897fcb at 0,0 size 100,100 {
+        Output _1a930234_50cf_4eb5_8db1_5aaa26d44980 at 0,0 size 100,100 {
             name "whole_slide_image"
             typeName "WholeSlideImage"
             isList false
@@ -32,7 +32,7 @@ SIBLibrary _1548d93a_ef61_4fe5_9e80_5e67bc223750 {
 
         
         
-        Branch _26e2c50e_ba95_456c_aa24_4d9d242294b0 at 0,0 size 100,100 {
+        Branch _9b9a2782_b5d2_44c8_bc7f_9a70adc5555a at 0,0 size 100,100 {
             name "success"
         }
 
@@ -44,12 +44,12 @@ SIBLibrary _1548d93a_ef61_4fe5_9e80_5e67bc223750 {
     
     
     
-    Service _cc1a9e17_a1ad_4cbd_930c_324c7eb0c581 at 0, 0 size 100,100 {
+    Service _5bc97a82_fcb1_4d47_90f6_78f7fde75837 at 0, 0 size 100,100 {
         name "CropCoresTMA"
         label "CropCoresTMA"
         
         
-        Input _f2143f93_a53d_49ce_92cb_5b85822dfceb at 0,0 size 100,100 {
+        Input _54e61214_67f9_4d79_ba63_0be08d2aeda6 at 0,0 size 100,100 {
             name "tissue_micro_array"
             typeName "TissueMicroArray"
             isList false
@@ -58,7 +58,7 @@ SIBLibrary _1548d93a_ef61_4fe5_9e80_5e67bc223750 {
 
         
         
-        Input _6e81d11b_da12_4390_8dbf_bbca89dcb655 at 0,0 size 100,100 {
+        Input _0e0a4d59_3dce_43f6_b3ff_8fafc33cb7cf at 0,0 size 100,100 {
             name "rois"
             typeName "ROIs"
             isList false
@@ -66,14 +66,14 @@ SIBLibrary _1548d93a_ef61_4fe5_9e80_5e67bc223750 {
 
 
         
-        Label _b3617242_ef30_4956_91f2_8f9a321c74d0 at 0,0 size 100, 100 {
+        Label _fc4d752f_c5ba_4d67_9a14_a4e21597ff79 at 0,0 size 100, 100 {
             name "CropCoresTMA"
             label "CropCoresTMA"
         }
 
         
         
-        Output _6167fd42_7d3f_4e37_bbab_08c52128fcc5 at 0,0 size 100,100 {
+        Output _6e8405cb_fc46_4b63_96bf_c4694d729a32 at 0,0 size 100,100 {
             name "dearrayed_tissue_micro_array"
             typeName "DearrayedTissueMicroArray"
             isList false
@@ -84,7 +84,7 @@ SIBLibrary _1548d93a_ef61_4fe5_9e80_5e67bc223750 {
 
         
         
-        Branch _8f0327f0_6ec4_40d3_b134_9e4316eb4406 at 0,0 size 100,100 {
+        Branch _fca74298_4617_43b8_bfb1_687648b4db74 at 0,0 size 100,100 {
             name "success"
         }
 
@@ -96,12 +96,12 @@ SIBLibrary _1548d93a_ef61_4fe5_9e80_5e67bc223750 {
     
     
     
-    Service _a6a1a183_5e23_46d2_b701_6eaec74bb77d at 0, 0 size 100,100 {
+    Service _0759b685_34ef_47a6_8534_8d5757d52370 at 0, 0 size 100,100 {
         name "SegArrayTMA"
         label "SegArrayTMA"
         
         
-        Input _4f00b5df_a243_4ef4_83b9_4c2783817fd1 at 0,0 size 100,100 {
+        Input _9fd7923c_1d5e_48dc_a7bd_f7d944441fa9 at 0,0 size 100,100 {
             name "tissue_micro_array"
             typeName "TissueMicroArray"
             isList false
@@ -110,7 +110,7 @@ SIBLibrary _1548d93a_ef61_4fe5_9e80_5e67bc223750 {
 
         
         
-        Input _bae333a5_e568_4983_894c_853e7e296885 at 0,0 size 100,100 {
+        Input _9627c5ec_a1ab_4193_8ad6_adbb5f040c84 at 0,0 size 100,100 {
             name "nuclear_stain"
             typeName "NuclearStain"
             isList false
@@ -118,14 +118,14 @@ SIBLibrary _1548d93a_ef61_4fe5_9e80_5e67bc223750 {
 
 
         
-        Label _de483b65_fbb6_49d3_94a3_17962975ad91 at 0,0 size 100, 100 {
+        Label _51b0f2e8_eb4a_47f9_a0f3_e6a6556391cb at 0,0 size 100, 100 {
             name "SegArrayTMA"
             label "SegArrayTMA"
         }
 
         
         
-        Output _b1506300_3621_4cc0_981e_2e0356ffad51 at 0,0 size 100,100 {
+        Output _c236a961_d1aa_42a3_90fb_27ea8f2f42e0 at 0,0 size 100,100 {
             name "predicted_rois"
             typeName "PredictedROIs"
             isList false
@@ -136,7 +136,7 @@ SIBLibrary _1548d93a_ef61_4fe5_9e80_5e67bc223750 {
 
         
         
-        Branch _491d2967_1958_4f02_8492_f636ee5e6588 at 0,0 size 100,100 {
+        Branch _2c1d6364_9904_4e45_845a_31c788e4d829 at 0,0 size 100,100 {
             name "success"
         }
 
@@ -148,12 +148,12 @@ SIBLibrary _1548d93a_ef61_4fe5_9e80_5e67bc223750 {
     
     
     
-    Service _23260274_48b2_4cfc_9eed_d28b9ebd49ef at 0, 0 size 100,100 {
+    Service _337953f7_4cc3_411f_9ca1_fde568023c1b at 0, 0 size 100,100 {
         name "CreateMissileObjectDTMA"
         label "CreateMissileObjectDTMA"
         
         
-        Input _c369c560_a751_487d_be6f_50066d968481 at 0,0 size 100,100 {
+        Input _6ffa85cb_0968_4d9b_9609_b9c0a535e1cc at 0,0 size 100,100 {
             name "dearrayed_tissue_micro_array_missile_fcs"
             typeName "DearrayedTissueMicroArrayMissileFCS"
             isList false
@@ -162,7 +162,7 @@ SIBLibrary _1548d93a_ef61_4fe5_9e80_5e67bc223750 {
 
         
         
-        Input _916090f5_8a69_48d8_bdb7_60b4d2a60cec at 0,0 size 100,100 {
+        Input _73ea1c45_54e9_425d_b5ad_247e633fb72c at 0,0 size 100,100 {
             name "protein_channel_markers"
             typeName "ProteinChannelMarkers"
             isList false
@@ -170,14 +170,14 @@ SIBLibrary _1548d93a_ef61_4fe5_9e80_5e67bc223750 {
 
 
         
-        Label _1d76748e_6898_4049_842c_d67d148219e6 at 0,0 size 100, 100 {
+        Label _2bcf3afe_7408_4150_8117_c94cdf4aaf69 at 0,0 size 100, 100 {
             name "CreateMissileObjectDTMA"
             label "CreateMissileObjectDTMA"
         }
 
         
         
-        Output _4ca78f8e_38f3_4b31_90dd_8e345cb67efa at 0,0 size 100,100 {
+        Output _d88a46c2_2e06_44f6_b8c3_82301d1c4a82 at 0,0 size 100,100 {
             name "missile_metadata"
             typeName "MissileMetadata"
             isList false
@@ -186,7 +186,7 @@ SIBLibrary _1548d93a_ef61_4fe5_9e80_5e67bc223750 {
 
         
         
-        Output _7924b0a5_11ca_40a9_a68f_6ecef5995701 at 0,0 size 100,100 {
+        Output _2d8f12e4_b322_4103_8d4c_5973eda5b89a at 0,0 size 100,100 {
             name "missile_counts"
             typeName "MissileExpressionCounts"
             isList false
@@ -195,7 +195,7 @@ SIBLibrary _1548d93a_ef61_4fe5_9e80_5e67bc223750 {
 
         
         
-        Output _ec19aea2_5810_45cf_8635_98e5cdef7882 at 0,0 size 100,100 {
+        Output _b04132c6_25f6_49f5_bcb3_0d362301bb84 at 0,0 size 100,100 {
             name "missile_spatial_data"
             typeName "MissileExpressionSpatialData"
             isList false
@@ -206,7 +206,7 @@ SIBLibrary _1548d93a_ef61_4fe5_9e80_5e67bc223750 {
 
         
         
-        Branch _9a4def35_3054_4bd5_ab8d_4a2167a8ec5b at 0,0 size 100,100 {
+        Branch _91d69b28_c6df_469c_9338_b87f081c250d at 0,0 size 100,100 {
             name "success"
         }
 
@@ -218,12 +218,12 @@ SIBLibrary _1548d93a_ef61_4fe5_9e80_5e67bc223750 {
     
     
     
-    Service _7dcbde4b_b3e6_482d_8cd0_f494d090cc78 at 0, 0 size 100,100 {
+    Service _7f2ae131_f9db_4b90_8c7b_3eb0d2b55619 at 0, 0 size 100,100 {
         name "AceDTMA"
         label "AceDTMA"
         
         
-        Input _e4acc9eb_ee91_4524_bec4_3c0153d9e0fb at 0,0 size 100,100 {
+        Input _5a1ea6d8_452b_4299_90c8_bd749e3c67e3 at 0,0 size 100,100 {
             name "dearrayed_tissue_micro_array"
             typeName "DearrayedTissueMicroArray"
             isList false
@@ -231,14 +231,14 @@ SIBLibrary _1548d93a_ef61_4fe5_9e80_5e67bc223750 {
 
 
         
-        Label _dd50cee9_2cf4_421f_a43b_086c5a7193df at 0,0 size 100, 100 {
+        Label _b199c49d_0778_442a_b716_91ff5428f5de at 0,0 size 100, 100 {
             name "AceDTMA"
             label "AceDTMA"
         }
 
         
         
-        Output _a638e4be_ebaf_4a68_b188_a4132f8590c6 at 0,0 size 100,100 {
+        Output _feea5c61_c1c3_42bd_b072_da12e4b476ce at 0,0 size 100,100 {
             name "dearrayed_tissue_micro_array"
             typeName "DearrayedTissueMicroArray"
             isList false
@@ -249,7 +249,7 @@ SIBLibrary _1548d93a_ef61_4fe5_9e80_5e67bc223750 {
 
         
         
-        Branch _6f82945a_84b5_44ec_a9f0_02e14c4f8ee0 at 0,0 size 100,100 {
+        Branch _b6db24a0_f6ff_4846_8929_2e0777b89a5a at 0,0 size 100,100 {
             name "success"
         }
 
@@ -261,12 +261,12 @@ SIBLibrary _1548d93a_ef61_4fe5_9e80_5e67bc223750 {
     
     
     
-    Service _05227fa5_a49e_47b9_8ec5_e9e2ef7b910c at 0, 0 size 100,100 {
+    Service _a1fe8fcc_33fa_4dad_b375_ecba10018978 at 0, 0 size 100,100 {
         name "CreateMissileObjectWSI"
         label "CreateMissileObjectWSI"
         
         
-        Input _9278927d_4bdf_4420_9545_210d136b14a6 at 0,0 size 100,100 {
+        Input _a5d0f6b5_7208_465b_a43a_8209e65fbaa6 at 0,0 size 100,100 {
             name "whole_slide_image_missile_fcs"
             typeName "WholeSlideImageMissileFCS"
             isList false
@@ -275,7 +275,7 @@ SIBLibrary _1548d93a_ef61_4fe5_9e80_5e67bc223750 {
 
         
         
-        Input _25c2b071_f76a_45f9_89c1_3032e65ab11e at 0,0 size 100,100 {
+        Input _a0e38c92_66c6_4853_90bd_e77b6c226f20 at 0,0 size 100,100 {
             name "protein_channel_markers"
             typeName "ProteinChannelMarkers"
             isList false
@@ -283,14 +283,14 @@ SIBLibrary _1548d93a_ef61_4fe5_9e80_5e67bc223750 {
 
 
         
-        Label _87373ff7_7689_457e_8cbc_04c9f5e64d97 at 0,0 size 100, 100 {
+        Label _e688a011_9ea1_44c2_b85e_f8036997c540 at 0,0 size 100, 100 {
             name "CreateMissileObjectWSI"
             label "CreateMissileObjectWSI"
         }
 
         
         
-        Output _bba05bd9_1ec7_4cdc_a8db_88fedd8ced56 at 0,0 size 100,100 {
+        Output _ee6201c4_f90f_46c3_a57f_23f47937c8c4 at 0,0 size 100,100 {
             name "missile_metadata"
             typeName "MissileMetadata"
             isList false
@@ -299,7 +299,7 @@ SIBLibrary _1548d93a_ef61_4fe5_9e80_5e67bc223750 {
 
         
         
-        Output _31c78052_8ead_4888_8d34_c2e30909750b at 0,0 size 100,100 {
+        Output _0f101d0d_d1ee_48ff_b793_c1b67cfdcbe0 at 0,0 size 100,100 {
             name "missile_counts"
             typeName "MissileExpressionCounts"
             isList false
@@ -308,7 +308,7 @@ SIBLibrary _1548d93a_ef61_4fe5_9e80_5e67bc223750 {
 
         
         
-        Output _f890de37_4d7c_4f7b_97f8_a91852c8185c at 0,0 size 100,100 {
+        Output _63697853_a8ce_42cf_8e2c_6aa1eeab3e15 at 0,0 size 100,100 {
             name "missile_spatial_data"
             typeName "MissileExpressionSpatialData"
             isList false
@@ -319,7 +319,7 @@ SIBLibrary _1548d93a_ef61_4fe5_9e80_5e67bc223750 {
 
         
         
-        Branch _01d2220d_a0dd_437f_9971_5a85e976ab9c at 0,0 size 100,100 {
+        Branch _910299ab_7b4e_4082_b990_08326fcc3d1e at 0,0 size 100,100 {
             name "success"
         }
 
@@ -331,18 +331,18 @@ SIBLibrary _1548d93a_ef61_4fe5_9e80_5e67bc223750 {
     
     
     
-    Task _c8acf980_8706_4f04_bdfd_4d534bd431db at 0, 0 size 100,100 {
+    Task _71e012f2_4eae_42b7_8a58_221fcd01a090 at 0, 0 size 100,100 {
         name "InitWSI"
         label "InitWSI"
         
-        Label _019bdb38_81e7_4336_9c63_a62fc17c71cb at 0,0 size 100, 100 {
+        Label _bc94e0d3_37d4_4608_8939_0f89688819d0 at 0,0 size 100, 100 {
             name "InitWSI"
             label "InitWSI"
         }
 
         
         
-    Output _62c3239e_3d22_4613_bfd2_18886c13b7e3 at 0,0 size 100,100 {
+    Output _1bf27cf7_3319_4ae6_b3d0_bc0a589e0d44 at 0,0 size 100,100 {
         name "whole_slide_image"
         typeName "WholeSlideImage"
         isList false
@@ -351,7 +351,7 @@ SIBLibrary _1548d93a_ef61_4fe5_9e80_5e67bc223750 {
 
         
         
-    Output _4040f652_c28a_42c4_9a7e_12affcc8211c at 0,0 size 100,100 {
+    Output _e2a43b6a_ae0b_4a18_87c0_5b65c541a143 at 0,0 size 100,100 {
         name "nuclear_stain"
         typeName "NuclearStain"
         isList false
@@ -360,7 +360,7 @@ SIBLibrary _1548d93a_ef61_4fe5_9e80_5e67bc223750 {
 
         
         
-    Output _8b27e720_d3d4_486a_ba3a_0cc9e663c0fe at 0,0 size 100,100 {
+    Output _f6cb688f_bae3_49eb_8c88_a5c335ce4329 at 0,0 size 100,100 {
         name "nuclear_markers"
         typeName "NuclearMarkers"
         isList false
@@ -369,7 +369,7 @@ SIBLibrary _1548d93a_ef61_4fe5_9e80_5e67bc223750 {
 
         
         
-    Output _1fa8fb8a_44fc_478d_8015_863d26751529 at 0,0 size 100,100 {
+    Output _1fba479b_d7df_4b8c_98c3_77dec8d2ae62 at 0,0 size 100,100 {
         name "membrane_markers"
         typeName "MembraneMarkers"
         isList false
@@ -378,7 +378,7 @@ SIBLibrary _1548d93a_ef61_4fe5_9e80_5e67bc223750 {
 
         
         
-    Output _06233f90_559f_4951_af14_624dad6afc0e at 0,0 size 100,100 {
+    Output _ae1a710a_7609_444b_9fd5_166245dd3a74 at 0,0 size 100,100 {
         name "protein_channel_markers"
         typeName "ProteinChannelMarkers"
         isList false
@@ -389,7 +389,7 @@ SIBLibrary _1548d93a_ef61_4fe5_9e80_5e67bc223750 {
 
         
         
-    Branch _825c14bc_4e01_4167_8112_2205b7a6b5f8 at 0,0 size 100,100 {
+    Branch _52f97ab4_e8fd_4a8a_8a8e_2e3281f655dc at 0,0 size 100,100 {
         name "success"
     }
 
@@ -401,12 +401,12 @@ SIBLibrary _1548d93a_ef61_4fe5_9e80_5e67bc223750 {
     
     
     
-    Task _a307b5cc_e59a_432a_aee8_996cb43ab605 at 0, 0 size 100,100 {
+    Task _5f20ce22_367f_48e7_83a3_93c882aff359 at 0, 0 size 100,100 {
         name "EditPredictedRoisTMA"
         label "EditPredictedRoisTMA"
         
         
-    Input _12b694df_5725_445b_b09d_f9bf5882d9f0 at 0,0 size 100,100 {
+    Input _045d4f59_fc1f_469f_9660_1c93d8cd2d10 at 0,0 size 100,100 {
         name "tissue_micro_array"
         typeName "TissueMicroArray"
         isList false
@@ -415,7 +415,7 @@ SIBLibrary _1548d93a_ef61_4fe5_9e80_5e67bc223750 {
 
         
         
-    Input _e2ae254a_2327_43f8_ae6f_e10d96f9567b at 0,0 size 100,100 {
+    Input _54fd3357_6324_48d7_8fcb_8caa5470958c at 0,0 size 100,100 {
         name "nuclear_stain"
         typeName "NuclearStain"
         isList false
@@ -424,7 +424,7 @@ SIBLibrary _1548d93a_ef61_4fe5_9e80_5e67bc223750 {
 
         
         
-    Input _596d8f71_79f4_4217_9090_5d74c9021453 at 0,0 size 100,100 {
+    Input _b8b24e17_9887_4bf1_914d_b2576bd5c460 at 0,0 size 100,100 {
         name "predicted_rois"
         typeName "PredictedROIs"
         isList false
@@ -432,14 +432,14 @@ SIBLibrary _1548d93a_ef61_4fe5_9e80_5e67bc223750 {
 
 
         
-        Label _b6e47e64_ef63_4301_a044_285da273756d at 0,0 size 100, 100 {
+        Label _b83c6774_4aa6_40db_9aeb_8b66c43d3817 at 0,0 size 100, 100 {
             name "EditPredictedRoisTMA"
             label "EditPredictedRoisTMA"
         }
 
         
         
-    Output _59f184ac_75c6_4129_a7b0_29b6fe30545a at 0,0 size 100,100 {
+    Output _d0adcb5d_a706_4123_b6fb_cee5167ae002 at 0,0 size 100,100 {
         name "rois"
         typeName "ROIs"
         isList false
@@ -450,7 +450,7 @@ SIBLibrary _1548d93a_ef61_4fe5_9e80_5e67bc223750 {
 
         
         
-    Branch _a7fa4752_ea30_42b4_8817_614359e80a08 at 0,0 size 100,100 {
+    Branch _1448f932_d9bb_4637_8689_269904a62618 at 0,0 size 100,100 {
         name "success"
     }
 
@@ -462,12 +462,12 @@ SIBLibrary _1548d93a_ef61_4fe5_9e80_5e67bc223750 {
     
     
     
-    Task _9f9b5406_b2a1_401e_ba9d_e70f47cdd933 at 0, 0 size 100,100 {
+    Task _fd9bc23a_538c_45b1_9b35_8667fb1606f2 at 0, 0 size 100,100 {
         name "ManualDearrayTMA"
         label "ManualDearrayTMA"
         
         
-    Input _f4644aaa_6f83_443a_be9a_b5a52610638b at 0,0 size 100,100 {
+    Input _88097a55_29b6_4276_a11c_f1100f6b7f6b at 0,0 size 100,100 {
         name "tissue_micro_array"
         typeName "TissueMicroArray"
         isList false
@@ -476,7 +476,7 @@ SIBLibrary _1548d93a_ef61_4fe5_9e80_5e67bc223750 {
 
         
         
-    Input _56e880e1_2235_42f8_9dbd_615356478b25 at 0,0 size 100,100 {
+    Input _a7f50914_53b9_43e0_ba98_26eab40b8688 at 0,0 size 100,100 {
         name "nuclear_stain"
         typeName "NuclearStain"
         isList false
@@ -484,14 +484,14 @@ SIBLibrary _1548d93a_ef61_4fe5_9e80_5e67bc223750 {
 
 
         
-        Label _bb3d157b_9796_4bf9_8d0d_b8977630c17f at 0,0 size 100, 100 {
+        Label _395529c3_2f68_4591_a31d_08fbf807a6ee at 0,0 size 100, 100 {
             name "ManualDearrayTMA"
             label "ManualDearrayTMA"
         }
 
         
         
-    Output _2adc4ad9_1ad8_4313_9afa_eef434dd1080 at 0,0 size 100,100 {
+    Output _ba526287_8c0f_41eb_9064_d0592bf2cdaf at 0,0 size 100,100 {
         name "rois"
         typeName "ROIs"
         isList false
@@ -502,7 +502,7 @@ SIBLibrary _1548d93a_ef61_4fe5_9e80_5e67bc223750 {
 
         
         
-    Branch _de1bf33e_bbe8_4238_b5ee_9afc9d370ce3 at 0,0 size 100,100 {
+    Branch _6808d4e4_40f3_4de0_b119_f10ad4825ae1 at 0,0 size 100,100 {
         name "success"
     }
 
@@ -514,18 +514,18 @@ SIBLibrary _1548d93a_ef61_4fe5_9e80_5e67bc223750 {
     
     
     
-    Task _4486d876_b4d8_4d40_b06e_f7fb91ae101b at 0, 0 size 100,100 {
+    Task _e6dbb92a_6e0a_4b48_b690_76be37f46ff1 at 0, 0 size 100,100 {
         name "InitTMA"
         label "InitTMA"
         
-        Label _4c0bcc16_44cc_40cb_8652_146d8faa6935 at 0,0 size 100, 100 {
+        Label _d1d468ed_fece_4efb_8946_18700ac1c6b3 at 0,0 size 100, 100 {
             name "InitTMA"
             label "InitTMA"
         }
 
         
         
-    Output _8a937706_2fd5_4408_9081_461cd1957be8 at 0,0 size 100,100 {
+    Output _b728bad3_d2fa_4eb2_87bd_bc137f43d8c3 at 0,0 size 100,100 {
         name "tissue_micro_array"
         typeName "TissueMicroArray"
         isList false
@@ -534,7 +534,7 @@ SIBLibrary _1548d93a_ef61_4fe5_9e80_5e67bc223750 {
 
         
         
-    Output _7b66d045_51b5_442f_8805_8eab8ef9fb66 at 0,0 size 100,100 {
+    Output _b4882ab7_382e_4cf5_8619_41474e5caf6d at 0,0 size 100,100 {
         name "nuclear_stain"
         typeName "NuclearStain"
         isList false
@@ -543,7 +543,7 @@ SIBLibrary _1548d93a_ef61_4fe5_9e80_5e67bc223750 {
 
         
         
-    Output _159639f9_4a54_411a_9b90_1f89891d5353 at 0,0 size 100,100 {
+    Output _68fd834d_17a0_4226_84c5_329d9b312cba at 0,0 size 100,100 {
         name "nuclear_markers"
         typeName "NuclearMarkers"
         isList false
@@ -552,7 +552,7 @@ SIBLibrary _1548d93a_ef61_4fe5_9e80_5e67bc223750 {
 
         
         
-    Output _f31a7fe9_5f68_49fc_822e_8183ebdb037c at 0,0 size 100,100 {
+    Output _ea0fced4_ae52_4ee0_9a19_274154d453d8 at 0,0 size 100,100 {
         name "membrane_markers"
         typeName "MembraneMarkers"
         isList false
@@ -561,7 +561,7 @@ SIBLibrary _1548d93a_ef61_4fe5_9e80_5e67bc223750 {
 
         
         
-    Output _c1dcc9f4_4c7d_4d73_bfe4_22d52dd5f68d at 0,0 size 100,100 {
+    Output _b0b48cc2_da96_49cc_9ab9_eb4d3e7df372 at 0,0 size 100,100 {
         name "protein_channel_markers"
         typeName "ProteinChannelMarkers"
         isList false
@@ -572,7 +572,7 @@ SIBLibrary _1548d93a_ef61_4fe5_9e80_5e67bc223750 {
 
         
         
-    Branch _b961c873_7aae_45c6_bc76_bdf64e0c0fdf at 0,0 size 100,100 {
+    Branch _5714015c_59d1_4ff6_84ae_c387edbe42f0 at 0,0 size 100,100 {
         name "success"
     }
 

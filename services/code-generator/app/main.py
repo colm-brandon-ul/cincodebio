@@ -56,7 +56,7 @@ def do_work(ch, method_frame, body):
     logging.warning(payload["model"])
     payload["external_url"]
 
-    res = requests.get(f"http://{SIB_MANAGER_ADDRESS}/get-sib-map")
+    res = requests.get(f"{SIB_MANAGER_ADDRESS}/get-sib-map")
 
     sib_map = json.loads(res.content.decode("utf-8"))
 
@@ -67,16 +67,18 @@ def do_work(ch, method_frame, body):
         external_url=payload["external_url"]
         
     )
+
+    logging.warning(f'WORKFLOW CODE: \n{executable}')
     
 
     # This will be replaced with some code generatioon functionality
-    res = requests.post(f"http://{EXECUTION_ADDRESS}/", 
+    res = requests.post(f"{EXECUTION_ADDRESS}/", 
                         json={"code": executable, 
                               "workflow_id": payload["workflow_id"]})
     
 
     if res.status_code == 202:
-        res = requests.post(f"http://{EXECUTION_API_ADDRESS}/control/update-workflow/{payload['workflow_id']}", json={"status": "accepted"})
+        res = requests.post(f"{EXECUTION_API_ADDRESS}/control/update-workflow/{payload['workflow_id']}", json={"status": "accepted"})
 
     # logging.warning(str(res.status_code))
 
