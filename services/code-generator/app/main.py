@@ -64,7 +64,7 @@ def do_work(ch, method_frame, body):
         model = payload["model"],
         workflow_id=payload["workflow_id"],
         sib_mapping=sib_map,
-        external_url=payload["external_url"]
+        cdb_external_url=payload["external_url"]
         
     )
 
