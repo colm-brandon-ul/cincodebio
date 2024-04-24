@@ -157,7 +157,7 @@ def get_results_{{ workflow_id }}(url: str) -> dict:
 {%- endfor -%}
 {%- if ns.latch == 1%} }{% endif %}{% endmacro %}
 # --- Workflow specific functions ---
-{%- macro formatdata(_DATA) %}{ 'system_parameters': {'dataflow': {{ _DATA.dataflow }} }
+{%- macro formatdata(_DATA) %}{ 'system_parameters': {'data_flow': {{ _DATA.dataflow }} }
 {{- formatDataForJSON(_DATA.data)|indent(12) -}}
 {{- formatWorkflowParametersForJSON(_DATA.data)|indent(12) -}}
 {{- formatServiceParametersForJSON(_DATA.data)|indent(12) -}}
