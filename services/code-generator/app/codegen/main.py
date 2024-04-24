@@ -1,5 +1,5 @@
-from parser import HippoFlowParser
-from graph_transformer import ComputationalGraphTransformer
+from codegen.graph_transformer import ComputationalGraphTransformer
+from codegen.parser import HippoFlowParser
 
 import os
 from jinja2 import Template
