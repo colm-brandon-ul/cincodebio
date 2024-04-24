@@ -16,6 +16,7 @@ app = FastAPI()
 def run_code(code: Code):
     # Receive Code and Run it
     logging.info(f"Executing Workflow: {code.workflow_id}")
+    logging.warning(code.code)
     exec(code.code)
     logging.warning(f"Completed Workflow: {code.workflow_id}")
     

@@ -1,106 +1,106 @@
 HippoFlow _Nm3M0P5IEe6GW8J3C84YnA {
-  TaskSIB _Zop_IQGHEe-VG6OBafcrYg at 250,70 size 240,220 {
+  TaskSIB _Zop_IQGHEe_VG6OBafcrYg at 250,70 size 240,220 {
   	libraryComponentUID "_71fc05b6_c395_4144_a78f_53ceaed17f92"
   	name "InitTMA"
   	label "InitTMA"
-  	SIBLabel _ZotpgQGHEe-VG6OBafcrYg at 2,10 size 236,50 {
+  	SIBLabel _ZotpgQGHEe_VG6OBafcrYg at 2,10 size 236,50 {
   		label "InitTMA"
   	}
-  	OutputPort _Zou3oQGHEe-VG6OBafcrYg at 2,60 size 236,30 {
+  	OutputPort _Zou3oQGHEe_VG6OBafcrYg at 2,60 size 236,30 {
   		typeName "TissueMicroArray"
   		name "tissue_micro_array"
   		isList false
-  		-DataFlow-> _cFOvQQGHEe-VG6OBafcrYg via (200,145) (200,415)  {
-  			id _cqbHAQGHEe-VG6OBafcrYg
+  		-DataFlow-> _cFOvQQGHEe_VG6OBafcrYg via (200,145) (200,415)  {
+  			id _cqbHAQGHEe_VG6OBafcrYg
   		}
-  		-DataFlow-> _gDgisQGHEe-VG6OBafcrYg via (170,145) (170,655)  {
-  			id _ks8zAQGHEe-VG6OBafcrYg
+  		-DataFlow-> _gDgisQGHEe_VG6OBafcrYg via (170,145) (170,655)  {
+  			id _ks8zAQGHEe_VG6OBafcrYg
   		}
   	}
-  	OutputPort _ZowFwQGHEe-VG6OBafcrYg at 2,90 size 236,30 {
+  	OutputPort _ZowFwQGHEe_VG6OBafcrYg at 2,90 size 236,30 {
   		typeName "NuclearStain"
   		name "nuclear_stain"
   		isList false
-  		-DataFlow-> _cFQkcQGHEe-VG6OBafcrYg via (180,175) (180,445)  {
-  			id _dAUegQGHEe-VG6OBafcrYg
+  		-DataFlow-> _cFQkcQGHEe_VG6OBafcrYg via (180,175) (180,445)  {
+  			id _dAUegQGHEe_VG6OBafcrYg
   		}
-  		-DataFlow-> _gDhw0QGHEe-VG6OBafcrYg via (150,175) (150,685)  {
-  			id _lVidAQGHEe-VG6OBafcrYg
+  		-DataFlow-> _gDhw0QGHEe_VG6OBafcrYg via (150,175) (150,685)  {
+  			id _lVidAQGHEe_VG6OBafcrYg
   		}
   	}
-  	OutputPort _ZoxT4QGHEe-VG6OBafcrYg at 2,120 size 236,30 {
+  	OutputPort _ZoxT4QGHEe_VG6OBafcrYg at 2,120 size 236,30 {
   		typeName "NuclearMarkers"
   		name "nuclear_markers"
   		isList false
   	}
-  	OutputPort _ZozJEQGHEe-VG6OBafcrYg at 2,150 size 236,30 {
+  	OutputPort _ZozJEQGHEe_VG6OBafcrYg at 2,150 size 236,30 {
   		typeName "MembraneMarkers"
   		name "membrane_markers"
   		isList false
   	}
-  	OutputPort _Zo1lUQGHEe-VG6OBafcrYg at 2,180 size 236,30 {
+  	OutputPort _Zo1lUQGHEe_VG6OBafcrYg at 2,180 size 236,30 {
   		typeName "ProteinChannelMarkers"
   		name "protein_channel_markers"
   		isList false
   	}
-  	-ControlFlow-> _cFM6EQGHEe-VG6OBafcrYg  decorate "" at (0,0) decorate "Text" at (0,0) {
-  		id _93d0EQIeEe-VG6OBafcrYg
+  	-ControlFlow-> _cFM6EQGHEe_VG6OBafcrYg  decorate "" at (0,0) decorate "Text" at (0,0) {
+  		id _93d0EQIeEe_VG6OBafcrYg
   		label "success"
   	}
   }
-  ServiceSIB _cFM6EQGHEe-VG6OBafcrYg at 220,390 size 240,160 {
+  ServiceSIB _cFM6EQGHEe_VG6OBafcrYg at 220,390 size 240,160 {
   	libraryComponentUID "_f3f5c104_4879_47a0_af99_499d2eabf8fa"
   	name "SegArrayTMA"
   	label "SegArrayTMA"
-  	InputPort _cFOvQQGHEe-VG6OBafcrYg at 2,10 size 236,30 {
+  	InputPort _cFOvQQGHEe_VG6OBafcrYg at 2,10 size 236,30 {
   		typeName "TissueMicroArray"
   		name "tissue_micro_array"
   		isList false
   	}
-  	InputPort _cFQkcQGHEe-VG6OBafcrYg at 2,40 size 236,30 {
+  	InputPort _cFQkcQGHEe_VG6OBafcrYg at 2,40 size 236,30 {
   		typeName "NuclearStain"
   		name "nuclear_stain"
   		isList false
   	}
-  	SIBLabel _cFSZoQGHEe-VG6OBafcrYg at 2,70 size 236,50 {
+  	SIBLabel _cFSZoQGHEe_VG6OBafcrYg at 2,70 size 236,50 {
   		label "SegArrayTMA"
   	}
-  	OutputPort _cFSZowGHEe-VG6OBafcrYg at 2,120 size 236,30 {
+  	OutputPort _cFSZowGHEe_VG6OBafcrYg at 2,120 size 236,30 {
   		typeName "PredictedROIs"
   		name "predicted_rois"
   		isList false
-  		-DataFlow-> _gDjmAQGHEe-VG6OBafcrYg via (190,525) (190,715)  {
-  			id _hR6PgQGHEe-VG6OBafcrYg
+  		-DataFlow-> _gDjmAQGHEe_VG6OBafcrYg via (190,525) (190,715)  {
+  			id _hR6PgQGHEe_VG6OBafcrYg
   		}
   	}
-  	-ControlFlow-> _gDetgQGHEe-VG6OBafcrYg  decorate "" at (0,0) decorate "Text" at (0,0) {
-  		id _-qIAEQIeEe-VG6OBafcrYg
+  	-ControlFlow-> _gDetgQGHEe_VG6OBafcrYg  decorate "" at (0,0) decorate "Text" at (0,0) {
+  		id _-qIAEQIeEe_VG6OBafcrYg
   		label "success"
   	}
   }
-  TaskSIB _gDetgQGHEe-VG6OBafcrYg at 220,630 size 240,190 {
+  TaskSIB _gDetgQGHEe_VG6OBafcrYg at 220,630 size 240,190 {
   	libraryComponentUID "_647a4bc7_574c_4420_a43d_bde1e38dbf49"
   	name "EditPredictedRoisTMA"
   	label "EditPredictedRoisTMA"
-  	InputPort _gDgisQGHEe-VG6OBafcrYg at 2,10 size 236,30 {
+  	InputPort _gDgisQGHEe_VG6OBafcrYg at 2,10 size 236,30 {
   		typeName "TissueMicroArray"
   		name "tissue_micro_array"
   		isList false
   	}
-  	InputPort _gDhw0QGHEe-VG6OBafcrYg at 2,40 size 236,30 {
+  	InputPort _gDhw0QGHEe_VG6OBafcrYg at 2,40 size 236,30 {
   		typeName "NuclearStain"
   		name "nuclear_stain"
   		isList false
   	}
-  	InputPort _gDjmAQGHEe-VG6OBafcrYg at 2,70 size 236,30 {
+  	InputPort _gDjmAQGHEe_VG6OBafcrYg at 2,70 size 236,30 {
   		typeName "PredictedROIs"
   		name "predicted_rois"
   		isList false
   	}
-  	SIBLabel _gDk0IQGHEe-VG6OBafcrYg at 2,100 size 236,50 {
+  	SIBLabel _gDk0IQGHEe_VG6OBafcrYg at 2,100 size 236,50 {
   		label "EditPredictedRoisTMA"
   	}
-  	OutputPort _gDmCQQGHEe-VG6OBafcrYg at 2,150 size 236,30 {
+  	OutputPort _gDmCQQGHEe_VG6OBafcrYg at 2,150 size 236,30 {
   		typeName "ROIs"
   		name "rois"
   		isList false
