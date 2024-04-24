@@ -59,6 +59,7 @@ def do_work(ch, method_frame, body):
     res = requests.get(f"{SIB_MANAGER_ADDRESS}/get-sib-map")
 
     sib_map = json.loads(res.content.decode("utf-8"))
+    logging.warning(sib_map)
 
     executable = HippoFlowCodegenrator.generate(
         model = payload["model"],

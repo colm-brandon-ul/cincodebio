@@ -29,6 +29,8 @@ class HippoFlowCodegenrator:
         graph = ComputationalGraphTransformer.transform_graph(
             model_dict=parsed_model,
             concept_map=sib_mapping)
+        
+        logging.warning(f"Graph: \n \n {graph}") 
 
         current_file_path = os.path.abspath(__file__)
         current_directory = os.path.dirname(current_file_path)
