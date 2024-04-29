@@ -67,6 +67,8 @@ spec:
               value: {{ .Values.codeGenerator.routing_key }}
             - name: EXECUTION_API_INGRESS_PATH
               value: {{ .Values.global.execution_api_ingress_path }}
+            - name: SERVICES_API_INGRESS_PATH
+              value: {{ .Values.global.services_api_ingress_path }}
             - name: RABBITMQ_USERNAME
               value: {{ .Values.rabbitmq.auth.username }}
             - name: RABBITMQ_PASSWORD

@@ -18,6 +18,7 @@ BASE_DIR = Path(__file__).resolve().parent
 
 WORKFLOW_LOG_PATH = os.environ.get('WORKFLOW_LOGS_PATH')
 EXECUTION_INGRESS_PATH = os.environ.get('EXECUTION_API_INGRESS_PATH')
+SERVICES_INGRESS_PATH = os.environ.get('SERVICES_API_INGRESS_PATH')
 
 
 logging.basicConfig(format='%(asctime)s - %(process)d - %(levelname)s - %(message)s', level=logging.WARNING)
@@ -67,7 +68,13 @@ async def root(request: Request, background_tasks: BackgroundTasks, model: Uploa
     
     
     # Dispatch the model to the code generator
-    background_tasks.add_task(model_submission_handler, workflow_id = uuid, model = model_file, external_url = str(request.base_url))
+    background_tasks.add_task(
+        model_submission_handler, 
+        workflow_id = uuid, 
+        model = model_file, 
+        # the external is for services front-ends to be accesible
+        external_url = f'{str(request.base_url)}{SERVICES_INGRESS_PATH}')
+    
     logging.info(f"Dispatched model to Code Generator for Workflow: {uuid}") 
     
     
