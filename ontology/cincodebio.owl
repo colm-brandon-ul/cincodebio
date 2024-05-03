@@ -7,9 +7,13 @@
 	xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
 	xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
 
-<rdf:Description rdf:about="https://raw.githubusercontent.com/colm-brandon-ul/cincodebio/master/ontology/cincodebio.owl">
+<!-- <rdf:Description rdf:about="https://raw.githubusercontent.com/colm-brandon-ul/cincodebio/master/ontology/cincodebio.owl">
 	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Ontology"/>
-</rdf:Description>
+</rdf:Description> -->
+
+<owl:Ontology rdf:about="https://raw.githubusercontent.com/colm-brandon-ul/cincodebio/master/ontology/cincodebio.owl">
+        <owl:versionInfo rdf:datatype="http://www.w3.org/2001/XMLSchema#string">0.0.1</owl:versionInfo>
+</owl:Ontology>
 <!--  -->
 <!--  -->
 <!-- ################################################################# -->

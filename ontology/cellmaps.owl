@@ -8,6 +8,7 @@
      xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
     <owl:Ontology rdf:about="https://raw.githubusercontent.com/colm-brandon-ul/cincodebio/master/ontology/cellmaps.owl">
         <owl:imports rdf:resource="https://raw.githubusercontent.com/colm-brandon-ul/cincodebio/master/ontology/cincodebio.owl"/>
+        <owl:versionInfo rdf:datatype="http://www.w3.org/2001/XMLSchema#string">0.0.1</owl:versionInfo>
     </owl:Ontology>
     
 
@@ -40,9 +41,9 @@
     
 
 
-    <!-- file:/Users/colmbrandon/Desktop/cincodebio/ontology/cellmaps.owl#hasMembraneMask -->
+    <!-- http://www.cellmaps.org/cellmapsontology#hasMembraneMask -->
 
-    <owl:ObjectProperty rdf:about="file:/Users/colmbrandon/Desktop/cincodebio/ontology/cellmaps.owl#hasMembraneMask">
+    <owl:ObjectProperty rdf:about="http://www.cellmaps.org/cellmapsontology#hasMembraneMask">
         <rdfs:domain rdf:resource="http://www.cincodebio.org/cdbontology#NonAtomic"/>
         <rdfs:range rdf:resource="http://www.cincodebio.org/cdbontology#Atomic"/>
         <rdfs:comment>Relates a Tissue Core CellMask to it&apos;s MembraneMask</rdfs:comment>
@@ -51,9 +52,9 @@
     
 
 
-    <!-- file:/Users/colmbrandon/Desktop/cincodebio/ontology/cellmaps.owl#hasNucleusMask -->
+    <!-- http://www.cellmaps.org/cellmapsontology#hasNucleusMask -->
 
-    <owl:ObjectProperty rdf:about="file:/Users/colmbrandon/Desktop/cincodebio/ontology/cellmaps.owl#hasNucleusMask">
+    <owl:ObjectProperty rdf:about="http://www.cellmaps.org/cellmapsontology#hasNucleusMask">
         <rdfs:domain rdf:resource="http://www.cincodebio.org/cdbontology#NonAtomic"/>
         <rdfs:range rdf:resource="http://www.cincodebio.org/cdbontology#Atomic"/>
         <rdfs:comment>Relates a Tissue Core CellMask to it&apos;s NucleusMask</rdfs:comment>
@@ -62,11 +63,11 @@
     
 
 
-    <!-- file:/Users/colmbrandon/Desktop/cincodebio/ontology/cellmaps.owl#hasRegionsOfInterest -->
+    <!-- http://www.cellmaps.org/cellmapsontology#hasRegionsOfInterest -->
 
-    <owl:ObjectProperty rdf:about="file:/Users/colmbrandon/Desktop/cincodebio/ontology/cellmaps.owl#hasRegionsOfInterest">
+    <owl:ObjectProperty rdf:about="http://www.cellmaps.org/cellmapsontology#hasRegionsOfInterest">
         <rdfs:domain rdf:resource="http://www.cincodebio.org/cdbontology#NonAtomic"/>
-        <rdfs:range rdf:resource="file:/Users/colmbrandon/Desktop/cincodebio/ontology/cellmaps.owl#RegionsOfInterest"/>
+        <rdfs:range rdf:resource="http://www.cellmaps.org/cellmapsontology#RegionsOfInterest"/>
         <rdfs:comment>Denotes a non-atomic class as having a regions of Interest </rdfs:comment>
         <rdfs:label>hasRegionsOfInterest</rdfs:label>
     </owl:ObjectProperty>
@@ -83,9 +84,9 @@
     
 
 
-    <!-- file:/Users/colmbrandon/Desktop/cincodebio/ontology/cellmaps.owl#hasConfidenceThreshold -->
+    <!-- http://www.cellmaps.org/cellmapsontology#hasConfidenceThreshold -->
 
-    <owl:DatatypeProperty rdf:about="file:/Users/colmbrandon/Desktop/cincodebio/ontology/cellmaps.owl#hasConfidenceThreshold">
+    <owl:DatatypeProperty rdf:about="http://www.cellmaps.org/cellmapsontology#hasConfidenceThreshold">
         <rdfs:domain rdf:resource="http://www.cincodebio.org/cdbontology#NonAtomic"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#float"/>
         <rdfs:comment>Denotes a non-atomic class as having a confidence threshold, this pertains to the mask gating process in CNN predictions.</rdfs:comment>
@@ -94,60 +95,60 @@
     
 
 
-    <!-- file:/Users/colmbrandon/Desktop/cincodebio/ontology/cellmaps.owl#img_h -->
+    <!-- http://www.cellmaps.org/cellmapsontology#img_h -->
 
-    <owl:DatatypeProperty rdf:about="file:/Users/colmbrandon/Desktop/cincodebio/ontology/cellmaps.owl#img_h">
-        <rdfs:domain rdf:resource="file:/Users/colmbrandon/Desktop/cincodebio/ontology/cellmaps.owl#RegionOfInterest"/>
+    <owl:DatatypeProperty rdf:about="http://www.cellmaps.org/cellmapsontology#img_h">
+        <rdfs:domain rdf:resource="http://www.cellmaps.org/cellmapsontology#RegionOfInterest"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#float"/>
         <rdfs:label>img_h</rdfs:label>
     </owl:DatatypeProperty>
     
 
 
-    <!-- file:/Users/colmbrandon/Desktop/cincodebio/ontology/cellmaps.owl#img_w -->
+    <!-- http://www.cellmaps.org/cellmapsontology#img_w -->
 
-    <owl:DatatypeProperty rdf:about="file:/Users/colmbrandon/Desktop/cincodebio/ontology/cellmaps.owl#img_w">
-        <rdfs:domain rdf:resource="file:/Users/colmbrandon/Desktop/cincodebio/ontology/cellmaps.owl#RegionOfInterest"/>
+    <owl:DatatypeProperty rdf:about="http://www.cellmaps.org/cellmapsontology#img_w">
+        <rdfs:domain rdf:resource="http://www.cellmaps.org/cellmapsontology#RegionOfInterest"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#float"/>
         <rdfs:label>img_w</rdfs:label>
     </owl:DatatypeProperty>
     
 
 
-    <!-- file:/Users/colmbrandon/Desktop/cincodebio/ontology/cellmaps.owl#x1 -->
+    <!-- http://www.cellmaps.org/cellmapsontology#x1 -->
 
-    <owl:DatatypeProperty rdf:about="file:/Users/colmbrandon/Desktop/cincodebio/ontology/cellmaps.owl#x1">
-        <rdfs:domain rdf:resource="file:/Users/colmbrandon/Desktop/cincodebio/ontology/cellmaps.owl#RegionOfInterest"/>
+    <owl:DatatypeProperty rdf:about="http://www.cellmaps.org/cellmapsontology#x1">
+        <rdfs:domain rdf:resource="http://www.cellmaps.org/cellmapsontology#RegionOfInterest"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#float"/>
         <rdfs:label>x1</rdfs:label>
     </owl:DatatypeProperty>
     
 
 
-    <!-- file:/Users/colmbrandon/Desktop/cincodebio/ontology/cellmaps.owl#x2 -->
+    <!-- http://www.cellmaps.org/cellmapsontology#x2 -->
 
-    <owl:DatatypeProperty rdf:about="file:/Users/colmbrandon/Desktop/cincodebio/ontology/cellmaps.owl#x2">
-        <rdfs:domain rdf:resource="file:/Users/colmbrandon/Desktop/cincodebio/ontology/cellmaps.owl#RegionOfInterest"/>
+    <owl:DatatypeProperty rdf:about="http://www.cellmaps.org/cellmapsontology#x2">
+        <rdfs:domain rdf:resource="http://www.cellmaps.org/cellmapsontology#RegionOfInterest"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#float"/>
         <rdfs:label>x2</rdfs:label>
     </owl:DatatypeProperty>
     
 
 
-    <!-- file:/Users/colmbrandon/Desktop/cincodebio/ontology/cellmaps.owl#y1 -->
+    <!-- http://www.cellmaps.org/cellmapsontology#y1 -->
 
-    <owl:DatatypeProperty rdf:about="file:/Users/colmbrandon/Desktop/cincodebio/ontology/cellmaps.owl#y1">
-        <rdfs:domain rdf:resource="file:/Users/colmbrandon/Desktop/cincodebio/ontology/cellmaps.owl#RegionOfInterest"/>
+    <owl:DatatypeProperty rdf:about="http://www.cellmaps.org/cellmapsontology#y1">
+        <rdfs:domain rdf:resource="http://www.cellmaps.org/cellmapsontology#RegionOfInterest"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#float"/>
         <rdfs:label>y1</rdfs:label>
     </owl:DatatypeProperty>
     
 
 
-    <!-- file:/Users/colmbrandon/Desktop/cincodebio/ontology/cellmaps.owl#y2 -->
+    <!-- http://www.cellmaps.org/cellmapsontology#y2 -->
 
-    <owl:DatatypeProperty rdf:about="file:/Users/colmbrandon/Desktop/cincodebio/ontology/cellmaps.owl#y2">
-        <rdfs:domain rdf:resource="file:/Users/colmbrandon/Desktop/cincodebio/ontology/cellmaps.owl#RegionOfInterest"/>
+    <owl:DatatypeProperty rdf:about="http://www.cellmaps.org/cellmapsontology#y2">
+        <rdfs:domain rdf:resource="http://www.cellmaps.org/cellmapsontology#RegionOfInterest"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#float"/>
         <rdfs:label>y2</rdfs:label>
     </owl:DatatypeProperty>
@@ -165,9 +166,9 @@
     
 
 
-    <!-- file:/Users/colmbrandon/Desktop/cincodebio/ontology/cellmaps.owl#CellSegmentation -->
+    <!-- http://www.cellmaps.org/cellmapsontology#CellSegmentation -->
 
-    <owl:Class rdf:about="file:/Users/colmbrandon/Desktop/cincodebio/ontology/cellmaps.owl#CellSegmentation">
+    <owl:Class rdf:about="http://www.cellmaps.org/cellmapsontology#CellSegmentation">
         <rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#ServiceConcept"/>
         <rdfs:Comment>The service concept for CellSegmentation services, which are involved in segmenting cells in the data.</rdfs:Comment>
         <rdfs:label>CellSegmentation</rdfs:label>
@@ -175,9 +176,9 @@
     
 
 
-    <!-- file:/Users/colmbrandon/Desktop/cincodebio/ontology/cellmaps.owl#Clustering -->
+    <!-- http://www.cellmaps.org/cellmapsontology#Clustering -->
 
-    <owl:Class rdf:about="file:/Users/colmbrandon/Desktop/cincodebio/ontology/cellmaps.owl#Clustering">
+    <owl:Class rdf:about="http://www.cellmaps.org/cellmapsontology#Clustering">
         <rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#ServiceConcept"/>
         <rdfs:comment>The service concept for Clustering services, which are involved in clustering the data.</rdfs:comment>
         <rdfs:label>Clustering</rdfs:label>
@@ -185,9 +186,9 @@
     
 
 
-    <!-- file:/Users/colmbrandon/Desktop/cincodebio/ontology/cellmaps.owl#DataTransformation -->
+    <!-- http://www.cellmaps.org/cellmapsontology#DataTransformation -->
 
-    <owl:Class rdf:about="file:/Users/colmbrandon/Desktop/cincodebio/ontology/cellmaps.owl#DataTransformation">
+    <owl:Class rdf:about="http://www.cellmaps.org/cellmapsontology#DataTransformation">
         <rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#ServiceConcept"/>
         <rdfs:comment>The service concept for DataTransformation services, which are involved in transforming the data.</rdfs:comment>
         <rdfs:label>DataTransformation</rdfs:label>
@@ -195,9 +196,9 @@
     
 
 
-    <!-- file:/Users/colmbrandon/Desktop/cincodebio/ontology/cellmaps.owl#DeArray -->
+    <!-- http://www.cellmaps.org/cellmapsontology#DeArray -->
 
-    <owl:Class rdf:about="file:/Users/colmbrandon/Desktop/cincodebio/ontology/cellmaps.owl#DeArray">
+    <owl:Class rdf:about="http://www.cellmaps.org/cellmapsontology#DeArray">
         <rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#ServiceConcept"/>
         <rdfs:comment>The service concept for DeArray services, which are involved in DeArraying/Segmenting Tissue MicroArrays</rdfs:comment>
         <rdfs:label>DeArray</rdfs:label>
@@ -205,9 +206,9 @@
     
 
 
-    <!-- file:/Users/colmbrandon/Desktop/cincodebio/ontology/cellmaps.owl#DearrayedTissueMicroArray -->
+    <!-- http://www.cellmaps.org/cellmapsontology#DearrayedTissueMicroArray -->
 
-    <owl:Class rdf:about="file:/Users/colmbrandon/Desktop/cincodebio/ontology/cellmaps.owl#DearrayedTissueMicroArray">
+    <owl:Class rdf:about="http://www.cellmaps.org/cellmapsontology#DearrayedTissueMicroArray">
         <rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#HashMap"/>
         <rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#NonAtomic"/>
         <rdfs:subClassOf>
@@ -219,7 +220,7 @@
         <rdfs:subClassOf>
             <owl:Restriction>
                 <owl:onProperty rdf:resource="http://www.cincodebio.org/cdbontology#hasValue"/>
-                <owl:allValuesFrom rdf:resource="file:/Users/colmbrandon/Desktop/cincodebio/ontology/cellmaps.owl#TissueCore"/>
+                <owl:allValuesFrom rdf:resource="http://www.cellmaps.org/cellmapsontology#TissueCore"/>
             </owl:Restriction>
         </rdfs:subClassOf>
         <rdfs:comment>This class describes a Dearrayed Tissue MicroArray.</rdfs:comment>
@@ -228,9 +229,9 @@
     
 
 
-    <!-- file:/Users/colmbrandon/Desktop/cincodebio/ontology/cellmaps.owl#DearrayedTissueMicroArrayCellSegmentationMask -->
+    <!-- http://www.cellmaps.org/cellmapsontology#DearrayedTissueMicroArrayCellSegmentationMask -->
 
-    <owl:Class rdf:about="file:/Users/colmbrandon/Desktop/cincodebio/ontology/cellmaps.owl#DearrayedTissueMicroArrayCellSegmentationMask">
+    <owl:Class rdf:about="http://www.cellmaps.org/cellmapsontology#DearrayedTissueMicroArrayCellSegmentationMask">
         <rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#HashMap"/>
         <rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#NonAtomic"/>
         <rdfs:subClassOf>
@@ -242,7 +243,7 @@
         <rdfs:subClassOf>
             <owl:Restriction>
                 <owl:onProperty rdf:resource="http://www.cincodebio.org/cdbontology#hasValue"/>
-                <owl:allValuesFrom rdf:resource="file:/Users/colmbrandon/Desktop/cincodebio/ontology/cellmaps.owl#TissueCoreCellSegmentationMask"/>
+                <owl:allValuesFrom rdf:resource="http://www.cellmaps.org/cellmapsontology#TissueCoreCellSegmentationMask"/>
             </owl:Restriction>
         </rdfs:subClassOf>
         <rdfs:comment>This class describes a Dearrayed Tissue MicroArray Cell Segmentation Mask(s).</rdfs:comment>
@@ -251,9 +252,9 @@
     
 
 
-    <!-- file:/Users/colmbrandon/Desktop/cincodebio/ontology/cellmaps.owl#DearrayedTissueMicroArrayMissileFCS -->
+    <!-- http://www.cellmaps.org/cellmapsontology#DearrayedTissueMicroArrayMissileFCS -->
 
-    <owl:Class rdf:about="file:/Users/colmbrandon/Desktop/cincodebio/ontology/cellmaps.owl#DearrayedTissueMicroArrayMissileFCS">
+    <owl:Class rdf:about="http://www.cellmaps.org/cellmapsontology#DearrayedTissueMicroArrayMissileFCS">
         <rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#HashMap"/>
         <rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#NonAtomic"/>
         <rdfs:subClassOf>
@@ -265,7 +266,7 @@
         <rdfs:subClassOf>
             <owl:Restriction>
                 <owl:onProperty rdf:resource="http://www.cincodebio.org/cdbontology#hasValue"/>
-                <owl:allValuesFrom rdf:resource="file:/Users/colmbrandon/Desktop/cincodebio/ontology/cellmaps.owl#TissueCoreMissileFCS"/>
+                <owl:allValuesFrom rdf:resource="http://www.cellmaps.org/cellmapsontology#TissueCoreMissileFCS"/>
             </owl:Restriction>
         </rdfs:subClassOf>
         <rdfs:comment>This class describes a Dearrayed Tissue MicroArray Missile FCS.</rdfs:comment>
@@ -274,9 +275,9 @@
     
 
 
-    <!-- file:/Users/colmbrandon/Desktop/cincodebio/ontology/cellmaps.owl#FeatureExtraction -->
+    <!-- http://www.cellmaps.org/cellmapsontology#FeatureExtraction -->
 
-    <owl:Class rdf:about="file:/Users/colmbrandon/Desktop/cincodebio/ontology/cellmaps.owl#FeatureExtraction">
+    <owl:Class rdf:about="http://www.cellmaps.org/cellmapsontology#FeatureExtraction">
         <rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#ServiceConcept"/>
         <rdfs:comment>The service concept for FeatureExtraction services, which are involved in extracting features from the data.</rdfs:comment>
         <rdfs:label>FeatureExtraction</rdfs:label>
@@ -284,9 +285,9 @@
     
 
 
-    <!-- file:/Users/colmbrandon/Desktop/cincodebio/ontology/cellmaps.owl#MembraneMarker -->
+    <!-- http://www.cellmaps.org/cellmapsontology#MembraneMarker -->
 
-    <owl:Class rdf:about="file:/Users/colmbrandon/Desktop/cincodebio/ontology/cellmaps.owl#MembraneMarker">
+    <owl:Class rdf:about="http://www.cellmaps.org/cellmapsontology#MembraneMarker">
         <rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#Atomic"/>
         <rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#String"/>
         <rdfs:comment>This class describes a membrane marker.</rdfs:comment>
@@ -295,15 +296,15 @@
     
 
 
-    <!-- file:/Users/colmbrandon/Desktop/cincodebio/ontology/cellmaps.owl#MembraneMarkers -->
+    <!-- http://www.cellmaps.org/cellmapsontology#MembraneMarkers -->
 
-    <owl:Class rdf:about="file:/Users/colmbrandon/Desktop/cincodebio/ontology/cellmaps.owl#MembraneMarkers">
+    <owl:Class rdf:about="http://www.cellmaps.org/cellmapsontology#MembraneMarkers">
         <rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#List"/>
         <rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#NonAtomic"/>
         <rdfs:subClassOf>
             <owl:Restriction>
                 <owl:onProperty rdf:resource="http://www.cincodebio.org/cdbontology#hasValue"/>
-                <owl:allValuesFrom rdf:resource="file:/Users/colmbrandon/Desktop/cincodebio/ontology/cellmaps.owl#MembraneMarker"/>
+                <owl:allValuesFrom rdf:resource="http://www.cellmaps.org/cellmapsontology#MembraneMarker"/>
             </owl:Restriction>
         </rdfs:subClassOf>
         <rdfs:comment>This class describes a list of membrane markers.</rdfs:comment>
@@ -312,9 +313,9 @@
     
 
 
-    <!-- file:/Users/colmbrandon/Desktop/cincodebio/ontology/cellmaps.owl#MissileClusters -->
+    <!-- http://www.cellmaps.org/cellmapsontology#MissileClusters -->
 
-    <owl:Class rdf:about="file:/Users/colmbrandon/Desktop/cincodebio/ontology/cellmaps.owl#MissileClusters">
+    <owl:Class rdf:about="http://www.cellmaps.org/cellmapsontology#MissileClusters">
         <rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#Atomic"/>
         <rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#CSV"/>
         <rdfs:comment>This class describes missile clusters.</rdfs:comment>
@@ -324,9 +325,9 @@
     
 
 
-    <!-- file:/Users/colmbrandon/Desktop/cincodebio/ontology/cellmaps.owl#MissileExpressionCounts -->
+    <!-- http://www.cellmaps.org/cellmapsontology#MissileExpressionCounts -->
 
-    <owl:Class rdf:about="file:/Users/colmbrandon/Desktop/cincodebio/ontology/cellmaps.owl#MissileExpressionCounts">
+    <owl:Class rdf:about="http://www.cellmaps.org/cellmapsontology#MissileExpressionCounts">
         <rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#Atomic"/>
         <rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#CSV"/>
         <rdfs:comment>This class describes missile expression counts.</rdfs:comment>
@@ -336,9 +337,9 @@
     
 
 
-    <!-- file:/Users/colmbrandon/Desktop/cincodebio/ontology/cellmaps.owl#MissileExpressionSpatialData -->
+    <!-- http://www.cellmaps.org/cellmapsontology#MissileExpressionSpatialData -->
 
-    <owl:Class rdf:about="file:/Users/colmbrandon/Desktop/cincodebio/ontology/cellmaps.owl#MissileExpressionSpatialData">
+    <owl:Class rdf:about="http://www.cellmaps.org/cellmapsontology#MissileExpressionSpatialData">
         <rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#Atomic"/>
         <rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#CSV"/>
         <rdfs:comment>This class describes missile expression spatial data.</rdfs:comment>
@@ -348,9 +349,9 @@
     
 
 
-    <!-- file:/Users/colmbrandon/Desktop/cincodebio/ontology/cellmaps.owl#MissileMetadata -->
+    <!-- http://www.cellmaps.org/cellmapsontology#MissileMetadata -->
 
-    <owl:Class rdf:about="file:/Users/colmbrandon/Desktop/cincodebio/ontology/cellmaps.owl#MissileMetadata">
+    <owl:Class rdf:about="http://www.cellmaps.org/cellmapsontology#MissileMetadata">
         <rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#Atomic"/>
         <rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#CSV"/>
         <rdfs:comment>This class describes missile metadata.</rdfs:comment>
@@ -360,9 +361,9 @@
     
 
 
-    <!-- file:/Users/colmbrandon/Desktop/cincodebio/ontology/cellmaps.owl#MissileNeighbourhoods -->
+    <!-- http://www.cellmaps.org/cellmapsontology#MissileNeighbourhoods -->
 
-    <owl:Class rdf:about="file:/Users/colmbrandon/Desktop/cincodebio/ontology/cellmaps.owl#MissileNeighbourhoods">
+    <owl:Class rdf:about="http://www.cellmaps.org/cellmapsontology#MissileNeighbourhoods">
         <rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#Atomic"/>
         <rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#CSV"/>
         <rdfs:comment>This class describes missile neighbourhoods.</rdfs:comment>
@@ -372,9 +373,9 @@
     
 
 
-    <!-- file:/Users/colmbrandon/Desktop/cincodebio/ontology/cellmaps.owl#NuclearMarker -->
+    <!-- http://www.cellmaps.org/cellmapsontology#NuclearMarker -->
 
-    <owl:Class rdf:about="file:/Users/colmbrandon/Desktop/cincodebio/ontology/cellmaps.owl#NuclearMarker">
+    <owl:Class rdf:about="http://www.cellmaps.org/cellmapsontology#NuclearMarker">
         <rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#Atomic"/>
         <rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#String"/>
         <rdfs:comment>This class describes a nuclear marker.</rdfs:comment>
@@ -383,15 +384,15 @@
     
 
 
-    <!-- file:/Users/colmbrandon/Desktop/cincodebio/ontology/cellmaps.owl#NuclearMarkers -->
+    <!-- http://www.cellmaps.org/cellmapsontology#NuclearMarkers -->
 
-    <owl:Class rdf:about="file:/Users/colmbrandon/Desktop/cincodebio/ontology/cellmaps.owl#NuclearMarkers">
+    <owl:Class rdf:about="http://www.cellmaps.org/cellmapsontology#NuclearMarkers">
         <rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#List"/>
         <rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#NonAtomic"/>
         <rdfs:subClassOf>
             <owl:Restriction>
                 <owl:onProperty rdf:resource="http://www.cincodebio.org/cdbontology#hasValue"/>
-                <owl:allValuesFrom rdf:resource="file:/Users/colmbrandon/Desktop/cincodebio/ontology/cellmaps.owl#NuclearMarker"/>
+                <owl:allValuesFrom rdf:resource="http://www.cellmaps.org/cellmapsontology#NuclearMarker"/>
             </owl:Restriction>
         </rdfs:subClassOf>
         <rdfs:comment>This class describes a list of nuclear markers.</rdfs:comment>
@@ -400,9 +401,9 @@
     
 
 
-    <!-- file:/Users/colmbrandon/Desktop/cincodebio/ontology/cellmaps.owl#NuclearStain -->
+    <!-- http://www.cellmaps.org/cellmapsontology#NuclearStain -->
 
-    <owl:Class rdf:about="file:/Users/colmbrandon/Desktop/cincodebio/ontology/cellmaps.owl#NuclearStain">
+    <owl:Class rdf:about="http://www.cellmaps.org/cellmapsontology#NuclearStain">
         <rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#Atomic"/>
         <rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#String"/>
         <rdfs:comment>This class describes a nuclear stain.</rdfs:comment>
@@ -411,9 +412,9 @@
     
 
 
-    <!-- file:/Users/colmbrandon/Desktop/cincodebio/ontology/cellmaps.owl#Plot -->
+    <!-- http://www.cellmaps.org/cellmapsontology#Plot -->
 
-    <owl:Class rdf:about="file:/Users/colmbrandon/Desktop/cincodebio/ontology/cellmaps.owl#Plot">
+    <owl:Class rdf:about="http://www.cellmaps.org/cellmapsontology#Plot">
         <rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#Atomic"/>
         <rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#PNG"/>
         <rdfs:comment>This class describes a plot. Could make this less generic (i.e. to plot type) </rdfs:comment>
@@ -422,9 +423,9 @@
     
 
 
-    <!-- file:/Users/colmbrandon/Desktop/cincodebio/ontology/cellmaps.owl#Plotting -->
+    <!-- http://www.cellmaps.org/cellmapsontology#Plotting -->
 
-    <owl:Class rdf:about="file:/Users/colmbrandon/Desktop/cincodebio/ontology/cellmaps.owl#Plotting">
+    <owl:Class rdf:about="http://www.cellmaps.org/cellmapsontology#Plotting">
         <rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#ServiceConcept"/>
         <rdfs:comment>The service concept for Plotting services, which are involved in plotting the data.</rdfs:comment>
         <rdfs:label>Plotting</rdfs:label>
@@ -432,9 +433,9 @@
     
 
 
-    <!-- file:/Users/colmbrandon/Desktop/cincodebio/ontology/cellmaps.owl#ProteinChannelMarker -->
+    <!-- http://www.cellmaps.org/cellmapsontology#ProteinChannelMarker -->
 
-    <owl:Class rdf:about="file:/Users/colmbrandon/Desktop/cincodebio/ontology/cellmaps.owl#ProteinChannelMarker">
+    <owl:Class rdf:about="http://www.cellmaps.org/cellmapsontology#ProteinChannelMarker">
         <rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#Atomic"/>
         <rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#String"/>
         <rdfs:comment>This class describes a protein channel marker.</rdfs:comment>
@@ -443,15 +444,15 @@
     
 
 
-    <!-- file:/Users/colmbrandon/Desktop/cincodebio/ontology/cellmaps.owl#ProteinChannelMarkers -->
+    <!-- http://www.cellmaps.org/cellmapsontology#ProteinChannelMarkers -->
 
-    <owl:Class rdf:about="file:/Users/colmbrandon/Desktop/cincodebio/ontology/cellmaps.owl#ProteinChannelMarkers">
+    <owl:Class rdf:about="http://www.cellmaps.org/cellmapsontology#ProteinChannelMarkers">
         <rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#List"/>
         <rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#NonAtomic"/>
         <rdfs:subClassOf>
             <owl:Restriction>
                 <owl:onProperty rdf:resource="http://www.cincodebio.org/cdbontology#hasValue"/>
-                <owl:allValuesFrom rdf:resource="file:/Users/colmbrandon/Desktop/cincodebio/ontology/cellmaps.owl#ProteinChannelMarker"/>
+                <owl:allValuesFrom rdf:resource="http://www.cellmaps.org/cellmapsontology#ProteinChannelMarker"/>
             </owl:Restriction>
         </rdfs:subClassOf>
         <rdfs:comment>This class describes a list of protein channel markers.</rdfs:comment>
@@ -460,9 +461,9 @@
     
 
 
-    <!-- file:/Users/colmbrandon/Desktop/cincodebio/ontology/cellmaps.owl#RegionOfInterest -->
+    <!-- http://www.cellmaps.org/cellmapsontology#RegionOfInterest -->
 
-    <owl:Class rdf:about="file:/Users/colmbrandon/Desktop/cincodebio/ontology/cellmaps.owl#RegionOfInterest">
+    <owl:Class rdf:about="http://www.cellmaps.org/cellmapsontology#RegionOfInterest">
         <rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#Atomic"/>
         <rdfs:comment>This class describes a region of interest.</rdfs:comment>
         <rdfs:label>RegionOfInterest</rdfs:label>
@@ -470,15 +471,15 @@
     
 
 
-    <!-- file:/Users/colmbrandon/Desktop/cincodebio/ontology/cellmaps.owl#RegionsOfInterest -->
+    <!-- http://www.cellmaps.org/cellmapsontology#RegionsOfInterest -->
 
-    <owl:Class rdf:about="file:/Users/colmbrandon/Desktop/cincodebio/ontology/cellmaps.owl#RegionsOfInterest">
+    <owl:Class rdf:about="http://www.cellmaps.org/cellmapsontology#RegionsOfInterest">
         <rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#List"/>
         <rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#NonAtomic"/>
         <rdfs:subClassOf>
             <owl:Restriction>
                 <owl:onProperty rdf:resource="http://www.cincodebio.org/cdbontology#hasValue"/>
-                <owl:allValuesFrom rdf:resource="file:/Users/colmbrandon/Desktop/cincodebio/ontology/cellmaps.owl#RegionOfInterest"/>
+                <owl:allValuesFrom rdf:resource="http://www.cellmaps.org/cellmapsontology#RegionOfInterest"/>
             </owl:Restriction>
         </rdfs:subClassOf>
         <rdfs:comment>This class describes a list of regions of interest.</rdfs:comment>
@@ -487,19 +488,19 @@
     
 
 
-    <!-- file:/Users/colmbrandon/Desktop/cincodebio/ontology/cellmaps.owl#RegionsOfInterestPredicition -->
+    <!-- http://www.cellmaps.org/cellmapsontology#RegionsOfInterestPredicition -->
 
-    <owl:Class rdf:about="file:/Users/colmbrandon/Desktop/cincodebio/ontology/cellmaps.owl#RegionsOfInterestPredicition">
+    <owl:Class rdf:about="http://www.cellmaps.org/cellmapsontology#RegionsOfInterestPredicition">
         <rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#NonAtomic"/>
         <rdfs:subClassOf>
             <owl:Restriction>
-                <owl:onProperty rdf:resource="file:/Users/colmbrandon/Desktop/cincodebio/ontology/cellmaps.owl#hasRegionsOfInterest"/>
-                <owl:allValuesFrom rdf:resource="file:/Users/colmbrandon/Desktop/cincodebio/ontology/cellmaps.owl#RegionsOfInterest"/>
+                <owl:onProperty rdf:resource="http://www.cellmaps.org/cellmapsontology#hasRegionsOfInterest"/>
+                <owl:allValuesFrom rdf:resource="http://www.cellmaps.org/cellmapsontology#RegionsOfInterest"/>
             </owl:Restriction>
         </rdfs:subClassOf>
         <rdfs:subClassOf>
             <owl:Restriction>
-                <owl:onProperty rdf:resource="file:/Users/colmbrandon/Desktop/cincodebio/ontology/cellmaps.owl#hasConfidenceThreshold"/>
+                <owl:onProperty rdf:resource="http://www.cellmaps.org/cellmapsontology#hasConfidenceThreshold"/>
                 <owl:allValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#float"/>
             </owl:Restriction>
         </rdfs:subClassOf>
@@ -509,15 +510,15 @@
     
 
 
-    <!-- file:/Users/colmbrandon/Desktop/cincodebio/ontology/cellmaps.owl#RegionsOfInterestPredictions -->
+    <!-- http://www.cellmaps.org/cellmapsontology#RegionsOfInterestPredictions -->
 
-    <owl:Class rdf:about="file:/Users/colmbrandon/Desktop/cincodebio/ontology/cellmaps.owl#RegionsOfInterestPredictions">
+    <owl:Class rdf:about="http://www.cellmaps.org/cellmapsontology#RegionsOfInterestPredictions">
         <rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#List"/>
         <rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#NonAtomic"/>
         <rdfs:subClassOf>
             <owl:Restriction>
                 <owl:onProperty rdf:resource="http://www.cincodebio.org/cdbontology#hasValue"/>
-                <owl:allValuesFrom rdf:resource="file:/Users/colmbrandon/Desktop/cincodebio/ontology/cellmaps.owl#RegionsOfInterestPredicition"/>
+                <owl:allValuesFrom rdf:resource="http://www.cellmaps.org/cellmapsontology#RegionsOfInterestPredicition"/>
             </owl:Restriction>
         </rdfs:subClassOf>
         <rdfs:comment>This class describes a list of regions of interest predictions.</rdfs:comment>
@@ -526,9 +527,9 @@
     
 
 
-    <!-- file:/Users/colmbrandon/Desktop/cincodebio/ontology/cellmaps.owl#Start -->
+    <!-- http://www.cellmaps.org/cellmapsontology#Start -->
 
-    <owl:Class rdf:about="file:/Users/colmbrandon/Desktop/cincodebio/ontology/cellmaps.owl#Start">
+    <owl:Class rdf:about="http://www.cellmaps.org/cellmapsontology#Start">
         <rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#ServiceConcept"/>
         <rdfs:comment>The service concept for Start services, which import raw data and prepare it for processing.</rdfs:comment>
         <rdfs:label>Start</rdfs:label>
@@ -536,9 +537,9 @@
     
 
 
-    <!-- file:/Users/colmbrandon/Desktop/cincodebio/ontology/cellmaps.owl#TechnicalVarianceCorrection -->
+    <!-- http://www.cellmaps.org/cellmapsontology#TechnicalVarianceCorrection -->
 
-    <owl:Class rdf:about="file:/Users/colmbrandon/Desktop/cincodebio/ontology/cellmaps.owl#TechnicalVarianceCorrection">
+    <owl:Class rdf:about="http://www.cellmaps.org/cellmapsontology#TechnicalVarianceCorrection">
         <rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#ServiceConcept"/>
         <rdfs:comment>The service concept for TechnicalVarianceCorrection services, which are involved in correcting technical variance in the data.</rdfs:comment>
         <rdfs:label>TechnicalVarianceCorrection</rdfs:label>
@@ -546,9 +547,9 @@
     
 
 
-    <!-- file:/Users/colmbrandon/Desktop/cincodebio/ontology/cellmaps.owl#TissueCore -->
+    <!-- http://www.cellmaps.org/cellmapsontology#TissueCore -->
 
-    <owl:Class rdf:about="file:/Users/colmbrandon/Desktop/cincodebio/ontology/cellmaps.owl#TissueCore">
+    <owl:Class rdf:about="http://www.cellmaps.org/cellmapsontology#TissueCore">
         <rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#HashMap"/>
         <rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#NonAtomic"/>
         <rdfs:subClassOf>
@@ -560,7 +561,7 @@
         <rdfs:subClassOf>
             <owl:Restriction>
                 <owl:onProperty rdf:resource="http://www.cincodebio.org/cdbontology#hasValue"/>
-                <owl:allValuesFrom rdf:resource="file:/Users/colmbrandon/Desktop/cincodebio/ontology/cellmaps.owl#TissueCoreProteinChannel"/>
+                <owl:allValuesFrom rdf:resource="http://www.cellmaps.org/cellmapsontology#TissueCoreProteinChannel"/>
             </owl:Restriction>
         </rdfs:subClassOf>
         <rdfs:comment>This class describes a Tissue Core.</rdfs:comment>
@@ -569,20 +570,20 @@
     
 
 
-    <!-- file:/Users/colmbrandon/Desktop/cincodebio/ontology/cellmaps.owl#TissueCoreCellSegmentationMask -->
+    <!-- http://www.cellmaps.org/cellmapsontology#TissueCoreCellSegmentationMask -->
 
-    <owl:Class rdf:about="file:/Users/colmbrandon/Desktop/cincodebio/ontology/cellmaps.owl#TissueCoreCellSegmentationMask">
+    <owl:Class rdf:about="http://www.cellmaps.org/cellmapsontology#TissueCoreCellSegmentationMask">
         <rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#NonAtomic"/>
         <rdfs:subClassOf>
             <owl:Restriction>
-                <owl:onProperty rdf:resource="file:/Users/colmbrandon/Desktop/cincodebio/ontology/cellmaps.owl#hasMembraneMask"/>
-                <owl:allValuesFrom rdf:resource="file:/Users/colmbrandon/Desktop/cincodebio/ontology/cellmaps.owl#TissueCoreMembraneSegmentationMask"/>
+                <owl:onProperty rdf:resource="http://www.cellmaps.org/cellmapsontology#hasMembraneMask"/>
+                <owl:allValuesFrom rdf:resource="http://www.cellmaps.org/cellmapsontology#TissueCoreMembraneSegmentationMask"/>
             </owl:Restriction>
         </rdfs:subClassOf>
         <rdfs:subClassOf>
             <owl:Restriction>
-                <owl:onProperty rdf:resource="file:/Users/colmbrandon/Desktop/cincodebio/ontology/cellmaps.owl#hasNucleusMask"/>
-                <owl:allValuesFrom rdf:resource="file:/Users/colmbrandon/Desktop/cincodebio/ontology/cellmaps.owl#TissueCoreNucleusSegmentationMask"/>
+                <owl:onProperty rdf:resource="http://www.cellmaps.org/cellmapsontology#hasNucleusMask"/>
+                <owl:allValuesFrom rdf:resource="http://www.cellmaps.org/cellmapsontology#TissueCoreNucleusSegmentationMask"/>
             </owl:Restriction>
         </rdfs:subClassOf>
         <rdfs:comment>This class describes a cell segmentation mask in a Tissue Core. Which contains a nucleus mask</rdfs:comment>
@@ -591,9 +592,9 @@
     
 
 
-    <!-- file:/Users/colmbrandon/Desktop/cincodebio/ontology/cellmaps.owl#TissueCoreMembraneSegmentationMask -->
+    <!-- http://www.cellmaps.org/cellmapsontology#TissueCoreMembraneSegmentationMask -->
 
-    <owl:Class rdf:about="file:/Users/colmbrandon/Desktop/cincodebio/ontology/cellmaps.owl#TissueCoreMembraneSegmentationMask">
+    <owl:Class rdf:about="http://www.cellmaps.org/cellmapsontology#TissueCoreMembraneSegmentationMask">
         <rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#Atomic"/>
         <rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#OMETIFF"/>
         <rdfs:comment>This class describes a membrane segmentation mask in a Tissue Core.</rdfs:comment>
@@ -602,9 +603,9 @@
     
 
 
-    <!-- file:/Users/colmbrandon/Desktop/cincodebio/ontology/cellmaps.owl#TissueCoreMissileFCS -->
+    <!-- http://www.cellmaps.org/cellmapsontology#TissueCoreMissileFCS -->
 
-    <owl:Class rdf:about="file:/Users/colmbrandon/Desktop/cincodebio/ontology/cellmaps.owl#TissueCoreMissileFCS">
+    <owl:Class rdf:about="http://www.cellmaps.org/cellmapsontology#TissueCoreMissileFCS">
         <rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#Atomic"/>
         <rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#CSV"/>
         <rdfs:comment>This class describes a missile FCS in a Tissue Core.</rdfs:comment>
@@ -614,9 +615,9 @@
     
 
 
-    <!-- file:/Users/colmbrandon/Desktop/cincodebio/ontology/cellmaps.owl#TissueCoreNucleusSegmentationMask -->
+    <!-- http://www.cellmaps.org/cellmapsontology#TissueCoreNucleusSegmentationMask -->
 
-    <owl:Class rdf:about="file:/Users/colmbrandon/Desktop/cincodebio/ontology/cellmaps.owl#TissueCoreNucleusSegmentationMask">
+    <owl:Class rdf:about="http://www.cellmaps.org/cellmapsontology#TissueCoreNucleusSegmentationMask">
         <rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#Atomic"/>
         <rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#OMETIFF"/>
         <rdfs:comment>This class describes a nucleus segmentation mask in a Tissue Core.</rdfs:comment>
@@ -625,9 +626,9 @@
     
 
 
-    <!-- file:/Users/colmbrandon/Desktop/cincodebio/ontology/cellmaps.owl#TissueCoreProteinChannel -->
+    <!-- http://www.cellmaps.org/cellmapsontology#TissueCoreProteinChannel -->
 
-    <owl:Class rdf:about="file:/Users/colmbrandon/Desktop/cincodebio/ontology/cellmaps.owl#TissueCoreProteinChannel">
+    <owl:Class rdf:about="http://www.cellmaps.org/cellmapsontology#TissueCoreProteinChannel">
         <rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#Atomic"/>
         <rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#OMETIFF"/>
         <rdfs:comment>This class describes a protein channel in a Tissue Core.</rdfs:comment>
@@ -636,9 +637,9 @@
     
 
 
-    <!-- file:/Users/colmbrandon/Desktop/cincodebio/ontology/cellmaps.owl#TissueMicroArray -->
+    <!-- http://www.cellmaps.org/cellmapsontology#TissueMicroArray -->
 
-    <owl:Class rdf:about="file:/Users/colmbrandon/Desktop/cincodebio/ontology/cellmaps.owl#TissueMicroArray">
+    <owl:Class rdf:about="http://www.cellmaps.org/cellmapsontology#TissueMicroArray">
         <rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#HashMap"/>
         <rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#NonAtomic"/>
         <rdfs:subClassOf>
@@ -650,7 +651,7 @@
         <rdfs:subClassOf>
             <owl:Restriction>
                 <owl:onProperty rdf:resource="http://www.cincodebio.org/cdbontology#hasValue"/>
-                <owl:allValuesFrom rdf:resource="file:/Users/colmbrandon/Desktop/cincodebio/ontology/cellmaps.owl#TissueMicroArrayProteinChannel"/>
+                <owl:allValuesFrom rdf:resource="http://www.cellmaps.org/cellmapsontology#TissueMicroArrayProteinChannel"/>
             </owl:Restriction>
         </rdfs:subClassOf>
         <rdfs:comment>This class describes a Tissue MicroArray.</rdfs:comment>
@@ -659,9 +660,9 @@
     
 
 
-    <!-- file:/Users/colmbrandon/Desktop/cincodebio/ontology/cellmaps.owl#TissueMicroArrayProteinChannel -->
+    <!-- http://www.cellmaps.org/cellmapsontology#TissueMicroArrayProteinChannel -->
 
-    <owl:Class rdf:about="file:/Users/colmbrandon/Desktop/cincodebio/ontology/cellmaps.owl#TissueMicroArrayProteinChannel">
+    <owl:Class rdf:about="http://www.cellmaps.org/cellmapsontology#TissueMicroArrayProteinChannel">
         <rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#Atomic"/>
         <rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#OMETIFF"/>
         <rdfs:comment>This class describes a protein channel in a Tissue MicroArray.</rdfs:comment>
@@ -670,20 +671,20 @@
     
 
 
-    <!-- file:/Users/colmbrandon/Desktop/cincodebio/ontology/cellmaps.owl#TmaExperiment -->
+    <!-- http://www.cellmaps.org/cellmapsontology#TmaExperiment -->
 
-    <owl:Class rdf:about="file:/Users/colmbrandon/Desktop/cincodebio/ontology/cellmaps.owl#TmaExperiment">
+    <owl:Class rdf:about="http://www.cellmaps.org/cellmapsontology#TmaExperiment">
         <rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#Experiment"/>
-        <owl:disjointWith rdf:resource="file:/Users/colmbrandon/Desktop/cincodebio/ontology/cellmaps.owl#WsiExperiment"/>
+        <owl:disjointWith rdf:resource="http://www.cellmaps.org/cellmapsontology#WsiExperiment"/>
         <rdfs:comment>Tissue Microarray Experiment - this describes the raw data produced from a TMA imaging run.</rdfs:comment>
         <rdfs:label>TmaExperiment</rdfs:label>
     </owl:Class>
     
 
 
-    <!-- file:/Users/colmbrandon/Desktop/cincodebio/ontology/cellmaps.owl#WholeSlideImage -->
+    <!-- http://www.cellmaps.org/cellmapsontology#WholeSlideImage -->
 
-    <owl:Class rdf:about="file:/Users/colmbrandon/Desktop/cincodebio/ontology/cellmaps.owl#WholeSlideImage">
+    <owl:Class rdf:about="http://www.cellmaps.org/cellmapsontology#WholeSlideImage">
         <rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#HashMap"/>
         <rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#NonAtomic"/>
         <rdfs:subClassOf>
@@ -695,7 +696,7 @@
         <rdfs:subClassOf>
             <owl:Restriction>
                 <owl:onProperty rdf:resource="http://www.cincodebio.org/cdbontology#hasValue"/>
-                <owl:allValuesFrom rdf:resource="file:/Users/colmbrandon/Desktop/cincodebio/ontology/cellmaps.owl#WholeSlideImageProteinChannel"/>
+                <owl:allValuesFrom rdf:resource="http://www.cellmaps.org/cellmapsontology#WholeSlideImageProteinChannel"/>
             </owl:Restriction>
         </rdfs:subClassOf>
         <rdfs:comment>This class describes a Whole Slide Image.</rdfs:comment>
@@ -704,20 +705,20 @@
     
 
 
-    <!-- file:/Users/colmbrandon/Desktop/cincodebio/ontology/cellmaps.owl#WholeSlideImageCellSegmentationMask -->
+    <!-- http://www.cellmaps.org/cellmapsontology#WholeSlideImageCellSegmentationMask -->
 
-    <owl:Class rdf:about="file:/Users/colmbrandon/Desktop/cincodebio/ontology/cellmaps.owl#WholeSlideImageCellSegmentationMask">
+    <owl:Class rdf:about="http://www.cellmaps.org/cellmapsontology#WholeSlideImageCellSegmentationMask">
         <rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#NonAtomic"/>
         <rdfs:subClassOf>
             <owl:Restriction>
-                <owl:onProperty rdf:resource="file:/Users/colmbrandon/Desktop/cincodebio/ontology/cellmaps.owl#hasMembraneMask"/>
-                <owl:allValuesFrom rdf:resource="file:/Users/colmbrandon/Desktop/cincodebio/ontology/cellmaps.owl#WholeSlideImageMembraneSegmentationMask"/>
+                <owl:onProperty rdf:resource="http://www.cellmaps.org/cellmapsontology#hasMembraneMask"/>
+                <owl:allValuesFrom rdf:resource="http://www.cellmaps.org/cellmapsontology#WholeSlideImageMembraneSegmentationMask"/>
             </owl:Restriction>
         </rdfs:subClassOf>
         <rdfs:subClassOf>
             <owl:Restriction>
-                <owl:onProperty rdf:resource="file:/Users/colmbrandon/Desktop/cincodebio/ontology/cellmaps.owl#hasNucleusMask"/>
-                <owl:allValuesFrom rdf:resource="file:/Users/colmbrandon/Desktop/cincodebio/ontology/cellmaps.owl#WholeSlideImageNucleusSegmentationMask"/>
+                <owl:onProperty rdf:resource="http://www.cellmaps.org/cellmapsontology#hasNucleusMask"/>
+                <owl:allValuesFrom rdf:resource="http://www.cellmaps.org/cellmapsontology#WholeSlideImageNucleusSegmentationMask"/>
             </owl:Restriction>
         </rdfs:subClassOf>
         <rdfs:comment>This class describes a cell segmentation mask in a Whole Slide Image. Which contains a nucleus and membrane mask</rdfs:comment>
@@ -726,9 +727,9 @@
     
 
 
-    <!-- file:/Users/colmbrandon/Desktop/cincodebio/ontology/cellmaps.owl#WholeSlideImageMembraneSegmentationMask -->
+    <!-- http://www.cellmaps.org/cellmapsontology#WholeSlideImageMembraneSegmentationMask -->
 
-    <owl:Class rdf:about="file:/Users/colmbrandon/Desktop/cincodebio/ontology/cellmaps.owl#WholeSlideImageMembraneSegmentationMask">
+    <owl:Class rdf:about="http://www.cellmaps.org/cellmapsontology#WholeSlideImageMembraneSegmentationMask">
         <rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#Atomic"/>
         <rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#OMETIFF"/>
         <rdfs:comment>This class describes a membrane segmentation mask in a Whole Slide Image.</rdfs:comment>
@@ -737,9 +738,9 @@
     
 
 
-    <!-- file:/Users/colmbrandon/Desktop/cincodebio/ontology/cellmaps.owl#WholeSlideImageMissileFCS -->
+    <!-- http://www.cellmaps.org/cellmapsontology#WholeSlideImageMissileFCS -->
 
-    <owl:Class rdf:about="file:/Users/colmbrandon/Desktop/cincodebio/ontology/cellmaps.owl#WholeSlideImageMissileFCS">
+    <owl:Class rdf:about="http://www.cellmaps.org/cellmapsontology#WholeSlideImageMissileFCS">
         <rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#Atomic"/>
         <rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#CSV"/>
         <rdfs:comment>This class describes a missile FCS in a Whole Slide Image.</rdfs:comment>
@@ -749,9 +750,9 @@
     
 
 
-    <!-- file:/Users/colmbrandon/Desktop/cincodebio/ontology/cellmaps.owl#WholeSlideImageNucleusSegmentationMask -->
+    <!-- http://www.cellmaps.org/cellmapsontology#WholeSlideImageNucleusSegmentationMask -->
 
-    <owl:Class rdf:about="file:/Users/colmbrandon/Desktop/cincodebio/ontology/cellmaps.owl#WholeSlideImageNucleusSegmentationMask">
+    <owl:Class rdf:about="http://www.cellmaps.org/cellmapsontology#WholeSlideImageNucleusSegmentationMask">
         <rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#Atomic"/>
         <rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#OMETIFF"/>
         <rdfs:comment>This class describes a nucleus segmentation mask in a Whole Slide Image.</rdfs:comment>
@@ -760,9 +761,9 @@
     
 
 
-    <!-- file:/Users/colmbrandon/Desktop/cincodebio/ontology/cellmaps.owl#WholeSlideImageProteinChannel -->
+    <!-- http://www.cellmaps.org/cellmapsontology#WholeSlideImageProteinChannel -->
 
-    <owl:Class rdf:about="file:/Users/colmbrandon/Desktop/cincodebio/ontology/cellmaps.owl#WholeSlideImageProteinChannel">
+    <owl:Class rdf:about="http://www.cellmaps.org/cellmapsontology#WholeSlideImageProteinChannel">
         <rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#Atomic"/>
         <rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#OMETIFF"/>
         <rdfs:comment>This class describes a protein channel in a Whole Slide Image.</rdfs:comment>
@@ -771,9 +772,9 @@
     
 
 
-    <!-- file:/Users/colmbrandon/Desktop/cincodebio/ontology/cellmaps.owl#WsiExperiment -->
+    <!-- http://www.cellmaps.org/cellmapsontology#WsiExperiment -->
 
-    <owl:Class rdf:about="file:/Users/colmbrandon/Desktop/cincodebio/ontology/cellmaps.owl#WsiExperiment">
+    <owl:Class rdf:about="http://www.cellmaps.org/cellmapsontology#WsiExperiment">
         <rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#Experiment"/>
         <rdfs:comment>Whole Slide Image Experiment - this describes the raw data produced from a WSI imaging run.</rdfs:comment>
         <rdfs:label>WsiExperiment</rdfs:label>
@@ -792,14 +793,14 @@
     <rdf:Description>
         <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AllDisjointClasses"/>
         <owl:members rdf:parseType="Collection">
-            <rdf:Description rdf:about="file:/Users/colmbrandon/Desktop/cincodebio/ontology/cellmaps.owl#CellSegmentation"/>
-            <rdf:Description rdf:about="file:/Users/colmbrandon/Desktop/cincodebio/ontology/cellmaps.owl#Clustering"/>
-            <rdf:Description rdf:about="file:/Users/colmbrandon/Desktop/cincodebio/ontology/cellmaps.owl#DataTransformation"/>
-            <rdf:Description rdf:about="file:/Users/colmbrandon/Desktop/cincodebio/ontology/cellmaps.owl#DeArray"/>
-            <rdf:Description rdf:about="file:/Users/colmbrandon/Desktop/cincodebio/ontology/cellmaps.owl#FeatureExtraction"/>
-            <rdf:Description rdf:about="file:/Users/colmbrandon/Desktop/cincodebio/ontology/cellmaps.owl#Plotting"/>
-            <rdf:Description rdf:about="file:/Users/colmbrandon/Desktop/cincodebio/ontology/cellmaps.owl#Start"/>
-            <rdf:Description rdf:about="file:/Users/colmbrandon/Desktop/cincodebio/ontology/cellmaps.owl#TechnicalVarianceCorrection"/>
+            <rdf:Description rdf:about="http://www.cellmaps.org/cellmapsontology#CellSegmentation"/>
+            <rdf:Description rdf:about="http://www.cellmaps.org/cellmapsontology#Clustering"/>
+            <rdf:Description rdf:about="http://www.cellmaps.org/cellmapsontology#DataTransformation"/>
+            <rdf:Description rdf:about="http://www.cellmaps.org/cellmapsontology#DeArray"/>
+            <rdf:Description rdf:about="http://www.cellmaps.org/cellmapsontology#FeatureExtraction"/>
+            <rdf:Description rdf:about="http://www.cellmaps.org/cellmapsontology#Plotting"/>
+            <rdf:Description rdf:about="http://www.cellmaps.org/cellmapsontology#Start"/>
+            <rdf:Description rdf:about="http://www.cellmaps.org/cellmapsontology#TechnicalVarianceCorrection"/>
         </owl:members>
     </rdf:Description>
 </rdf:RDF>
