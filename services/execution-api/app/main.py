@@ -256,7 +256,11 @@ async def render_front_end(request: Request, workflow_id: str):
     ws_address = f"{request.base_url.__str__().replace('http','ws')}/{EXECUTION_INGRESS_PATH}/state/ws/{workflow_id}"
 
     template = env.get_template("execution_template.html.j2")
-    html_content = template.render(request=request, ws_address=ws_address)
+    html_content = template.render(request=request,
+                                   executionApiIngress=EXECUTION_INGRESS_PATH,
+                                   dataUploadIngress=DATA_MANAGER_API_INGRESS,
+                                   sibManagerIngress=SIB_MANAGER_INGRESS_PATH,
+                                   ws_address=ws_address)
 
     return HTMLResponse(content=html_content)
 
