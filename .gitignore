@@ -132,4 +132,5 @@ dmypy.json
 local_secrets.txt
 sibgen/
 test.owl
+dep_cincodebio.owl
 mock-front-end-design/
