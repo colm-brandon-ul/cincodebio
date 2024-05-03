@@ -8,3 +8,4 @@ pymongo
 minio
 kubernetes
 watchgod
+aiofiles
