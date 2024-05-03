@@ -2,7 +2,7 @@
 <catalog prefer="public" xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog">
     <uri id="Imports Wizard Entry" name="http://www.cincodebio.org/cdbontology" uri="CincoDeBio.owl"/>
     <group id="Folder Repository, directory=, recursive=true, Auto-Update=true, version=2" prefer="public" xml:base="">
-        <uri id="Automatically generated entry, Timestamp=1714557764973" name="http://www.cincodebio.org/cdbontology" uri="CincoDeBio.owl"/>
-        <uri id="Automatically generated entry, Timestamp=1714557764973" name="http://www.semanticweb.org/ontology" uri="test.owl"/>
+        <uri id="Automatically generated entry, Timestamp=1714748358257" name="http://www.cellmaps.org/cellmapsontology" uri="cellmaps.owl"/>
+        <uri id="Automatically generated entry, Timestamp=1714748358257" name="http://www.semanticweb.org/ontology" uri="test.owl"/>
     </group>
 </catalog>
