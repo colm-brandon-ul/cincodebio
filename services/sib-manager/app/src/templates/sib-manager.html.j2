@@ -1,14 +1,68 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>SIB Installation Manager</title>
     <style>
-        /* Global Styles */
-        body {
-            font-family: Arial, sans-serif;
+        :root {
+            --background: #ffffff;
+            --modal-background-color: #f9f9f9;
+            --modal-border-color: #ccc;
+            --modal-border-radius: 8px;
+            --clickable-modal-background-color: #f8f8f8;
+            --clickable-text: #007bff;
+            --text: #000000;
+            --heading: #61dafb;
+            --submit-button-color: #3498db;
+            --submit-button-color-hover: #2186c4;
+
+        }
+
+        nav {
+            background-color: var(--modal-background-color);
+            border: 1px solid var(--modal-border-color);
+            border-radius: var(--modal-border-radius);
+            padding: 10px;
+            display: flex;
+            justify-content: flex-end;
+            /* Modified: right-align the nav */
+            align-items: center;
+            margin-bottom: 1vh;
+        }
+
+        #cdbLogo {
+            height: 5vh;
+            margin-right: auto;
+        }
+
+        nav ul {
+            list-style-type: none;
             margin: 0;
             padding: 0;
+            display: flex;
         }
+
+        nav ul li {
+            margin-right: 20px;
+        }
+
+        nav ul li a {
+            color: var(--text);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        nav ul li a:hover {
+            color: var(--heading);
+        }
+
+        /* Global Styles */
+        body {
+            background-color: var(--background);
+            color: var(--text);
+            font-family: Arial, sans-serif;
+        }
+
         /* Loading Modal Style */
         .loading {
             display: none;
@@ -20,7 +74,7 @@
             background-color: rgba(0, 0, 0, 0.5);
             z-index: 9999;
             text-align: center;
-            text-transform: uppercase; 
+            text-transform: uppercase;
             font-size: 60px;
             line-height: 100vh;
         }
@@ -30,8 +84,9 @@
         .container {
             display: flex;
             justify-content: center;
-            align-items: center;
-            height: 100vh;
+            /* align-items: bottom; */
+            height: 70vh;
+
         }
 
         /* Lists Styles */
@@ -39,14 +94,17 @@
             display: flex;
             justify-content: space-between;
             width: 60vw;
+            min-height: 40vh;
         }
 
         .list {
             width: 20vw;
+            margin-left: 0.5vw;
+            margin-right: 0.5vw;
             padding: 10px;
             border: 1px solid #ccc;
             border-radius: 5px;
-            background-color: #f5f5f5;
+            background-color: #fcfcfc;
         }
 
         .list h3 {
@@ -62,7 +120,7 @@
             margin-bottom: 5px;
             padding: 5px;
             cursor: pointer;
-            background-color: #fff;
+            background-color: var(--clickable-modal-background-color);
             border: 1px solid #ccc;
             border-radius: 3px;
             transition: background-color 0.3s ease;
@@ -76,39 +134,80 @@
             background-color: #ccc;
         }
 
+
+        #buttonContainer {
+            width: 100%;
+            margin: 10px 0;
+            display: flex;
+            justify-content: center;
+        }
+
+        #buttonContainer button[type="submit"] {
+            margin: 0 auto;
+        }
+
+
         /* Button Styles */
         .button {
             margin-top: 10px;
         }
+
+        button[type="submit"] {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 4px;
+            background-color: var(--submit-button-color);
+            color: #fff;
+            font-size: 1rem;
+            cursor: pointer;
+            width: 59.5vw;
+
+        }
+
+        button[type="submit"]:hover {
+            background-color: var(--submit-button-color-hover);
+        }
     </style>
 </head>
+
 <body>
+    <nav>
+        <!-- need to set a proper source URI for this -->
+        <img id="cdbLogo" src="/{{ sibManagerIngress }}/static/cdbLogo.png" alt="Image">
+        <ul>
+            <!-- URLs need to be set by the cluster ingress -->
+            <li><a href="/{{ executionApiIngress }}/">Workflows</a></li>
+            <li><a href="/{{ dataUploadIngress }}/">Data Upload</a></li>
+            <li><a href="/{{ sibManagerIngress }}/">Manage Sibs</a></li>
+        </ul>
+    </nav>
     <div class="container">
         <div class="lists">
             <div class="list">
                 <h3>Latest Version</h3>
                 {% for item in latest %}
-                    <div class="list-item" onclick="moveItem(this, 'installed')" data-item="{{ item }}">{{ item }}</div>
+                <div class="list-item" onclick="moveItem(this, 'installed')" data-item="{{ item }}">{{ item }}</div>
                 {% endfor %}
             </div>
             <div class="list">
                 <h3>Older Version (s)</h3>
                 {% for item in rest %}
-                    <div class="list-item" onclick="moveItem(this, 'installed')" data-item="{{ item }}">{{ item }}</div>
+                <div class="list-item" onclick="moveItem(this, 'installed')" data-item="{{ item }}">{{ item }}</div>
                 {% endfor %}
             </div>
             <div class="list" id="installed">
                 <h3>Installed</h3>
                 {% for item in installed %}
-                    <div class="list-item" onclick="removeItem(this)" data-item="{{ item }}">{{ item }}</div>
+                <div class="list-item" onclick="removeItem(this)" data-item="{{ item }}">{{ item }}</div>
                 {% endfor %}
             </div>
         </div>
-        <button onclick="submit()">Submit</button>
+    </div>
+    <div id="buttonContainer">
+        <button type="submit" onclick="submit()">Submit</button>
     </div>
     <div class="loading">Loading...</div>
 
-    
 
     <script>
 
@@ -124,11 +223,11 @@
             var target = document.getElementById(targetList);
             var itemData = item.getAttribute('data-item');
             var existingItems = target.querySelectorAll('.list-item[data-item="' + itemData + '"]');
-            
+
             if (existingItems.length === 0) {
                 if (!item.classList.contains('selected')) {
                     var clonedItem = item.cloneNode(true);
-                    clonedItem.onclick = function() {
+                    clonedItem.onclick = function () {
                         removeItem(this);
                     };
                     target.appendChild(clonedItem);
@@ -152,38 +251,37 @@
             showLoading();
             var installedItems = document.querySelectorAll('#installed .list-item');
             var dataArray = [];
-            installedItems.forEach(function(item) {
+            installedItems.forEach(function (item) {
                 dataArray.push(item.getAttribute('data-item'));
             });
             console.log(dataArray);
 
             fetch('{{ submit_url }}', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(dataArray),
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(dataArray),
             })
-            .then(response => response.json())
-            .then(data => {
-                hideLoading();
-                console.log('Success:', data.status);
-                if (data.status === 'success') {
-                    alert('Software Installation Successful');
-                    location.reload();
-                } else {
-                    alert('Software Installation Failed');
-                }
-             
-            })
-            .catch((error) => {
-                hideLoading();
-                console.error('Error:', error);
-            });
+                .then(response => response.json())
+                .then(data => {
+                    hideLoading();
+                    console.log('Success:', data.status);
+                    if (data.status === 'success') {
+                        alert('Software Installation Successful');
+                        location.reload();
+                    } else {
+                        alert('Software Installation Failed');
+                    }
+
+                })
+                .catch((error) => {
+                    hideLoading();
+                    console.error('Error:', error);
+                });
 
         }
-        
-
     </script>
 </body>
+
 </html>

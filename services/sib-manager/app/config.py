@@ -1,6 +1,7 @@
 import jinja2
 
 TEMPLATE_DIR = "./src/templates/"
+STATIC_DIR = "./src/static/"
 STATIC_CODE_DIR = "./src/static-code/"
 PERSISTENT_STATE_MOUNT_PATH = "/sib-manager-state"
 

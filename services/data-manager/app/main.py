@@ -1,3 +1,4 @@
+from pathlib import Path
 from fastapi import FastAPI, Request
 from fastapi.responses import FileResponse, HTMLResponse
 from fastapi.staticfiles import StaticFiles
@@ -22,8 +23,16 @@ MINIO_FQDN = f'{os.environ.get("MINIO_SERVICE_HOSTNAME")}.{os.environ.get("CINCO
 MINIO_SERVICE_PORT = os.environ.get('MINIO_SERVICE_PORT')
 MINIO_PRESIGNED_EXTERNAL_PATH = 'minio-presigned'
 
+# Get Ingress Paths
+SIB_MANAGER_API_INGRESS = os.environ.get('SIB_MANAGER_API_INGRESS_PATH')
+EXECUTION_API_INGRESS = os.environ.get('EXECUTION_API_INGRESS_PATH')
+DATA_MANAGER_API_INGRESS = os.environ.get('DATA_MANAGER_API_INGRESS')
+
+BASE_DIR = Path(__file__).resolve().parent
+
 app = FastAPI()
-app.mount("/static", StaticFiles(directory="static"), name="static")
+env = Environment(loader=FileSystemLoader(Path(BASE_DIR,"templates")))
+app.mount("/static", StaticFiles(directory=Path(BASE_DIR,"static")), name="static")
 
 
 def get_minio_client():
@@ -67,12 +76,29 @@ def make_external_url(request_base_url: str, presigned_url: str) -> str:
     # + it needs to base path i.e. minio-presigned/
     return presigned._replace(netloc=base_url.netloc, path=f'{MINIO_PRESIGNED_EXTERNAL_PATH}{presigned.path}').geturl()
 
-@app.get("/")
-def read_root():
+
+
+@app.get("/", response_class=HTMLResponse)
+def read_root(request: Request):
     # This will need to be generated based on the ontology version installed
-    return FileResponse('static/index.html')
+    
+    # retreive the ontology version from the environment variable
+    # extract the subclasses of Experiment, etc..
+
+    template = env.get_template("index.html.j2")
+    html_content = template.render(
+        request=request,
+        # replace with environment variable
+        sibManagerIngress=SIB_MANAGER_API_INGRESS,
+        executionApiIngress=EXECUTION_API_INGRESS,
+        dataUploadIngress=DATA_MANAGER_API_INGRESS)
+
+    return HTMLResponse(content=html_content)
+
 
     
+
+
 
 @app.get("/check-prefix")
 def check_prefix(prefix: str):

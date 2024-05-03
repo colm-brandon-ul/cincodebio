@@ -1,3 +1,4 @@
+{# Template for providing updates of the workflow execution steps #}
 <html>
     <head>
         <style>
@@ -9,11 +10,16 @@
             */
         
             :root {
-                --background: #11667e;
-                --object-color: #282c34;
+                --background: #ffffff;
+                --modal-background-color: #f9f9f9;
+                --modal-border-color: #ccc;
+                --modal-border-radius: 8px;
+                --clickable-modal-background-color: #f8f8f8;
                 --clickable-text: #007bff;
-                --text: #ffffff;
+                --text: #000000;
                 --heading: #61dafb;
+                --submit-button-color: #3498db;
+                --submit-button-color-hover: #2186c4;
         
             }
             
@@ -22,6 +28,44 @@
                 color: var(--text);
                 font-family: Arial, sans-serif;
             }
+        
+            nav {
+                background-color: var(--modal-background-color);
+                border: 1px solid var(--modal-border-color);
+                border-radius: var(--modal-border-radius);
+                padding: 10px;  
+                display: flex;
+                justify-content: flex-end; /* Modified: right-align the nav */
+                align-items: center;
+                margin-bottom: 1vh;
+            }
+
+            #cdbLogo {
+                    height: 5vh;
+                    margin-right: auto;
+            }
+
+            nav ul {
+                list-style-type: none;
+                margin: 0;
+                padding: 0;
+                display: flex;
+            }
+
+            nav ul li {
+                margin-right: 20px;
+            }
+
+            nav ul li a {
+                color: var(--text);
+                text-decoration: none;
+                transition: color 0.3s ease;
+            }
+
+            nav ul li a:hover {
+                color: var(--heading);
+            }
+
         
             h1 {
                 color: var(--heading)
@@ -59,22 +103,30 @@
          
         
             #wf-state-container li {
-                    border: 1px solid var(--object-color);
-                    background-color: var(--object-color);
+                    background-color: var(--modal-background-color);
                     /* padding: 10px; */
                     margin-bottom: 10px;
-                    border-radius: 5px;
+                    border: 1px solid #ccc;
+                    border-radius: 8px;
                     
+            }
+
+            #wf-state-container li.has-link {
+            background-color: #007BFF; /* Adjust this color to your liking */
+            }
+
+            #wf-state-container li.has-link:hover {
+                background-color: var(--submit-button-color-hover);
             }
         
             #wf-state-container li a {
                 display: block;
-                
+                color: #ffffff;
                 width: 100%;
             }
         
             #wf-state-container li a > span {
-                color: var(--clickable-text);
+                color: #ffffff;
                 padding: 10px;
                 
             }
@@ -84,6 +136,7 @@
                 padding: 10px;
                 
             }
+            
         
         </style>
         <script>
@@ -158,14 +211,15 @@
                             console.log(item.job_status == 'awaiting_interaction')
                             var content
                             if (item.job_status == 'awaiting_interaction'){
-                                
+                                // creates a clickable hyperlink and puts the job_status as the text inside a span
                                 content = document.createElement('a')
                                 content.setAttribute("href",item.url)
-                                content_text = document.createTextNode(item.job_status);
+                                content_text = document.createTextNode(`${item.service_name} - ${item.job_status}`);
                                 content.appendChild(content_text)
                             }
                             else{
-                                content = document.createTextNode(item.job_status)
+                                // creates a span with the job_status as the text
+                                content = document.createTextNode(`${item.service_name} - ${item.job_status}`)
                             }
                             
                             message.appendChild(content)
@@ -175,17 +229,17 @@
                             if (item.job_status != wf_state.state[index].job_status){
                             existing_text_node = document.getElementById(item.id)
                             // console.log(wf_state.state[index])
-                            console.log(item.job_status + " " + wf_state.state[index].job_status)
-                            console.log(item.job_status != wf_state.state[index].job_status)
+                            // console.log(item.job_status + " " + wf_state.state[index].job_status)
+                            // console.log(item.job_status != wf_state.state[index].job_status)
                             let newNode;
                             if (item.job_status == 'awaiting_interaction') {
                                 newNode = document.createElement('a')
                                 newNode.setAttribute("href",item.url)
-                                content_text = document.createTextNode(item.job_status);
+                                content_text = document.createTextNode(`${item.service_name} - ${item.job_status}`);
                                 newNode.appendChild(content_text)
                             }
                             else{
-                                newNode = document.createTextNode(item.job_status);
+                                newNode = document.createTextNode(`${item.service_name} - ${item.job_status}`);
                             }
 
                             
@@ -210,15 +264,20 @@
                             content = document.createElement('a');
                             var link = document.createElement('span');
                             content.setAttribute("href", item.url);
-                            var content_text = document.createTextNode(item.job_status);
+                            var content_text = document.createTextNode(`${item.service_name} - ${item.job_status}`);
                             link.appendChild(content_text);
-                            content.appendChild(link);
+                            content.appendChild(link)
+                            
+                             // Add a class to the li element
+                             message.classList.add('has-link');;
                             
                         }
                         else{
                             content = document.createElement('span');
-                            var content_text = document.createTextNode(item.job_status);
+                            var content_text = document.createTextNode(`${item.service_name} - ${item.job_status}`);
                             content.appendChild(content_text);
+
+                           
                         }
 
                         // var content = document.createTextNode(item.job_status)
@@ -231,7 +290,7 @@
                 }
               
             };
-    
+            // Send Echo every second for Websocket to stay open
             setInterval(sendEcho,1000)
         </script>
         <title>
@@ -239,8 +298,23 @@
         </title>
     </head>
     <body>
-        <div id="wf-status"></div>
-        <ol id="wf-state-container"></div>
+        <nav>
+            <!-- need to set a proper source URI for this -->
+            <img id="cdbLogo" src="/{{ executionApiIngress }}/static/cdbLogo.png" alt="Image">
+            <ul>
+                <!-- URLs need to be set by the cluster ingress -->
+                <li><a href="/{{ executionApiIngress }}/">Workflows</a></li>
+                <li><a href="/{{ dataUploadIngress }}/">Data Upload</a></li>
+                <li><a href="/{{ sibManagerIngress }}/">Manage Sibs</a></li>
+            </ul>
+        </nav>
+
+        <div id="wf-status">
+
+        </div>
+        <ol id="wf-state-container">
+
+        </ol>
     </body>
 
 

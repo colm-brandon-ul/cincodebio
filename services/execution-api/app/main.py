@@ -1,3 +1,4 @@
+from typing import List
 from fastapi import FastAPI, WebSocket, File, UploadFile, BackgroundTasks, Request, WebSocketDisconnect, status
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse, JSONResponse
@@ -17,8 +18,11 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent
 
 WORKFLOW_LOG_PATH = os.environ.get('WORKFLOW_LOGS_PATH')
+# Get Ingress Paths
 EXECUTION_INGRESS_PATH = os.environ.get('EXECUTION_API_INGRESS_PATH')
 SERVICES_INGRESS_PATH = os.environ.get('SERVICES_API_INGRESS_PATH')
+SIB_MANAGER_INGRESS_PATH = os.environ.get('SIB_MANAGER_API_INGRESS_PATH')
+DATA_MANAGER_API_INGRESS = os.environ.get('DATA_MANAGER_API_INGRESS')
 
 
 logging.basicConfig(format='%(asctime)s - %(process)d - %(levelname)s - %(message)s', level=logging.WARNING)
@@ -32,7 +36,7 @@ logging.basicConfig(format='%(asctime)s - %(process)d - %(levelname)s - %(messag
     - API for returning all workflows
 """
 
-from models import JobStatus, UpdateWorkflow, Workflow, JobState, WorkflowStatus
+from models import JobStatus, UpdateWorkflow, Workflow, JobState, WorkflowState, WorkflowStatus
 from handlers import (add_job_state_to_workflow_in_db, create_workflow_log_file, get_workflow_from_db_by_id, 
                       model_submission_handler, insert_new_workflow_to_db, create_logs_directory_handler,
                        update_job_status_in_workflow_in_db, update_workflow_in_db, update_workflow_log_file)
@@ -41,7 +45,7 @@ from db import get_db_client
 
 app = FastAPI()
 env = Environment(loader=FileSystemLoader(Path(BASE_DIR,"templates")))
-# app.mount("/static", StaticFiles(directory="static"), name="static")
+app.mount("/static", StaticFiles(directory=Path(BASE_DIR,"static")), name="static")
 
 # Handles the Ingestion of the Model from the IME
 # Returns the URL
@@ -52,6 +56,8 @@ async def startup_event():
     create_logs_directory_handler(WORKFLOW_LOG_PATH=WORKFLOW_LOG_PATH)
 
 
+# Needs to be indepotent (possibly?)
+# Model Submission Endpoint
 @app.post("/model/submit")
 async def root(request: Request, background_tasks: BackgroundTasks, model: UploadFile = File(...)):
     # Let the full file upload
@@ -84,9 +90,8 @@ async def root(request: Request, background_tasks: BackgroundTasks, model: Uploa
         status_code=status.HTTP_202_ACCEPTED, 
         content={"url": str(request.base_url) + f"{EXECUTION_INGRESS_PATH}/frontend/{uuid}"})
 
-
+# Handles the Callbacks from the Job Management Service
 # Needs to be indepotent (possibly?)
-# With Job ID
 @app.post("/control/callback/{workflow_id}")
 async def handles_callbacks(workflow_id: str, job: JobState):
     logging.warning(f'JOB STATE SENT: {job}')
@@ -103,7 +108,6 @@ async def handles_callbacks(workflow_id: str, job: JobState):
         # Happens in the case of an where the front end is available for the user to perform their interaction
         update_job_status_in_workflow_in_db(workflow_id=workflow_id, job_state=job)
         # Update the Database with the new State (so that URL to front is presented to the user)
-        # get_db_client()
     
     # Callback from the execution environment to update the workflow object id 
     elif job.job_status == JobStatus.submitted:
@@ -122,8 +126,6 @@ async def handles_callbacks(workflow_id: str, job: JobState):
         logging.warning(job)
         update_job_status_in_workflow_in_db(workflow_id=workflow_id, job_state=job)
 
-
-
     # Callbacks from the JMS, Occurs when the data processing service reads the job off the queue
     elif job.job_status == JobStatus.processing:
         logging.warning(f'Job {job.id}, has started processing')
@@ -132,34 +134,19 @@ async def handles_callbacks(workflow_id: str, job: JobState):
     
     # Callbacks from the JMS - if job failed, need to figure this one out
     elif job.job_status == JobStatus.failed:
+        # TO BE IMPLEMENTED
+        # Should add a kill statement to log file for execution environment
         pass
     
-    # logging.warning(f"Callback made for Workflow: {workflow_id}, Job: {job.id}, with Status: {job.job_status}")
-    # f = open(f"data/test-id-{workflow_id}.txt", "a")
-    # f.write(r"\tCallback has been made!")
-    # return None
 
 @app.post("/control/update-workflow/{workflow_id}")
 async def update_workflow_state(workflow_id: str, workflow_update: UpdateWorkflow):
-
     update_workflow_in_db(
         workflow_id=workflow_id,
         workflow=workflow_update)
+    
 
-@app.get("/frontend/{workflow_id}", response_class=HTMLResponse)
-async def render_front_end(request: Request, workflow_id: str):
-    logging.warning(f"FRONT END REQUEST: {request.base_url}")
-
-    # Create the appropriate WS address
-    ws_address = f"{request.base_url.__str__().replace('http','ws')}/{EXECUTION_INGRESS_PATH}/state/ws/{workflow_id}"
-
-    template = env.get_template("execution_template.html")
-    html_content = template.render(request=request, ws_address=ws_address)
-
-    return HTMLResponse(content=html_content)
-
-
-
+# Websocket(s) for the Front End
 class ConnectionManager:
     def __init__(self):
         self.active_connections: list[WebSocket] = []
@@ -173,12 +160,7 @@ class ConnectionManager:
 
     async def send_json(self, message: str, websocket: WebSocket):
         await websocket.send_json(message)
-
-
 manager = ConnectionManager()
-
-
-# Needs to read the state from somewhere and push it to the front-end
 @app.websocket("/state/ws/{workflow_id}")
 async def websocket_endpoint(websocket: WebSocket,workflow_id: str):
     logging.warning(f"WS COOKIES: {websocket.cookies}")
@@ -200,17 +182,22 @@ async def websocket_endpoint(websocket: WebSocket,workflow_id: str):
         # await manager.broadcast(f"Client #{client_id} left the chat")
         
 
-@app.get("/get-workflows")
-async def get_all_workflow_objects():
-    return [obj for obj in get_db_client().find()]
+# Workflow Retrieval Endpoints
 
-@app.get("/get-worfklow/{workflow_id}")
+@app.get("/get-workflows", response_model=List[WorkflowState])
+async def get_all_workflow_objects():
+    # retrieve all workflows from the database
+    # return them as a list of WorkflowState objects
+    return [WorkflowState(**obj) for obj in get_db_client().find()]
+
+@app.get("/get-worfklow/{workflow_id}", response_model=Workflow)
 async def get_workflow_by_id(workflow_id: str):
     workflow_state = get_workflow_from_db_by_id(workflow_id)
-    return workflow_state.json()
+    return Workflow(**workflow_state)
 
 
 
+# TEST API ENDPOINT & HANDLER
 
 # Function to dispatch model to code generator
 def test_code_submission_handler(workflow_id, model):
@@ -227,10 +214,6 @@ def test_code_submission_handler(workflow_id, model):
                         json={"code": model.replace("WORKFLOW_ID", workflow_id), 
                               "workflow_id": workflow_id})
     logging.warning(str(res.status_code))
-
-
-
-
 
 
 @app.post("/test/python-code/submit")
@@ -263,4 +246,31 @@ async def root(request: Request, background_tasks: BackgroundTasks, model: Uploa
 
 
 
+# FRONT END RENDERING
+# Endpoint for displaying the progress of a single workflow
+@app.get("/frontend/{workflow_id}", response_class=HTMLResponse)
+async def render_front_end(request: Request, workflow_id: str):
+    logging.warning(f"FRONT END REQUEST: {request.base_url}")
 
+    # Create the appropriate WS address
+    ws_address = f"{request.base_url.__str__().replace('http','ws')}/{EXECUTION_INGRESS_PATH}/state/ws/{workflow_id}"
+
+    template = env.get_template("execution_template.html.j2")
+    html_content = template.render(request=request, ws_address=ws_address)
+
+    return HTMLResponse(content=html_content)
+
+# Endpoint for displaying all workflows
+@app.get("/", response_class=HTMLResponse)
+async def workflow_frontend(request: Request):
+    logging.warning(f"FRONT END REQUEST: {request.base_url}")
+    # Create the appropriate WS address
+    template = env.get_template("all_workflows.html.j2")
+    
+    html_content = template.render(
+        request=request, 
+        executionApiIngress=EXECUTION_INGRESS_PATH,
+        dataUploadIngress=DATA_MANAGER_API_INGRESS,
+        sibManagerIngress=SIB_MANAGER_INGRESS_PATH,
+        getWorkflowsEndpoint=f'/{EXECUTION_INGRESS_PATH}/get-workflows')
+    return HTMLResponse(content=html_content)

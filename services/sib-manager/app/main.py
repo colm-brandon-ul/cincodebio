@@ -1,6 +1,7 @@
 from typing import List
 from fastapi import FastAPI, Request, BackgroundTasks
 from fastapi.responses import HTMLResponse
+from fastapi.staticfiles import StaticFiles
 
 # from minio import Minio
 from kubernetes import client, config
@@ -27,6 +28,7 @@ import handlers
 # workdir needs to be set to the root of the project (i.e. app)
 from config import (
     TEMPLATE_DIR,
+    STATIC_DIR,
     PERSISTENT_STATE_MOUNT_PATH,
     LATEST_SIBS,
     OTHER_SIBS,
@@ -35,6 +37,11 @@ from config import (
     UTD_SIB_FILE,
     JINJA_ENV
 )
+
+# Get Ingress Paths
+EXECUTION_INGRESS_PATH = os.environ.get('EXECUTION_API_INGRESS_PATH')
+DATA_MANAGER_API_INGRESS = os.environ.get('DATA_MANAGER_API_INGRESS')
+SIB_MANAGER_API_INGRESS = os.environ.get('SIB_MANAGER_API_INGRESS_PATH')
 
 # K8S ENVIRONMENT VARIABLES (used in app)
 #     - CONTAINER_REGISTRY_DOMAIN_ON_HOST
@@ -57,11 +64,12 @@ from config import (
 # JINJA_ENV = jinja2.Environment(
 #     loader=jinja2.FileSystemLoader(TEMPLATE_DIR), 
 #     extensions=['jinja2_strcase.StrcaseExtension'])
+BASE_DIR = pathlib.Path(__file__).resolve().parent
 
 app = FastAPI()
+# For serving static files
+app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
 
-
-    
 
 @app.on_event("startup")
 async def startup_event():
@@ -103,22 +111,6 @@ def health_check():
     return {"status": "healthy"}
 
 
-@app.get("/get-installed-sibs")
-def get_installed_sibs():
-    state_path = pathlib.Path(PERSISTENT_STATE_MOUNT_PATH)
-    with open(state_path / INSTALLED_SIBS, "r") as f:
-        return json.loads(f.read())
-    
-
-@app.get("/get-uninstalled-sibs")
-def get_uninstalled_sibs():
-    # set of sibs that are not installed but are available
-    # compare latest and installed
-    state_path = pathlib.Path(PERSISTENT_STATE_MOUNT_PATH)
-    with open(state_path / OTHER_SIBS, "r") as f:
-        return json.loads(f.read())
-    
-
 # This is the front end for the SIB Manager
 @app.get("/")
 def sib_manager(request: Request):
@@ -150,10 +142,28 @@ def sib_manager(request: Request):
         "submit_url": submit_url,
         "latest": latest,
         "rest": rest,
-        "installed": installed
+        "installed": installed,
+        'dataUploadIngress': DATA_MANAGER_API_INGRESS,
+        'sibManagerIngress': SIB_MANAGER_API_INGRESS,
+        'executionApiIngress': EXECUTION_INGRESS_PATH
         }))
 
+# --- ENDPOINTS FOR THE SIB Manager --
+@app.get("/get-installed-sibs")
+def get_installed_sibs():
+    state_path = pathlib.Path(PERSISTENT_STATE_MOUNT_PATH)
+    with open(state_path / INSTALLED_SIBS, "r") as f:
+        return json.loads(f.read())
+    
 
+@app.get("/get-uninstalled-sibs")
+def get_uninstalled_sibs():
+    # set of sibs that are not installed but are available
+    # compare latest and installed
+    state_path = pathlib.Path(PERSISTENT_STATE_MOUNT_PATH)
+    with open(state_path / OTHER_SIBS, "r") as f:
+        return json.loads(f.read())
+    
 
 @app.post("/update-installed-sibs")
 def update_installed_sibs(body: List, request: Request, background_task: BackgroundTasks):

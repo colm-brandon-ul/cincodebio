@@ -1,0 +1,291 @@
+<html>
+<head>
+    <title>Upload Files</title>
+    <style>
+        :root {
+                --background: #ffffff;
+                --secondary: #007bff;
+                --modal-background-color: #f9f9f9;
+                --modal-border-color: #ccc;
+                --modal-border-radius: 8px;
+                --clickable-modal-background-color: #f8f8f8;
+                --clickable-text: #007bff;
+                --text: #000000;
+                --heading: #61dafb;
+                --submit-button-color: #3498db;
+                --submit-button-color-hover: #2186c4;
+        
+            }
+
+            nav {
+                background-color: var(--modal-background-color);
+                border: 1px solid var(--modal-border-color);
+                border-radius: var(--modal-border-radius);
+                padding: 10px;  
+                display: flex;
+                justify-content: flex-end; /* Modified: right-align the nav */
+                align-items: center;
+                margin-bottom: 1vh;
+            }
+
+
+            #cdbLogo {
+                    height: 5vh;
+                    margin-right: auto;
+            }
+
+
+            nav ul {
+                list-style-type: none;
+                margin: 0;
+                padding: 0;
+                display: flex;
+            }
+
+            nav ul li {
+                margin-right: 20px;
+            }
+
+            nav ul li a {
+                color: var(--text);
+                text-decoration: none;
+                transition: color 0.3s ease;
+            }
+
+            nav ul li a:hover {
+                color: var(--heading);
+            }
+
+            
+            body {
+                background-color: var(--background);
+                color: var(--text);
+                font-family: Arial, sans-serif;
+            }
+        
+            h1 {
+                color: var(--heading)
+            }
+        
+        /* Style for the loading modal */
+        .loading-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .loading-modal .loading-spinner {
+            border: 16px solid #f3f3f3;
+            border-top: 16px solid #3498db;
+            border-radius: 50%;
+            width: 120px;
+            height: 120px;
+            animation: spin 2s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Modern UI styling for the upload form */
+        #uploadForm {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            /* Added to center align vertically */
+            gap: 1rem;
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 2rem;
+            border: 1px solid var(--modal-border-color);
+            border-radius: var(--modal-border-radius);
+            background-color: var(--modal-background-color);
+        }
+
+        #uploadForm input[type="text"],
+        #uploadForm input[type="file"],
+        #uploadForm select {
+            padding: 0.5rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+
+        #uploadForm button[type="submit"] {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 4px;
+            background-color: var(--submit-button-color);
+            color: #fff;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+
+        #uploadForm button[type="submit"]:hover {
+            background-color: var(--submit-button-color-hover);
+        }
+
+        #uploadForm label {
+            display: block;
+            font-size: 1rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+    </style>
+</head>
+
+<body>
+    <nav>
+        <!-- need to set a proper source URI for this -->
+        <img id="cdbLogo" src="/{{ dataUploadIngress }}/static/cdbLogo.png" alt="Image">
+        <ul>
+            <!-- URLs need to be set by the cluster ingress -->
+            <li><a href="/{{ executionApiIngress }}/">Workflows</a></li>
+            <li><a href="/{{ dataUploadIngress }}/">Data Upload</a></li>
+            <li><a href="/{{ sibManagerIngress }}/">Manage Sibs</a></li>
+        </ul>
+    </nav>
+     <!-- TO DO -->
+    <!-- This needs to be dynamically populated from the ontology -->
+    <!-- Experiment Type is the SubClasses of Experiment -->
+    <!-- The remainder of the form is dynamic and based on the files associated with the Experiment SubClass in the ontology-->
+    <div>
+        <form id="uploadForm" action="/upload" method="post" enctype="multipart/form-data">
+            <label for="fileTypeSelect">Experimental Data Type:</label>
+            <select id="fileTypeSelect" name="fileTypeSelect" required>
+                <option value="TMA">TMA</option>
+                <option value="WSI">WSI</option>
+            </select>
+
+            <label for="id">Experiment ID:</label>
+            <!-- Need to do some form validation on input (needs to a valid prefix for Minio/filepath) -->
+            <input type="text" id="id" name="id" required placeholder="Enter experiment ID">
+
+            <label for="tiff_name">Image:</label>
+            <input type="file" id="tiff_name" name="tiff_name" accept=".tiff" required>
+
+            <label for="channel_markers">Marker File:</label>
+            <input type="file" id="channel_markers" name="channel_markers" accept=".txt" required>
+
+            <button type="submit">Upload</button>
+        </form>
+    </div>
+    <!-- Loading modal -->
+    <div class="loading-modal" id="loadingModal">
+        <div class="loading-spinner"></div>
+    </div>
+    <script>
+        document.getElementById("fileTypeSelect").addEventListener("change", function () {
+            var selectedOption = this.value;
+            console.log("You selected: ", selectedOption);
+            // You can add more code here to perform actions based on the selected option
+        });
+
+        
+
+        document.getElementById('uploadForm').addEventListener('submit', function (event) {
+            event.preventDefault(); // Prevent the form from submitting normally
+            let fetchPromises = [];
+            // Show the loading modal
+            document.getElementById('loadingModal').style.display = 'flex';
+
+            var fileInput = document.getElementById('uploadForm');
+            console.log(fileInput.fileTypeSelect.value);
+
+            var fileInputs = document.querySelectorAll('input[type="file"]');
+            
+            console.log(fileInputs[1].name);
+
+            let fetchP = fetch('/{{ dataUploadIngress }}/check-prefix?prefix=' + fileInput.id.value)
+                .then(response => response.json())
+                .then(data => {
+                    if (data) {
+                        fileInputs.forEach(function (input,index) {
+                            var file = input.files[0];
+                            console.log(input);
+                            console.log(file);
+                            // Perform actions with the file here
+                            let fetchp2 = fetch('/{{ dataUploadIngress }}/get-presigned-upload-url?prefix=' + fileInput.id.value + '&object_name=' + file.name + '&content_type=' + file.type)
+                                .then(response => response.json())
+                                .then(data => {
+                                    if (file) {
+
+                                        let fetchp3 = fetch(data, {
+                                            method: 'PUT',
+                                            body: file,
+                                        })
+                                            .then(response => response)
+                                            .then(data => {
+                                                console.log(data);
+                                                let fetchp4 = fetch('/{{ dataUploadIngress }}/add-tags?prefix=' + fileInput.id.value + '&object_name=' + file.name + '&content_type=' + file.type + '&experimental_tag=' + fileInput.fileTypeSelect.value + '&file_tag=' + input.name)
+                                                    .then(response => response.json())
+                                                    .then(data => {
+                                                        //console.log("Files uploaded successfully!");
+
+                                                        if (index === fileInputs.length - 1) {
+                                                            Promise.all(fetchPromises)
+                                                            .then(() => {
+                                                                console.log("All files uploaded successfully!");
+                                                                
+                                                                document.getElementById("uploadForm").reset();
+                                                                // Hide the loading modal after a delay (you can adjust the delay as needed)
+                                                                setTimeout(function () {
+                                                                            document.getElementById('loadingModal').style.display = 'none';
+                                                                        }, 100);
+                                                                alert("Files uploaded successfully!");
+                                                            })
+                                                            .catch(error => console.error(error));
+                                                           
+                                                        }
+                                                    })
+                                                    .catch(error => console.error(error));
+
+                                                fetchPromises.push(fetchp4);
+                                            })
+                                            .catch(error => console.error(error));
+
+                                    fetchPromises.push(fetchp3);
+                                    }
+                                })
+                                .catch(error => console.error(error));
+                                fetchPromises.push(fetchp2);
+                        });
+
+                    }
+                    else {
+                        alert("The id already exists. Please enter a new id.");
+                    }
+                })
+                .catch(error => console.error(error));
+
+
+            fetchPromises.push(fetchP);
+
+            
+
+
+        });
+        
+        
+
+
+        
+
+    </script>
+</body>
+
+</html>

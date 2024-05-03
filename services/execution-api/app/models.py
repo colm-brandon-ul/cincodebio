@@ -51,6 +51,16 @@ class JobState(BaseModel):
         arbitrary_types_allowed = True
         json_encoders = {ObjectId: str}
 
+class WorkflowState(BaseModel):
+    id: PyObjectId = Field(default_factory=PyObjectId, alias="_id")
+    owner: str = "public"
+    status: WorkflowStatus
+
+    class Config:
+        allow_population_by_field_name = True
+        arbitrary_types_allowed = True
+        json_encoders = {ObjectId: str}
+
 class Workflow(BaseModel):
     id: PyObjectId = Field(default_factory=PyObjectId, alias="_id")
     owner: str = "public"
