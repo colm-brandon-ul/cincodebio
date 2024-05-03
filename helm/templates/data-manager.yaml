@@ -50,3 +50,10 @@ spec:
               value: {{ .Values.minio.buckets.experimentBucket }}
             - name: MINIO_SERVICE_HOSTNAME
               value: {{ .Values.minio.nameOverride }}
+            - name: SIB_MANAGER_API_INGRESS_PATH
+              value: {{ .Values.global.sib_manager_ingress_path }}
+            - name: EXECUTION_API_INGRESS_PATH
+              value: {{ .Values.global.execution_api_ingress_path }}
+            - name: DATA_MANAGER_API_INGRESS
+              value: {{ .Values.global.data_manager_ingress_path }}
+            

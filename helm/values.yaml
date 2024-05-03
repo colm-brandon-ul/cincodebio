@@ -89,5 +89,6 @@ global:
   execution_api_ingress_path: 'execution-api'
   services_api_ingress_path: 'services-api'
   sib_manager_ingress_path: 'sib-manager'
+  data_manager_ingress_path: 'data-manager'
   application_namespace: "default"
   
