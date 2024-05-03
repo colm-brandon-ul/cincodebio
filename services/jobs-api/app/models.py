@@ -33,6 +33,7 @@ class JobStatus(str, Enum):
 class JobState(BaseModel):
     id: PyObjectId = Field(alias="_id")
     workflow: str
+    service_name : str # service name
     job_status: JobStatus
     data: typing.Optional[dict]
     frontend: typing.Optional[str]
@@ -52,6 +53,7 @@ class UpdateJobState(BaseModel):
 
 class CreateJobState(BaseModel):
     workflow: str
+    service_name : str # service name
     job_status: JobStatus = Field(default=JobStatus.submitted)
 
 

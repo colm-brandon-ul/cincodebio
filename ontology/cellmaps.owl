@@ -1,0 +1,601 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Currently using <rdfs:seeAlso> as the means of adding Schemas to CSV's, need to find a more elegent way to do this -->
+<rdf:RDF xmlns="http://www.cellmaps.org/cellmapsontology#"
+         xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:owl="http://www.w3.org/2002/07/owl#"
+         xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+         xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
+
+    <!-- Import statement -->
+    <owl:Ontology rdf:about="">
+        <owl:imports rdf:resource="/Users/colmbrandon/Desktop/cincodebio/ontology/CincoDeBio.owl"/>
+    </owl:Ontology>
+
+    <!-- Add your ontology content here -->
+
+    <!-- Domain Specific Data Structures -->
+    <!-- Atomic Types  -->
+    <!-- TissueMicroArrayProteinChannel -->
+    <owl:Class rdf:about="#TissueMicroArrayProteinChannel">
+        <rdfs:label>TissueMicroArrayProteinChannel</rdfs:label>
+        <rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#OMETIFF"/>
+        <rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#Atomic"/>
+        <rdfs:comment>This class describes a protein channel in a Tissue MicroArray.</rdfs:comment>
+    </owl:Class>
+
+    <!-- WholeSlideImageProteinChannel -->
+    <owl:Class rdf:about="#WholeSlideImageProteinChannel">
+        <rdfs:label>WholeSlideImageProteinChannel</rdfs:label>
+        <rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#OMETIFF"/>
+        <rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#Atomic"/>
+        <rdfs:comment>This class describes a protein channel in a Whole Slide Image.</rdfs:comment>
+    </owl:Class>
+
+    <!-- WholeSlideImageNucleusSegmentationMask -->
+    <owl:Class rdf:about="#WholeSlideImageNucleusSegmentationMask">
+        <rdfs:label>WholeSlideImageNucleusSegmentationMask</rdfs:label>
+        <rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#OMETIFF"/>
+        <rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#Atomic"/>
+        <rdfs:comment>This class describes a nucleus segmentation mask in a Whole Slide Image.</rdfs:comment>
+    </owl:Class>
+
+    <!-- WholeSlideImageMembraneSegmentationMask -->
+    <owl:Class rdf:about="#WholeSlideImageMembraneSegmentationMask">
+        <rdfs:label>WholeSlideImageMembraneSegmentationMask</rdfs:label>
+        <rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#OMETIFF"/>
+        <rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#Atomic"/>
+        <rdfs:comment>This class describes a membrane segmentation mask in a Whole Slide Image.</rdfs:comment>
+    </owl:Class>
+
+    <!-- TissueCoreNucleusSegmentationMask -->
+    <owl:Class rdf:about="#TissueCoreNucleusSegmentationMask">
+        <rdfs:label>TissueCoreNucleusSegmentationMask</rdfs:label>
+        <rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#OMETIFF"/>
+        <rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#Atomic"/>
+        <rdfs:comment>This class describes a nucleus segmentation mask in a Tissue Core.</rdfs:comment>
+    </owl:Class>
+
+    <!-- TissueCoreMembraneSegmentationMask -->
+    <owl:Class rdf:about="#TissueCoreMembraneSegmentationMask">
+        <rdfs:label>TissueCoreMembraneSegmentationMask</rdfs:label>
+        <rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#OMETIFF"/>
+        <rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#Atomic"/>
+        <rdfs:comment>This class describes a membrane segmentation mask in a Tissue Core.</rdfs:comment>
+    </owl:Class>
+
+    <!-- TissueCoreProteinChannel -->
+    <owl:Class rdf:about="#TissueCoreProteinChannel">
+        <rdfs:label>TissueCoreProteinChannel</rdfs:label>
+        <rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#OMETIFF"/>
+        <rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#Atomic"/>
+        <rdfs:comment>This class describes a protein channel in a Tissue Core.</rdfs:comment>
+    </owl:Class>
+
+    <!-- WholeSlideImageMissileFCS -->
+    <owl:Class rdf:about="#WholeSlideImageMissileFCS">
+        <rdfs:label>WholeSlideImageMissileFCS</rdfs:label>
+        <rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#CSV"/>
+        <rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#Atomic"/>
+        <rdfs:comment>This class describes a missile FCS in a Whole Slide Image.</rdfs:comment>
+        <rdfs:seeAlso>{Schema:{"Cell_ID": "int", "Region": "int", "x": "int", "y": "int", "Size": "int", "Perimeter": "float", "MajorAxisLength": "float", "MinorAxisLength": "float", "Eccentricity": "float", "Solidity": "float", "MajorMinorAxisRatio": "float", "PerimeterSquareToArea": "float", "MajorAxisToEquivalentDiam": "float", "NucCytoRatio": "float", "*": "float"}}</rdfs:seeAlso> <!-- * is a wildcard simply meaning all non-named columns simply need to match that type -->
+    </owl:Class>
+
+    <!-- TissueCoreMissileFCS -->
+    <owl:Class rdf:about="#TissueCoreMissileFCS">
+        <rdfs:label>TissueCoreMissileFCS</rdfs:label>
+        <rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#CSV"/>
+        <rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#Atomic"/>
+        <rdfs:comment>This class describes a missile FCS in a Tissue Core.</rdfs:comment>
+        <rdfs:seeAlso>{Schema:{"Cell_ID": "int", "Region": "int", "x": "int", "y": "int", "Size": "int", "Perimeter": "float", "MajorAxisLength": "float", "MinorAxisLength": "float", "Eccentricity": "float", "Solidity": "float", "MajorMinorAxisRatio": "float", "PerimeterSquareToArea": "float", "MajorAxisToEquivalentDiam": "float", "NucCytoRatio": "float", "*": "float"}}</rdfs:seeAlso> <!-- * is a wildcard simply meaning all non-named columns simply need to match that type -->
+    </owl:Class>
+
+    <!-- MissileExpressionCounts -->
+    <owl:Class rdf:about="#MissileExpressionCounts">
+        <rdfs:label>MissileExpressionCounts</rdfs:label>
+        <rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#CSV"/>
+        <rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#Atomic"/>
+        <rdfs:comment>This class describes missile expression counts.</rdfs:comment>
+        <rdfs:seeAlso>{Schema:{"*" : float}}</rdfs:seeAlso> <!-- * is a wildcard simply meaning all non-named columns simply need to match that type -->
+    </owl:Class>
+
+    <!-- MissileExpressionSpatialData -->
+    <owl:Class rdf:about="#MissileExpressionSpatialData">
+        <rdfs:label>MissileExpressionSpatialData</rdfs:label>
+        <rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#CSV"/>
+        <rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#Atomic"/>
+        <rdfs:comment>This class describes missile expression spatial data.</rdfs:comment>
+        <rdfs:seeAlso>{Schema:{"x": int, "y": int}}</rdfs:seeAlso>
+    </owl:Class>
+
+    <!-- MissileMetadata -->
+    <owl:Class rdf:about="#MissileMetadata">
+        <rdfs:label>MissileMetadata</rdfs:label>
+        <rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#CSV"/>
+        <rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#Atomic"/>
+        <rdfs:comment>This class describes missile metadata.</rdfs:comment>
+        <rdfs:seeAlso>{Schema:{"allRegions": int, "Size": int,"Perimeter": float, "MajorAxisLength": float, "MinorAxisLength": float, "Eccentricity": float, "Solidity": float, "MajorMinorAxisRatio": float, "PerimeterSquareToArea": float, "MajorAxisToEquivalentDiam": float, "NucCytoRatio": float}}</rdfs:seeAlso>
+    </owl:Class>
+
+    <!-- MissileClusters -->
+    <owl:Class rdf:about="#MissileClusters">
+        <rdfs:label>MissileClusters</rdfs:label>
+        <rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#CSV"/>
+        <rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#Atomic"/>
+        <rdfs:comment>This class describes missile clusters.</rdfs:comment>
+        <rdfs:seeAlso>{Schema:{"cluster_labels": int}}</rdfs:seeAlso>
+    </owl:Class>
+
+    <!-- MissileNeighbourhoods -->
+    <owl:Class rdf:about="#MissileNeighbourhoods">
+        <rdfs:label>MissileNeighbourhoods</rdfs:label>
+        <rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#CSV"/>
+        <rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#Atomic"/>
+        <rdfs:comment>This class describes missile neighbourhoods.</rdfs:comment>
+        <rdfs:seeAlso>{Schema:{"cluster_labels": int}}</rdfs:seeAlso>
+    </owl:Class>
+
+
+
+    <!-- Plot -->
+    <owl:Class rdf:about="#Plot">
+        <rdfs:label>Plot</rdfs:label>
+        <rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#PNG"/>
+        <rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#Atomic"/>
+        <rdfs:comment>This class describes a plot. Could make this less generic (i.e. to plot type) </rdfs:comment>
+    </owl:Class>
+
+    <!-- NuclearStain -->
+    <owl:Class rdf:about="#NuclearStain">
+        <rdfs:label>NuclearStain</rdfs:label>
+        <rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#String"/>
+        <rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#Atomic"/>
+        <rdfs:comment>This class describes a nuclear stain.</rdfs:comment>
+    </owl:Class>
+
+    <!-- NuclearMarker  -->
+    <owl:Class rdf:about="#NuclearMarker">
+        <rdfs:label>NuclearMarker</rdfs:label>
+        <rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#String"/>
+        <rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#Atomic"/>
+        <rdfs:comment>This class describes a nuclear marker.</rdfs:comment>
+    </owl:Class>
+
+    <!-- MembraneMarker -->
+    <owl:Class rdf:about="#MembraneMarker">
+        <rdfs:label>MembraneMarker</rdfs:label>
+        <rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#String"/>
+        <rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#Atomic"/>
+        <rdfs:comment>This class describes a membrane marker.</rdfs:comment>
+    </owl:Class>
+
+    <!-- ProteinChannelMarker  -->
+    <owl:Class rdf:about="#ProteinChannelMarker">
+        <rdfs:label>ProteinChannelMarker</rdfs:label>
+        <rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#String"/>
+        <rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#Atomic"/>
+        <rdfs:comment>This class describes a protein channel marker.</rdfs:comment>
+    </owl:Class>
+
+    <!-- RegionOfInterest  -->
+    <owl:Class rdf:about="#RegionOfInterest">
+        <rdfs:label>RegionOfInterest</rdfs:label>
+        <rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#Atomic"/>
+        <rdfs:comment>This class describes a region of interest.</rdfs:comment>
+    </owl:Class>
+
+
+      <!-- Define the data properties -->
+    <owl:DatatypeProperty rdf:about="#x1">
+        <rdfs:label>x1</rdfs:label>
+        <rdfs:domain rdf:resource="#RegionOfInterest"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#float"/>
+    </owl:DatatypeProperty>
+
+    <owl:DatatypeProperty rdf:about="#y1">
+        <rdfs:label>y1</rdfs:label>
+        <rdfs:domain rdf:resource="#RegionOfInterest"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#float"/>
+    </owl:DatatypeProperty>
+
+    <owl:DatatypeProperty rdf:about="#x2">
+        <rdfs:label>x2</rdfs:label>
+        <rdfs:domain rdf:resource="#RegionOfInterest"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#float"/>
+    </owl:DatatypeProperty>
+
+    <owl:DatatypeProperty rdf:about="#y2">
+        <rdfs:label>y2</rdfs:label>
+        <rdfs:domain rdf:resource="#RegionOfInterest"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#float"/>
+    </owl:DatatypeProperty>
+
+    <owl:DatatypeProperty rdf:about="#img_w">
+        <rdfs:label>img_w</rdfs:label>
+        <rdfs:domain rdf:resource="#RegionOfInterest"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#float"/>
+    </owl:DatatypeProperty>
+
+    <owl:DatatypeProperty rdf:about="#img_h">
+        <rdfs:label>img_h</rdfs:label>
+        <rdfs:domain rdf:resource="#RegionOfInterest"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#float"/>
+    </owl:DatatypeProperty>
+
+
+    <!-- Non Atomic Classes -->
+    <!-- Normal Classes -->
+    <!-- WholeSlideImageCellSegmentationMask -->
+    <owl:ObjectProperty rdf:about="#hasNucleusMask">
+        <rdfs:label>TissueCoreNucleusMask</rdfs:label>
+        <rdfs:comment>Relates a Tissue Core CellMask to it's NucleusMask</rdfs:comment>
+        <rdfs:domain rdf:resource="http://www.cincodebio.org/cdbontology#NonAtomic"/>
+        <rdfs:range rdf:resource="http://www.cincodebio.org/cdbontology#Atomic"/>
+    </owl:ObjectProperty>
+
+    <owl:ObjectProperty rdf:about="#hasMembraneMask">
+        <rdfs:label>MembraneMask</rdfs:label>
+        <rdfs:comment>Relates a Tissue Core CellMask to it's MembraneMask</rdfs:comment>
+        <rdfs:domain rdf:resource="http://www.cincodebio.org/cdbontology#NonAtomic"/>
+        <rdfs:range rdf:resource="http://www.cincodebio.org/cdbontology#Atomic"/>
+    </owl:ObjectProperty>
+
+    <owl:Class rdf:about="#WholeSlideImageCellSegmentationMask">
+        <rdfs:label>WholeSlideImageCellSegmentationMask</rdfs:label>
+        <rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#NonAtomic"/>
+        <rdfs:comment>This class describes a cell segmentation mask in a Whole Slide Image. Which contains a nucleus and membrane mask</rdfs:comment>
+        <rdfs:subClassOf>
+        <owl:Restriction>
+            <owl:onProperty rdf:resource="http://www.cincodebio.org/cdbontology#hasNucleusMask"/>
+            <owl:allValuesFrom rdf:resource="#WholeSlideImageNucleusSegmentationMask"/>
+        </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+        <owl:Restriction>
+            <owl:onProperty rdf:resource="http://www.cincodebio.org/cdbontology#hasMembraneMask"/>
+            <owl:allValuesFrom rdf:resource="#WholeSlideImageMembraneSegmentationMask"/>
+        </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+
+    <!-- TissueCoreCellSegmentationMask -->
+    <owl:Class rdf:about="#TissueCoreCellSegmentationMask">
+        <rdfs:label>TissueCoreCellSegmentationMask</rdfs:label>
+        <rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#NonAtomic"/>
+        <rdfs:comment>This class describes a cell segmentation mask in a Tissue Core. Which contains a nucleus mask</rdfs:comment>
+        <rdfs:subClassOf>
+        <owl:Restriction>
+            <owl:onProperty rdf:resource="http://www.cincodebio.org/cdbontology#hasNucleusMask"/>
+            <owl:allValuesFrom rdf:resource="#TissueCoreNucleusSegmentationMask"/>
+        </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+        <owl:Restriction>
+            <owl:onProperty rdf:resource="http://www.cincodebio.org/cdbontology#hasMembraneMask"/>
+            <owl:allValuesFrom rdf:resource="#TissueCoreMembraneSegmentationMask"/>
+        </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+
+    <!-- RegionsOfInterestPredicition -->
+
+    <owl:ObjectProperty rdf:about="#hasRegionsOfInterest">
+        <rdfs:label>hasRegionsOfInterest</rdfs:label>
+        <rdfs:comment>Denotes a non-atomic class as having a regions of Interest </rdfs:comment>
+        <rdfs:domain rdf:resource="http://www.cincodebio.org/cdbontology#NonAtomic"/>
+        <rdfs:range rdf:resource="#RegionsOfInterest"/>
+    </owl:ObjectProperty>
+
+    <owl:DatatypeProperty rdf:about="#hasConfidenceThreshold">
+        <rdfs:label>hasConfidenceThreshold</rdfs:label>
+        <rdfs:comment>Denotes a non-atomic class as having a confidence threshold, this pertains to the mask gating process in CNN predictions.</rdfs:comment>
+        <rdfs:domain rdf:resource="http://www.cincodebio.org/cdbontology#NonAtomic"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#float"/>
+    </owl:DatatypeProperty>
+
+
+    <owl:Class rdf:about="#RegionsOfInterestPredicition">
+        <rdfs:label>RegionsOfInterestPredicition</rdfs:label>
+        <rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#NonAtomic"/>
+        <rdfs:comment>This class describes a prediction of regions of interest.</rdfs:comment>
+        <rdfs:subClassOf>
+        <owl:Restriction>
+            <owl:onProperty rdf:resource="#hasRegionsOfInterest"/>
+            <owl:allValuesFrom rdf:resource="#RegionsOfInterest"/>
+        </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+        <owl:Restriction>
+            <owl:onProperty rdf:resource="#hasConfidenceThreshold"/>
+            <owl:allValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#float"/>
+        </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+
+
+    <!-- HashMap Based -->
+    <!-- TissueMicroArray -->
+    <owl:Class rdf:about="#TissueMicroArray">
+        <rdfs:label>TissueMicroArray</rdfs:label>
+        <rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#HashMap"/>
+        <rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#NonAtomic"/>
+        <rdfs:comment>This class describes a Tissue MicroArray.</rdfs:comment>
+        <rdfs:subClassOf>
+        <owl:Restriction>
+            <owl:onProperty rdf:resource="http://www.cincodebio.org/cdbontology#hasKey"/>
+            <owl:allValuesFrom rdf:resource="http://www.cincodebio.org/cdbontology#String"/>
+            <!-- Technically the key here should be ProteinChannelMarker -->
+        </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+        <owl:Restriction>
+            <owl:onProperty rdf:resource="http://www.cincodebio.org/cdbontology#hasValue"/>
+            <owl:allValuesFrom rdf:resource="#TissueMicroArrayProteinChannel"/>
+        </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+
+    <!-- WholeSlideImage -->
+    <owl:Class rdf:about="#WholeSlideImage">
+        <rdfs:label>WholeSlideImage</rdfs:label>
+        <rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#HashMap"/>
+        <rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#NonAtomic"/>
+        <rdfs:comment>This class describes a Whole Slide Image.</rdfs:comment>
+        <rdfs:subClassOf>
+        <owl:Restriction>
+            <owl:onProperty rdf:resource="http://www.cincodebio.org/cdbontology#hasKey"/>
+            <owl:allValuesFrom rdf:resource="http://www.cincodebio.org/cdbontology#String"/>
+            <!-- Technically the key here should be ProteinChannelMarker -->
+        </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+        <owl:Restriction>
+            <owl:onProperty rdf:resource="http://www.cincodebio.org/cdbontology#hasValue"/>
+            <owl:allValuesFrom rdf:resource="#WholeSlideImageProteinChannel"/>
+        </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+
+    <!-- TissueCore -->
+    <owl:Class rdf:about="#TissueCore">
+        <rdfs:label>TissueCore</rdfs:label>
+        <rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#HashMap"/>
+        <rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#NonAtomic"/>
+        <rdfs:comment>This class describes a Tissue Core.</rdfs:comment>
+        <rdfs:subClassOf>
+        <owl:Restriction>
+            <owl:onProperty rdf:resource="http://www.cincodebio.org/cdbontology#hasKey"/>
+            <owl:allValuesFrom rdf:resource="http://www.cincodebio.org/cdbontology#String"/>
+            <!-- Technically the key here should be ProteinChannelMarker -->
+        </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+        <owl:Restriction>
+            <owl:onProperty rdf:resource="http://www.cincodebio.org/cdbontology#hasValue"/>
+            <owl:allValuesFrom rdf:resource="#TissueCoreProteinChannel"/>
+        </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+
+
+    <!-- DearrayedTissueMicroArray -->
+    <owl:Class rdf:about="#DearrayedTissueMicroArray">
+        <rdfs:label>DearrayedTissueMicroArray</rdfs:label>
+        <rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#HashMap"/>
+        <rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#NonAtomic"/>
+        <rdfs:comment>This class describes a Dearrayed Tissue MicroArray.</rdfs:comment>
+        <rdfs:subClassOf>
+        <owl:Restriction>
+            <owl:onProperty rdf:resource="http://www.cincodebio.org/cdbontology#hasKey"/>
+            <owl:allValuesFrom rdf:resource="http://www.cincodebio.org/cdbontology#String"/>
+            <!-- Technically the key here should be CoreID / Region Marker -->
+        </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+        <owl:Restriction>
+            <owl:onProperty rdf:resource="http://www.cincodebio.org/cdbontology#hasValue"/>
+            <owl:allValuesFrom rdf:resource="#TissueCore"/>
+        </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+
+    <!-- DearrayedTissueMicroArrayCellSegmentationMask -->
+    <owl:Class rdf:about="#DearrayedTissueMicroArrayCellSegmentationMask">
+        <rdfs:label>DearrayedTissueMicroArrayCellSegmentationMask</rdfs:label>
+        <rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#HashMap"/>
+        <rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#NonAtomic"/>
+        <rdfs:comment>This class describes a Dearrayed Tissue MicroArray Cell Segmentation Mask(s).</rdfs:comment>
+        <rdfs:subClassOf>
+        <owl:Restriction>
+            <owl:onProperty rdf:resource="http://www.cincodebio.org/cdbontology#hasKey"/>
+            <owl:allValuesFrom rdf:resource="http://www.cincodebio.org/cdbontology#String"/>
+            <!-- Technically the key here should be CoreID / Region Marker -->
+        </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+        <owl:Restriction>
+            <owl:onProperty rdf:resource="http://www.cincodebio.org/cdbontology#hasValue"/>
+            <owl:allValuesFrom rdf:resource="#TissueCoreCellSegmentationMask"/>
+        </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+
+    <!-- DearrayedTissueMicroArrayMissileFCS -->
+    <owl:Class rdf:about="#DearrayedTissueMicroArrayMissileFCS">
+        <rdfs:label>DearrayedTissueMicroArrayMissileFCS</rdfs:label>
+        <rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#HashMap"/>
+        <rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#NonAtomic"/>
+        <rdfs:comment>This class describes a Dearrayed Tissue MicroArray Missile FCS.</rdfs:comment>
+        <rdfs:subClassOf>
+        <owl:Restriction>
+            <owl:onProperty rdf:resource="http://www.cincodebio.org/cdbontology#hasKey"/>
+            <owl:allValuesFrom rdf:resource="http://www.cincodebio.org/cdbontology#String"/>
+            <!-- Technically the key here should be CoreID / Region Marker -->
+        </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+        <owl:Restriction>
+            <owl:onProperty rdf:resource="http://www.cincodebio.org/cdbontology#hasValue"/>
+            <owl:allValuesFrom rdf:resource="#TissueCoreMissileFCS"/>
+        </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+
+    <!-- List Based -->
+
+    <!-- RegionsOfInterest -->
+    <owl:Class rdf:about="#RegionsOfInterest">
+        <rdfs:label>RegionsOfInterest</rdfs:label>
+        <rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#List"/>
+        <rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#NonAtomic"/>
+        <rdfs:comment>This class describes a list of regions of interest.</rdfs:comment>
+        <rdfs:subClassOf>
+        <owl:Restriction>
+            <owl:onProperty rdf:resource="http://www.cincodebio.org/cdbontology#hasValue"/>
+            <owl:allValuesFrom rdf:resource="#RegionOfInterest"/>
+        </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+
+    <!-- RegionsOfInterestPredictions -->
+    <owl:Class rdf:about="#RegionsOfInterestPredictions">
+        <rdfs:label>RegionsOfInterestPredictions</rdfs:label>
+        <rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#List"/>
+        <rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#NonAtomic"/>
+        <rdfs:comment>This class describes a list of regions of interest predictions.</rdfs:comment>
+        <rdfs:subClassOf>
+        <owl:Restriction>
+            <owl:onProperty rdf:resource="http://www.cincodebio.org/cdbontology#hasValue"/>
+            <owl:allValuesFrom rdf:resource="#RegionsOfInterestPredicition"/>
+        </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+
+    <!-- NuclearMarkers -->
+    <owl:Class rdf:about="#NuclearMarkers">
+        <rdfs:label>NuclearMarkers</rdfs:label>
+        <rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#List"/>
+        <rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#NonAtomic"/>
+        <rdfs:comment>This class describes a list of nuclear markers.</rdfs:comment>
+        <rdfs:subClassOf>
+        <owl:Restriction>
+            <owl:onProperty rdf:resource="http://www.cincodebio.org/cdbontology#hasValue"/>
+            <owl:allValuesFrom rdf:resource="#NuclearMarker"/>
+        </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+
+    <!-- MembraneMarkers -->
+    <owl:Class rdf:about="#MembraneMarkers">
+        <rdfs:label>MembraneMarkers</rdfs:label>
+        <rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#List"/>
+        <rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#NonAtomic"/>
+        <rdfs:comment>This class describes a list of membrane markers.</rdfs:comment>
+        <rdfs:subClassOf>
+        <owl:Restriction>
+            <owl:onProperty rdf:resource="http://www.cincodebio.org/cdbontology#hasValue"/>
+            <owl:allValuesFrom rdf:resource="#MembraneMarker"/>
+        </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+
+    <!-- ProteinChannelMarkers -->
+    <owl:Class rdf:about="#ProteinChannelMarkers">
+        <rdfs:label>ProteinChannelMarkers</rdfs:label>
+        <rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#List"/>
+        <rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#NonAtomic"/>
+        <rdfs:comment>This class describes a list of protein channel markers.</rdfs:comment>
+        <rdfs:subClassOf>
+        <owl:Restriction>
+            <owl:onProperty rdf:resource="http://www.cincodebio.org/cdbontology#hasValue"/>
+            <owl:allValuesFrom rdf:resource="#ProteinChannelMarker"/>
+        </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+    <!-- Experiments -->
+
+    <owl:AllDisjointClasses>
+    <owl:members rdf:parseType="Collection">
+        <rdf:Description rdf:about="#TmaExperiment"/>
+        <rdf:Description rdf:about="#WsiExperiment"/>
+    </owl:members>
+    </owl:AllDisjointClasses>
+
+    <owl:Class rdf:about="#TmaExperiment">
+        <rdfs:label>TmaExperiment</rdfs:label>
+        <rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#Experiment"/>
+        <rdfs:comment>Tissue Microarray Experiment - this describes the raw data produced from a TMA imaging run.</rdfs:comment>
+    </owl:Class>
+
+    <owl:Class rdf:about="#WsiExperiment">
+        <rdfs:label>WsiExperiment</rdfs:label>
+        <rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#Experiment"/>
+        <rdfs:comment>Whole Slide Image Experiment - this describes the raw data produced from a WSI imaging run.</rdfs:comment>
+    </owl:Class>
+
+
+    <!-- Domain Specific Service Concepts -->
+
+    <owl:AllDisjointClasses>
+    <owl:members rdf:parseType="Collection">
+        <rdf:Description rdf:about="#Start"/>
+        <rdf:Description rdf:about="#DeArray"/>
+        <rdf:Description rdf:about="#TechnicalVarianceCorrection"/>
+        <rdf:Description rdf:about="#CellSegmentation"/>
+        <rdf:Description rdf:about="#FeatureExtraction"/>
+        <rdf:Description rdf:about="#DataTransformation"/>
+        <rdf:Description rdf:about="#Clustering"/>
+        <rdf:Description rdf:about="#Plotting"/>
+    </owl:members>
+    </owl:AllDisjointClasses>
+
+    <owl:Class rdf:about="#Start">
+        <rdfs:label>Start</rdfs:label>
+        <rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#ServiceConcept"/>
+        <rdfs:comment>The service concept for Start services, which import raw data and prepare it for processing.</rdfs:comment>
+    </owl:Class>
+
+    <owl:Class rdf:about="#DeArray">
+        <rdfs:label>DeArray</rdfs:label>
+        <rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#ServiceConcept"/>
+        <rdfs:comment>The service concept for DeArray services, which are involved in DeArraying/Segmenting Tissue MicroArrays</rdfs:comment>
+    </owl:Class>
+
+    <owl:Class rdf:about="#TechnicalVarianceCorrection">
+        <rdfs:label>TechnicalVarianceCorrection</rdfs:label>
+        <rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#ServiceConcept"/>
+        <rdfs:comment>The service concept for TechnicalVarianceCorrection services, which are involved in correcting technical variance in the data.</rdfs:comment>
+    </owl:Class>
+
+    <owl:Class rdf:about="#CellSegmentation">
+        <rdfs:label>CellSegmentation</rdfs:label>
+        <rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#ServiceConcept"/>
+        <rdfs:Comment>The service concept for CellSegmentation services, which are involved in segmenting cells in the data.</rdfs:Comment>
+    </owl:Class>
+
+    <owl:Class rdf:about="#FeatureExtraction">
+        <rdfs:label>FeatureExtraction</rdfs:label>
+        <rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#ServiceConcept"/>
+        <rdfs:comment>The service concept for FeatureExtraction services, which are involved in extracting features from the data.</rdfs:comment>
+    </owl:Class>
+
+    <owl:Class rdf:about="#DataTransformation">
+        <rdfs:label>DataTransformation</rdfs:label>
+        <rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#ServiceConcept"/>
+        <rdfs:comment>The service concept for DataTransformation services, which are involved in transforming the data.</rdfs:comment>
+    </owl:Class>
+
+    <owl:Class rdf:about="#Clustering">
+        <rdfs:label>Clustering</rdfs:label>
+        <rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#ServiceConcept"/>
+        <rdfs:comment>The service concept for Clustering services, which are involved in clustering the data.</rdfs:comment>
+    </owl:Class>
+
+    <owl:Class rdf:about="#Plotting">
+        <rdfs:label>Plotting</rdfs:label>
+        <rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#ServiceConcept"/>
+        <rdfs:comment>The service concept for Plotting services, which are involved in plotting the data.</rdfs:comment>
+    </owl:Class>
+
+</rdf:RDF>

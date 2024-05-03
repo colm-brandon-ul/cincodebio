@@ -41,6 +41,7 @@ class JobState(BaseModel):
     id: PyObjectId = Field(alias="_id")
     workflow: str
     job_status: JobStatus
+    service_name : str # service name
     data: typing.Optional[dict]
     frontend: typing.Optional[str]
     url: typing.Optional[str]
