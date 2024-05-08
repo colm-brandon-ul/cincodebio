@@ -1,0 +1,104 @@
+HippoFlow _JCx7AA1ZEe-bt9bPK9Z6oQ {
+  TaskSIB _J5zpoA1ZEe-bt9bPK9Z6oQ at 130,170 size 240,220 {
+  	libraryComponentUID "_dd2a6b28_6d2e_43ad_bca8_3f8f4de30b55"
+  	name "InitTMA"
+  	label "InitTMA"
+  	parameter [  ]
+  	SIBLabel _J6BFAA1ZEe-bt9bPK9Z6oQ at 2,10 size 236,50 {
+  		label "InitTMA"
+  	}
+  	
+  	OutputPort _J6Sx0A1ZEe-bt9bPK9Z6oQ at 2,60 size 236,30 {
+  		typeName "TissueMicroArray"
+  		name "tissue_micro_array"
+  		isList false
+  		-DataFlow-> _LAAcsA1ZEe-bt9bPK9Z6oQ via (110,245) (110,275)  {
+  			id _LweQUA1ZEe-bt9bPK9Z6oQ
+  		}
+  	}
+  	
+  	OutputPort _J6mT0A1ZEe-bt9bPK9Z6oQ at 2,90 size 236,30 {
+  		typeName "NuclearStain"
+  		name "nuclear_stain"
+  		isList false
+  		-DataFlow-> _LAXCAQ1ZEe-bt9bPK9Z6oQ via (90,275) (90,305)  {
+  			id _MFuHkQ1ZEe-bt9bPK9Z6oQ
+  		}
+  	}
+  	
+  	OutputPort _J6uPoQ1ZEe-bt9bPK9Z6oQ at 2,120 size 236,30 {
+  		typeName "NuclearMarkers"
+  		name "nuclear_markers"
+  		isList false
+  	}
+  	
+  	OutputPort _J6510Q1ZEe-bt9bPK9Z6oQ at 2,150 size 236,30 {
+  		typeName "MembraneMarkers"
+  		name "membrane_markers"
+  		isList false
+  	}
+  	
+  	OutputPort _J7AjgQ1ZEe-bt9bPK9Z6oQ at 2,180 size 236,30 {
+  		typeName "ProteinChannelMarkers"
+  		name "protein_channel_markers"
+  		isList false
+  	}
+  	-ControlFlow-> _K_yaQA1ZEe-bt9bPK9Z6oQ  decorate "" at (0,0) decorate "Text" at (0,0) {
+  		id _NALksA1ZEe-bt9bPK9Z6oQ
+  		label "success"
+  	}
+  }
+  
+  TaskSIB _K_yaQA1ZEe-bt9bPK9Z6oQ at 550,250 size 240,160 {
+  	libraryComponentUID "_610e652b_3580_4490_91b4_0c3e648ced7f"
+  	name "ManualDearrayTMA"
+  	label "ManualDearrayTMA"
+  	parameter [  ]
+  	InputPort _LAAcsA1ZEe-bt9bPK9Z6oQ at 2,10 size 236,30 {
+  		typeName "TissueMicroArray"
+  		name "tissue_micro_array"
+  		isList false
+  	}
+  	
+  	InputPort _LAXCAQ1ZEe-bt9bPK9Z6oQ at 2,40 size 236,30 {
+  		typeName "NuclearStain"
+  		name "nuclear_stain"
+  		isList false
+  	}
+  	
+  	SIBLabel _LAgzAQ1ZEe-bt9bPK9Z6oQ at 2,70 size 236,50 {
+  		label "ManualDearrayTMA"
+  	}
+  	
+  	OutputPort _LAoHwQ1ZEe-bt9bPK9Z6oQ at 2,120 size 236,30 {
+  		typeName "ROIs"
+  		name "rois"
+  		isList false
+  	}
+  }
+  
+  ServiceSIB _hKjtIA12Ee-bt9bPK9Z6oQ at 459,107 size 240,130 {
+  	libraryComponentUID "_cQgN8A12Ee-bt9bPK9Z6oQ"
+  	name "service"
+  	label "Service"
+  	parameter [ Parameter _hKy9sA12Ee-bt9bPK9Z6oQ {
+  			value "0"
+  			key "key"
+  		} ]
+  	InputPort _hK32MQ12Ee-bt9bPK9Z6oQ at 2,10 size 236,30 {
+  		typeName "Type"
+  		name "input"
+  		isList false
+  	}
+  	
+  	SIBLabel _hK-j4Q12Ee-bt9bPK9Z6oQ at 2,40 size 236,50 {
+  		label "Service"
+  	}
+  	
+  	OutputPort _hLBAIQ12Ee-bt9bPK9Z6oQ at 2,90 size 236,30 {
+  		typeName "Type"
+  		name "output"
+  		isList false
+  	}
+  }
+}
