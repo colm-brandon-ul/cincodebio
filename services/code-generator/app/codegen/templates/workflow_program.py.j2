@@ -1,6 +1,5 @@
 # Shared functions
 import time, os, requests, json
-WORKFLOW_LOG_PATH = os.getenv('WORKFLOW_LOG_PATH')
 WORKFLOW_ID = '{{ workflow_id }}'
 # Keyword for killing the workflow
 KILL_WORFLOW = 'KWORKFLOW'
@@ -37,6 +36,7 @@ def monitor_logs_{{ workflow_id }}(
     KILL_WORFLOW = 'KWORKFLOW'
     continue_wf = True
     # Get logs
+    WORKFLOW_LOG_PATH = os.environ.get('WORKFLOW_LOGS_PATH')
     while True:
         # Get logs file
         f = open(f"{WORKFLOW_LOG_PATH}/{WORKFLOW_ID}.txt", "r")
