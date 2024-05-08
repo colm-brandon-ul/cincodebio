@@ -140,7 +140,7 @@ def initial_build_service_api(dh_namespace: str) -> bool:
             new_lib_dot_sibs = cinco_interface.code_gen(JINJA_ENV,new_ime_sib_library_schema)
 
             # Write the new lib.sibs to the static code dir
-            with open(static_path / UTD_SIB_FILE, "w") as f:
+            with open(state_path / UTD_SIB_FILE, "w") as f:
                 f.write(new_lib_dot_sibs)
 
             # Write the new sib schema to the current sib schema file
