@@ -4,6 +4,7 @@ import json
 from typing import Dict
 
 from lark import Lark, Transformer
+import os
 
 
 class HippoFlowTransformer(Transformer):
@@ -183,7 +184,12 @@ class HippoFlowParser:
         # %import common.WS
         # %ignore WS
         # """
-        with open('./templates/grammar.lark', 'r') as file:
+        # return grammar relative to the current file
+        
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+        grammar_file = os.path.join(current_dir, 'templates', 'grammar.lark')
+
+        with open(grammar_file, 'r') as file:
             grammar = file.read()
         return grammar
     
