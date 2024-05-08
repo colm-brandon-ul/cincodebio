@@ -74,7 +74,7 @@ executionEnvironment:
 
 
 global:
-  ontology_url: "http://"
+  ontology_url: "https://raw.githubusercontent.com/colm-brandon-ul/cellmaps/master/ontology/cellmaps.owl"
   dps_registry: "http://"
   docker_hub_namespace: "sccecellmaps"
   workflow_log_path: "data/workflow-logs"

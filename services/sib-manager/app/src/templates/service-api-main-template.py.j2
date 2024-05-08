@@ -51,7 +51,7 @@ async def {{ ServiceName | to_snake }}_submit(
     # Create job in JMS
     res = requests.post(
         f"http://{JMS_ADDRESS}/create-job/", 
-        json={'workflow': cdb_workflow_id, 'service_name': '{{ ServiceName }}')
+        json={'workflow': cdb_workflow_id, 'service_name': '{{ ServiceName }}'})
     
     # logging job
     logging.info(f"Status: {res.status_code}")

@@ -3,3 +3,4 @@ pydantic
 uvicorn
 minio
 jinja2
+rdflib
