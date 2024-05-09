@@ -49,7 +49,7 @@ def monitor_logs_{{ workflow_id }}(
         # The execution API has written to the logs that the job with that id has been completed
             break
 
-        elif KILL_WORFLOW in f.readlines()[-1]:
+        elif KILL_WORFLOW in lines[-1]:
             # The execution API has written to the logs that the job with that id has been killed
             continue_wf = False
             break
@@ -144,7 +144,7 @@ def get_results_{{ workflow_id }}(url: str) -> dict:
 {%- endfor -%}
 {%- if ns.latch == 1%} }{% endif %}{% endmacro %}
 {%- macro formatWorkflowParametersForJSON(value) %}{%- set ns = namespace(latch=0) %}{%- for key, value in value.items() %}{%- if value.parent_key == "workflow_parameters"%}{%- if ns.latch == 0 %}{%- set ns.latch = 1 %},
-
+'workflow_parameters': {
         {%- endif %}
     '{{ key }}': sib_id_{{ value.source_sib|replace("-", "_") }}['{{ value.source_parent_key }}']['{{ value.source_key }}'],
     {%- endif %}
