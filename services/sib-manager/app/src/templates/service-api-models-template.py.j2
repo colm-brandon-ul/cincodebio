@@ -60,9 +60,12 @@ class ROI(BaseModel):
     img_w: float
     img_h: float
 
-class PredictedROIs(BaseModel):
+class ROIsPredictionWrapper(BaseModel):
     confidence_value : float
     rois: List[ROI]
+
+class PredictedROIs(RootModel[List[ROIsPredictionWrapper]]):
+    ...
 
 class TissueCoreCellSegmentationMaskSymbolicLink(RootModel[str]):
     ...
