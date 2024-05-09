@@ -33,7 +33,7 @@ def monitor_logs_{{ workflow_id }}(
     Returns:
         bool: True if the job is still running, False if the job has completed or been killed.
     """
-    import os, time
+    import os, time, logging
     KILL_WORFLOW = 'KWORKFLOW'
     WORKFLOW_ID = '{{ workflow_id }}'
     continue_wf = True
@@ -41,21 +41,18 @@ def monitor_logs_{{ workflow_id }}(
     WORKFLOW_LOG_PATH = os.environ.get('WORKFLOW_LOGS_PATH')
     while True:
         # Get logs file
-        f = open(f"{WORKFLOW_LOG_PATH}/{WORKFLOW_ID}.txt", "r")
+        
+        with open(f"{WORKFLOW_LOG_PATH}/{WORKFLOW_ID}.txt", "r") as f:
+            lines = f.readlines()
 
-        if job_id in f.readlines()[-1]:
+        if job_id in lines[-1]:
         # The execution API has written to the logs that the job with that id has been completed
-            f.close()
             break
 
         elif KILL_WORFLOW in f.readlines()[-1]:
             # The execution API has written to the logs that the job with that id has been killed
-            f.close()
             continue_wf = False
             break
-
-        
-        f.close()
         # Wait for 1 second 
         time.sleep(1)
 
@@ -147,7 +144,7 @@ def get_results_{{ workflow_id }}(url: str) -> dict:
 {%- endfor -%}
 {%- if ns.latch == 1%} }{% endif %}{% endmacro %}
 {%- macro formatWorkflowParametersForJSON(value) %}{%- set ns = namespace(latch=0) %}{%- for key, value in value.items() %}{%- if value.parent_key == "workflow_parameters"%}{%- if ns.latch == 0 %}{%- set ns.latch = 1 %},
-'workflow_parameters': { 
+
         {%- endif %}
     '{{ key }}': sib_id_{{ value.source_sib|replace("-", "_") }}['{{ value.source_parent_key }}']['{{ value.source_key }}'],
     {%- endif %}
