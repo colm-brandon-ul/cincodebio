@@ -66,7 +66,7 @@ async def {{ ServiceName | to_snake }}_submit(
         submit_k8s_job,
         routing_key='task.{{ AbstractConcept | to_kebab }}.{{ ServiceName | to_kebab }}.process',
         image_name = "{{ ContainerImageName }}",
-        data = data.model_dump(), 
+        data = data.model_dump(exclude_none=True), 
         job_id = job_state['id'])
 
     {# Essentially just serialze the job state object #}
@@ -118,7 +118,7 @@ async def {{ ServiceName | to_snake }}_submit(
     background_tasks.add_task(
         submit_k8s_job, 
         routing_key = 'task.{{ AbstractConcept | to_kebab }}.{{ ServiceName | to_kebab }}.prepare-template',
-        data= data.model_dump(),
+        data= data.model_dump(exclude_none=True),
         image_name = "{{ ContainerImageName }}",
         # Need to replace with a non-hardcoded method for this
         base_url = cdb_external_url,
@@ -170,7 +170,7 @@ async def {{ ServiceName | to_snake }}_submit_interaction(
     background_tasks.add_task(
         submit_k8s_job,
         routing_key = 'task.{{ AbstractConcept | to_kebab }}.{{ ServiceName | to_kebab }}.process',
-        data= data.model_dump(), 
+        data= data.model_dump(exclude_none=True), 
         image_name = "{{ ContainerImageName }}",
         is_interactive_submit = True,
         job_id = job_id)
