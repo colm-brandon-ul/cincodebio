@@ -2,7 +2,7 @@
 {# These Imports aren't going to change #}
 from enum import Enum
 from pydantic import BaseModel, Field,root_validator, RootModel
-from typing import List, Any, Union, Optional
+from typing import List, Any, Union, Optional, Dict
 from fastapi.responses import HTMLResponse
 
 {# This is the enum for job objects #}
@@ -23,8 +23,8 @@ class TmaSymbolicLink(RootModel[str]):
 class TmaProteinChannel(BaseModel):
     url: TmaSymbolicLink
 
-class TissueMicroArray(BaseModel):
-    channels: dict[str,TmaProteinChannel]
+class TissueMicroArray(RootModel[Dict[str,TmaProteinChannel]]):
+    ...
 
 class TissueCoreSymbolicLink(RootModel[str]):
     ...
@@ -32,12 +32,11 @@ class TissueCoreSymbolicLink(RootModel[str]):
 class TissueCoreProteinChannel(BaseModel):
     url: TissueCoreSymbolicLink
 
-class TissueCore(BaseModel):
-    channels: dict[str, TissueCoreProteinChannel]
+class TissueCore(RootModel[Dict[str, TissueCoreProteinChannel]]):
     ...
 
-class DearrayedTissueMicroArray(BaseModel):
-    cores : dict[str, TissueCore]
+class DearrayedTissueMicroArray(RootModel[Dict[str, TissueCore]]):
+    ...
 
 # Workflow Parameters Models
 class NuclearStain(RootModel[str]):
@@ -75,8 +74,8 @@ class TissueCoreCellSegmentationMasks(BaseModel):
     nucleus_mask: TissueCoreSegmentationMask
     membrane_mask: TissueCoreSegmentationMask
 
-class DearrayedTissueMicroArrayCellSegmentationMask(BaseModel):
-    cores: dict[str, TissueCoreCellSegmentationMasks]
+class DearrayedTissueMicroArrayCellSegmentationMask(RootModel[Dict[str, TissueCoreCellSegmentationMasks]]):
+    ...
 
 class TissueCoreFcsFileSymbolicLink(RootModel[str]):
     ...
@@ -85,8 +84,8 @@ class TissueCoreFcsFile(BaseModel):
     url: TissueCoreFcsFileSymbolicLink
 
 
-class DearrayedTissueMicroArrayMissileFCS(BaseModel):
-    cores: dict[str, TissueCoreFcsFile]
+class DearrayedTissueMicroArrayMissileFCS(RootModel[Dict[str, TissueCoreFcsFile]]):
+    ...
 
 
 class WsiSymbolicLink(RootModel[str]):
