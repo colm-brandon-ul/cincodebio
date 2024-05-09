@@ -74,8 +74,10 @@ def submit_job_{{ workflow_id }}(url: str, headers: dict, data: dict) -> str:
         requests.HTTPError: If the request was not successful.
         requests.Timeout: If the request timed out.
     """
-    import requests, json, time
+    import requests, json, time, logging
     TIMEOUT = 60
+    logging.warning(f"submitting job to {url}")
+    logging.warning(f"data: {data}")
     while True:
         res = requests.post(
             url=url,
@@ -115,8 +117,10 @@ def get_results_{{ workflow_id }}(url: str) -> dict:
         requests.exceptions.HTTPError: If the request was not successful (status code >= 400).
         requests.exceptions.Timeout: If the request timed out.
     """
-    import requests, json, time
+    import requests, json, time, logging
     TIMEOUT = 60
+    logging.warning(f"submitting job to {url}")
+    
     while True:
         res = requests.get(
             url=url,
@@ -135,7 +139,10 @@ def get_results_{{ workflow_id }}(url: str) -> dict:
             # else break loop
             break
     
-    return json.loads(res.content)
+    data = json.loads(res.content)
+    logging.warning(f"data: {data}")
+
+    return data
 # update workflow status to processing
 res = requests.post(f"http://{EXECUTION_API}/control/update-workflow/{WORKFLOW_ID}", json={"status": "processing"})
 # --- --- --- --- --- --- --- --- --- ---
