@@ -33,6 +33,7 @@ def monitor_logs_{{ workflow_id }}(
     Returns:
         bool: True if the job is still running, False if the job has completed or been killed.
     """
+    import os, time
     KILL_WORFLOW = 'KWORKFLOW'
     continue_wf = True
     # Get logs
@@ -75,6 +76,7 @@ def submit_job_{{ workflow_id }}(url: str, headers: dict, data: dict) -> str:
         requests.HTTPError: If the request was not successful.
         requests.Timeout: If the request timed out.
     """
+    import requests, json, time
     TIMEOUT = 60
     while True:
         res = requests.post(
@@ -115,6 +117,7 @@ def get_results_{{ workflow_id }}(url: str) -> dict:
         requests.exceptions.HTTPError: If the request was not successful (status code >= 400).
         requests.exceptions.Timeout: If the request timed out.
     """
+    import requests, json, time
     TIMEOUT = 60
     while True:
         res = requests.get(
