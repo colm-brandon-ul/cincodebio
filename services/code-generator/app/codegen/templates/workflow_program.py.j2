@@ -35,6 +35,7 @@ def monitor_logs_{{ workflow_id }}(
     """
     import os, time
     KILL_WORFLOW = 'KWORKFLOW'
+    WORKFLOW_ID = '{{ workflow_id }}'
     continue_wf = True
     # Get logs
     WORKFLOW_LOG_PATH = os.environ.get('WORKFLOW_LOGS_PATH')
@@ -141,14 +142,14 @@ def get_results_{{ workflow_id }}(url: str) -> dict:
 # --- --- --- --- --- --- --- --- --- ---
 {%- macro formatDataForJSON(value) %}{%- set ns = namespace(latch=0) %}{%- for key, value in value.items() %}{%- if value.parent_key == "data"%}{%- if ns.latch == 0 %}{%- set ns.latch = 1 %},
 'data': { {%- endif %}
-    '{{ key }}': sib_id_{{ value.source_sib }}['{{ value.source_parent_key }}']['{{ value.source_key }}'],
+    '{{ key }}': sib_id_{{ value.source_sib|replace("-", "_") }}['{{ value.source_parent_key }}']['{{ value.source_key }}'],
     {%- endif %}
 {%- endfor -%}
 {%- if ns.latch == 1%} }{% endif %}{% endmacro %}
 {%- macro formatWorkflowParametersForJSON(value) %}{%- set ns = namespace(latch=0) %}{%- for key, value in value.items() %}{%- if value.parent_key == "workflow_parameters"%}{%- if ns.latch == 0 %}{%- set ns.latch = 1 %},
 'workflow_parameters': { 
         {%- endif %}
-    '{{ key }}': sib_id_{{ value.source_sib }}['{{ value.source_parent_key }}']['{{ value.source_key }}'],
+    '{{ key }}': sib_id_{{ value.source_sib|replace("-", "_") }}['{{ value.source_parent_key }}']['{{ value.source_key }}'],
     {%- endif %}
 {%- endfor -%}
 {%- if ns.latch == 1%} }{% endif %}{% endmacro %}
