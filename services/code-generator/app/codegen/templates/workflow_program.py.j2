@@ -9,7 +9,7 @@ TIMEOUT = 60
 # Global Environment variables - same across all workflow programs
 SERVICE_API = os.environ.get('SERVICE_API_SERVICE_HOST')
 WORKFLOW_LOG_PATH = os.environ.get('WORKFLOW_LOGS_PATH')
-EXECUTION_API_SOCKET_ADDRESS = os.environ.get('EXECUTION_API_SERVICE_HOST')
+EXECUTION_API = os.environ.get('EXECUTION_API_SERVICE_HOST')
 
 # specific to each workflow program
 CDB_EXTERNAL_URL = '{{ cdb_external_url }}'
@@ -136,6 +136,8 @@ def get_results_{{ workflow_id }}(url: str) -> dict:
             break
     
     return json.loads(res.content)
+# update workflow status to processing
+res = requests.post(f"{EXECUTION_API}/control/update-workflow/{WORKFLOW_ID}", json={"status": "processing"})
 # --- --- --- --- --- --- --- --- --- ---
 {%- macro formatDataForJSON(value) %}{%- set ns = namespace(latch=0) %}{%- for key, value in value.items() %}{%- if value.parent_key == "data"%}{%- if ns.latch == 0 %}{%- set ns.latch = 1 %},
 'data': { {%- endif %}
@@ -197,4 +199,6 @@ elif sib_id_{{ graph.sib|replace("-", "_") }} == '{{child[0]}}':
 {% endfor %}
 {% endmacro %}
 {{ generate_computational_graph(computational_graph) }}
+# Update workflow status to completed
+res = requests.post(f"{EXECUTION_API}/control/update-workflow/{WORKFLOW_ID}", json={"status": "completed"})
 
