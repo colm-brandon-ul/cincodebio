@@ -36,7 +36,7 @@ spec:
                 port:
                   number: 80
 
-          - path: /jobs-api/(.*)$
+          - path: /{{ .Values.global.jobs_api_ingress_path }}/(.*)$
             pathType: Prefix
             backend:
               service:
@@ -52,7 +52,7 @@ spec:
                 port:
                   number: 80
           # Definitely needs to be available outside the cluster
-          - path: /minio-console/(.*)$
+          - path: /{{ .Values.global.minio_console_ingress_path }}/(.*)$
             pathType: Prefix
             backend:
               service:
@@ -60,7 +60,7 @@ spec:
                 port:
                   number: 9001
           # Definitely needs to be available outside the cluster
-          - path: /minio-presigned/(.*)$
+          - path: /{{ .Values.global.minio_presigned_ingress_path }}/(.*)$
             pathType: Prefix
             backend:
               service:
@@ -68,7 +68,7 @@ spec:
                 port:
                   number: 80
           # Definitely needs to be available outside the cluster
-          - path: /sib-manager/(.*)$
+          - path: /{{ .Values.global.sib_manager_ingress_path }}/(.*)$
             pathType: Prefix
             backend:
               service:
@@ -76,7 +76,7 @@ spec:
                 port:
                   number: 80
           
-          - path: /data-manager/(.*)$
+          - path: /{{ .Values.global.data_manager_ingress_path }}/(.*)$
             pathType: Prefix
             backend:
               service:

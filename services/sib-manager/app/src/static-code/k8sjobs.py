@@ -41,6 +41,8 @@ def submit_k8s_job(
     JOBS_API_FQDN = f'{os.environ.get("JOBS_API_SERVICE_HOSTNAME")}.{os.environ.get("CINCO_DE_BIO_NAMESPACE")}.svc.cluster.local'
     JOBS_API_SERVICE_PORT = os.environ.get('JOBS_API_SERVICE_PORT')
 
+    MINIO_PRESIGNED_INGRESS_PATH = os.environ.get('MINIO_PRESIGNED_INGRESS_PATH')
+
     try:
         # Create the Namespace if it doesn't exist
         namespace = client.V1Namespace(metadata=client.V1ObjectMeta(name=NAMESPACE))
@@ -109,6 +111,12 @@ def submit_k8s_job(
         client.V1EnvVar(
             name="JOBS_API_SERVICE_PORT",
             value=JOBS_API_SERVICE_PORT
+        ),
+        # this is the path to the presigned url ingress
+        # so that interactive frontends can access the presigned urls
+        client.V1EnvVar(
+            name="MINIO_PRESIGNED_INGRESS_PATH",
+            value=MINIO_PRESIGNED_INGRESS_PATH
         )
     ]
 

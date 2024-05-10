@@ -85,10 +85,13 @@ global:
     name: "registry"
     namespace: "container-registry"
     port: 5000
-    domain_on_host: "localhost:32000"
+    domain_on_host: "localhost:32000" # This is the domain name that the registry is exposed on the host (i.e. inside the VM)
   execution_api_ingress_path: 'execution-api'
   services_api_ingress_path: 'services-api'
   sib_manager_ingress_path: 'sib-manager'
   data_manager_ingress_path: 'data-manager'
+  jobs_api_ingress_path: 'jobs-api'
+  minio_console_ingress_path: 'minio-console'
+  minio_presigned_ingress_path: 'minio-presigned'
   application_namespace: "default"
   
