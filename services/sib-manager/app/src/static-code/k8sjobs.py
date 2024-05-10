@@ -56,7 +56,9 @@ def submit_k8s_job(
     job = client.V1Job()
 
     # Add metadata to the Job
-    job.metadata = client.V1ObjectMeta(name=job_id+routing_key)
+    # This is the unique job id from the JMS, 
+    # removed the routing key from the name as it was causing issues with the job name being too long
+    job.metadata = client.V1ObjectMeta(name=job_id)
 
     
     # popluating env variables
