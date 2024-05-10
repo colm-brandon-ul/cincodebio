@@ -125,7 +125,8 @@ def submit_k8s_job(
     # Create the container
     container = client.V1Container(
         # creating a unique name for the container
-        name=f"{routing_key.replace('.', '-')}-{job_id}",
+        # this is to ensure that the container name is unique (and not too long)
+        name=f"{routing_key.split('.')[-1]}-{job_id}",
         image=image_name,
         env=env_vars
     )
