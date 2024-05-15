@@ -1,4 +1,5 @@
 import jinja2
+import os
 
 TEMPLATE_DIR = "./src/templates/"
 STATIC_DIR = "./src/static/"
@@ -22,3 +23,6 @@ DH_API_ENDPOINT = "registry-1.docker.io"
 JINJA_ENV = jinja2.Environment(
     loader=jinja2.FileSystemLoader(TEMPLATE_DIR), 
     extensions=['jinja2_strcase.StrcaseExtension'])
+
+DOCKER_HUB_PASSWORD = os.environ.get('DOCKER_HUB_PASSWORD')
+DOCKER_HUB_USERNAME = os.environ.get('DOCKER_HUB_USERNAME')

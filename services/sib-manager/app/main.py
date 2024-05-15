@@ -83,10 +83,11 @@ async def startup_event():
         url=f"http://{os.getenv('REGISTRY_NAME')}.{os.getenv('REGISTRY_NAMESPACE')}.svc.cluster.local:{os.getenv('REGISTRY_PORT')}",
         timeout=300)
     
+    local_state_exists = handlers.check_if_local_state_exists()
     
     # Depending on the health of the service-api and the local registry, we can decide whether to rebuild the service-api
     # also if the local state exists
-    if service_deployment_health_check and container_registry_health_check and not handlers.check_if_local_state_exists():
+    if service_deployment_health_check and container_registry_health_check and not local_state_exists:
         # If conditions are met, trigger the rebuild of the service-api
         if handlers.initial_build_service_api(dh_namespace=os.getenv('DOCKER_HUB_NAMESPACE')):
             ...
@@ -97,7 +98,10 @@ async def startup_event():
     else:
         # Failure - for some reason the service-api deployment failed
         # Need to log this and raise an error
-        logging.error(f"Dependant services are not available. Local Registry Health Check: {container_registry_health_check}. Service API Health Check: {service_deployment_health_check}")
+        if handlers.check_if_local_state_exists():
+            logging.error(f"Local state already exists. No need to rebuild the service-api")
+        else:
+            logging.error(f"Dependant services are not available. Local Registry Health Check: {container_registry_health_check}. Service API Health Check: {service_deployment_health_check}")
 
 
 
@@ -149,6 +153,13 @@ def sib_manager(request: Request):
         }))
 
 # --- ENDPOINTS FOR THE SIB Manager --
+@app.get("sync-sibs-with-registry")
+def sync_sibs_with_registry():
+    # get the latest sibs from the registry (and overwrite the local state)
+
+    pass
+
+
 @app.get("/get-installed-sibs")
 def get_installed_sibs():
     state_path = pathlib.Path(PERSISTENT_STATE_MOUNT_PATH)

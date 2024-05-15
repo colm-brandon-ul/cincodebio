@@ -3,6 +3,7 @@ from typing import Dict, List, Tuple, Union
 from urllib.parse import urljoin,urlparse
 import jinja2
 import requests
+from requests.auth import HTTPBasicAuth
 import json
 import logging
 import pprint
@@ -16,10 +17,12 @@ ALLOW_EMULATION = False
 from config import (
     DH_ENDPOINT,
     DH_AUTH_ENDPOINT,
-    DH_API_ENDPOINT
+    DH_API_ENDPOINT,
+    DOCKER_HUB_USERNAME as username,
+    DOCKER_HUB_PASSWORD as password
 )
 
-
+# Need to get auth env variables for Docker Hub
 
 # DOCKER HUB REGISTRY FNS
 def get_dh_api_token_for_repo(namespace: str, repository: str):
@@ -36,7 +39,11 @@ def get_dh_api_token_for_repo(namespace: str, repository: str):
     Raises:
         requests.HTTPError: If the request to retrieve the token fails.
     """
-    auth_response = requests.get(f"https://{DH_AUTH_ENDPOINT}/token?service=registry.docker.io&scope=repository:{namespace}/{repository}:pull")
+
+    # get's the token for the repo (with the users credentials)
+    auth_response = requests.get(f"https://{DH_AUTH_ENDPOINT}/token?service=registry.docker.io&scope=repository:{namespace}/{repository}:pull", 
+                                 auth=HTTPBasicAuth(username, password))
+    
     auth_response.raise_for_status()  # Raise exception if the request failed
     token = auth_response.json()['token']
 
@@ -60,6 +67,8 @@ def get_repo_from_namespace_dh(namespace: str) -> List[Dict]:
         requests.HTTPError: If there is an error while making the HTTP request to the Docker registry.
     """
     # Need to decide which registry to use - currently only support public docker repos
+
+    # Authenthicate request with Username password
 
     # Get the list of repositories in the a namespace
     response = requests.get(f"https://{DH_ENDPOINT}/v2/repositories/{namespace}/?page_size=10000")
@@ -110,8 +119,10 @@ def get_tags_from_repo_dh(repository: Dict) -> List:
     # Need to decide which registry to use
     response = requests.get(
         f"https://{DH_ENDPOINT}/v2/repositories/{repository['namespace']}/{repository['name']}/tags/?page_size=10000" )
+    
     response.raise_for_status()
-    print(response.status_code)
+    
+    
     tags = response.json()["results"]
     print(f'NUM TAGS: {len(tags)}')
 
@@ -167,7 +178,11 @@ def retrieve_valid_cdb_images(
         f'https://{DH_API_ENDPOINT}/v2/{namespace}/{repository}/manifests/{tag}', headers=headers)
     
     # ensure the request was successful
-    res.raise_for_status()
+    try:
+        res.raise_for_status()
+    except requests.exceptions.HTTPError as e:
+        logging.error(f"Error retrieving manifest for {namespace}/{repository}:{tag}")
+        return None
 
     manifest = json.loads(res.content.decode('utf-8'))
 
@@ -197,7 +212,11 @@ def retrieve_valid_cdb_images(
                      'Accept': sm['mediaType']})
         
         # ensure the request was successful
-        res.raise_for_status()
+        try:
+            res.raise_for_status()
+        except requests.exceptions.HTTPError as e:
+            logging.error(f"Error retrieving manifest for {namespace}/{repository}:{tag}")
+            return None
 
 
         digest = res.json()['config']['digest']
