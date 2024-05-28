@@ -45,6 +45,7 @@ class JobState(BaseModel):
     data: typing.Optional[dict]
     frontend: typing.Optional[str]
     url: typing.Optional[str]
+    root_prefix: typing.Optional[str]
 
     class Config:
         allow_population_by_field_name = True

@@ -4,3 +4,4 @@ uvicorn
 minio
 jinja2
 rdflib
+httpx

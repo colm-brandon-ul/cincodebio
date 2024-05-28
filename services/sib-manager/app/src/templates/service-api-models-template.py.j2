@@ -226,6 +226,7 @@ class {{ ServiceName | to_camel }}_Input_Response(BaseModel):
     data: Optional[dict] = None
     frontend: Optional[str] = None
     url: Optional[str] = None
+    root_prefix: Optional[str] = None
 {%- endmacro %}
 
 {%- macro Print_AutomatedOutputResponse(ServiceName,model) %}
@@ -248,6 +249,7 @@ class {{ ServiceName | to_camel }}_Input_Response(BaseModel):
     data: Optional[dict] = None
     frontend: Optional[str] = None
     url: Optional[str] = None
+    root_prefix: Optional[str] = None
 {%- endmacro %}
 
 {%- macro Print_InteractiveFrontEndResponse(ServiceName) %}
