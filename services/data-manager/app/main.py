@@ -299,7 +299,7 @@ def get_job_as_zip(job_id: str,
     # This operation is not supported by the S3 API.
     return StreamingResponse(
         stream_file(
-            f'https://{MINIO_FQDN}:{MINIO_SERVICE_PORT_MINIO_CONSOLE}/api/v1/buckets/{MINIO_WORKFLOW_BUCKET}/objects/download?prefix={encoded_str}', 
+            f'http://{MINIO_FQDN}:{MINIO_SERVICE_PORT_MINIO_CONSOLE}/api/v1/buckets/{MINIO_WORKFLOW_BUCKET}/objects/download?prefix={encoded_str}', 
             cookies), 
         media_type="application/zip")
 
@@ -329,7 +329,7 @@ def get_wf_as_zip(workflow_id: str,
     # This operation is not supported by the S3 API.
     return StreamingResponse(
         stream_file(
-            f'https://{MINIO_FQDN}:{MINIO_SERVICE_PORT_MINIO_CONSOLE}/api/v1/buckets/{MINIO_WORKFLOW_BUCKET}/objects/download?prefix={encoded_str}', 
+            f'http://{MINIO_FQDN}:{MINIO_SERVICE_PORT_MINIO_CONSOLE}/api/v1/buckets/{MINIO_WORKFLOW_BUCKET}/objects/download?prefix={encoded_str}', 
             cookies), 
         media_type="application/zip")
     
