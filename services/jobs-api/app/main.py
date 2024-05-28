@@ -59,6 +59,8 @@ async def update_job(id: str, job: UpdateJobState, background_tasks: BackgroundT
     db = mdbclient[JOBS_DB]
     db_col = db[JOBS_COLLECTION]
 
+    logging.warning(f'Updating Job {id} with {job.dict()}')
+
 
     # Remove updates which are None
     job = {k: v for k, v in job.dict().items() if v is not None}
