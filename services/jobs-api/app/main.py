@@ -137,3 +137,4 @@ async def delete_job_by_id(id: str):
     
     
     raise HTTPException(status_code=404, detail=f"Job {id} not found")
+

@@ -1,7 +1,7 @@
 import base64
 import json
 from pathlib import Path
-from fastapi import BackgroundTasks, FastAPI, Request
+from fastapi import BackgroundTasks, FastAPI, HTTPException, Request
 from fastapi.responses import FileResponse, HTMLResponse, StreamingResponse
 from fastapi.staticfiles import StaticFiles
 import httpx
@@ -30,6 +30,8 @@ MINIO_EXPERIMENT_BUCKET = os.environ.get('MINIO_EXPERIMENT_BUCKET')
 
 # Create the FQDN for the minio and jobs-api services (so dps running in different namespace can access them)
 MINIO_FQDN = f'{os.environ.get("MINIO_SERVICE_HOSTNAME")}.{os.environ.get("CINCO_DE_BIO_NAMESPACE")}.svc.cluster.local'
+
+JMS_ADDRESS = f"{os.getenv('JOBS_API_SERVICE_HOST')}:{os.getenv('JOBS_API_SERVICE_PORT')}"
 # Need to make sure that the Environment variable is set for the namespace
 MINIO_SERVICE_PORT = os.environ.get('MINIO_SERVICE_PORT')
 MINIO_SERVICE_PORT_MINIO_CONSOLE = os.environ.get('MINIO_SERVICE_PORT_MINIO_CONSOLE')
@@ -221,7 +223,7 @@ def get_minio_session_token() -> requests.cookies.RequestsCookieJar:
 
     """
     # Set the URL for the POST request
-    url = f'https://{MINIO_FQDN}:{MINIO_SERVICE_PORT_MINIO_CONSOLE}/api/v1/login'
+    url = f'http://{MINIO_FQDN}:{MINIO_SERVICE_PORT_MINIO_CONSOLE}/api/v1/login'
 
 
     # Set the request headers
@@ -241,12 +243,36 @@ def get_minio_session_token() -> requests.cookies.RequestsCookieJar:
 
     return response.cookies
 
+def retrieve_prefix_for_job(job_id: str) -> str:
 
+    # Retrieve the Job State Object for the job_id from the jobs API
+
+    # Set the URL for the GET request
+
+    url = f'http://{JMS_ADDRESS}/get-job-by-id/{job_id}'
+
+    # Make the GET request
+    response = requests.get(url)
+
+    # If the request is successful, return the prefix
+    if response.status_code == 200:
+        # Return the root prefix from the job state object (workflow_id/TIME-STAMP-ROUTING_KEY/)
+        return response.json()['root_prefix']
+    else:
+        return None
+
+
+# Function that streams the file from the Minio Console API
+async def stream_file(url: str, cookies: requests.cookies.RequestsCookieJar):
+    async with httpx.AsyncClient(cookies=cookies) as client:
+        async with client.stream("GET", url) as response:
+            async for chunk in response.aiter_bytes():
+                yield chunk
 
 # HANDLING DATA DOWNLOAD (I.E. RESULTS)
 # Using query parameter instead of path parameter
-@app.get("/get-prefix-as-zip/", response_class=FileResponse)
-def get_prefix_as_zip(prefix: str, 
+@app.get("/get-job-data-as-zip/{job_id}", response_class=StreamingResponse)
+def get_job_as_zip(job_id: str, 
                       request: Request,
                       background_tasks: BackgroundTasks):
     
@@ -257,23 +283,17 @@ def get_prefix_as_zip(prefix: str,
     # For intermediate results, it's slightly more complicated
     # As the prefix is WORKFLOW_ID/YYYY-MM-DD-HH-MM-SS-ROUTING_KEY
     
+    prefix = retrieve_prefix_for_job(job_id)
 
-    # Original string
-    s = prefix
+    # If the prefix is None, the job does not exist (or there was an error in the request to the jobs API)
+    if prefix is None:
+        return HTTPException(status_code=404, detail=f"Job {job_id} not found")
 
     # Convert the string to bytes, then encode it in base64
-    encoded = base64.b64encode(s.encode())
+    encoded = base64.b64encode(prefix.encode())
 
     # The result is a bytes object, so if you want it as a string, you can decode it
     encoded_str = encoded.decode()
-
-
-    # Function that streams the file from the Minio Console API
-    async def stream_file(url: str, cookies: requests.cookies.RequestsCookieJar):
-        async with httpx.AsyncClient(cookies=cookies) as client:
-            async with client.stream("GET", url) as response:
-                async for chunk in response.aiter_bytes():
-                    yield chunk
 
     # Rather than using the Minio API, we will use the Minio Console API to download the files (as it automatically zips the files, for a prefix)
     # This operation is not supported by the S3 API.
@@ -283,3 +303,33 @@ def get_prefix_as_zip(prefix: str,
             cookies), 
         media_type="application/zip")
 
+
+
+@app.get("/get-workflow-data-as-zip/{workflow_id}", response_class=StreamingResponse)
+def get_wf_as_zip(workflow_id: str, 
+                      request: Request,
+                      background_tasks: BackgroundTasks):
+    
+
+    # Get the session token (for Minio Console API)
+    cookies = get_minio_session_token()
+
+    # append backslash to workflow_id to create the prefix
+    prefix = f'{workflow_id}/'
+
+
+    # Convert the string to bytes, then encode it in base64
+    encoded = base64.b64encode(prefix.encode())
+
+    # The result is a bytes object, so if you want it as a string, you can decode it
+    encoded_str = encoded.decode()
+
+
+    # Rather than using the Minio API, we will use the Minio Console API to download the files (as it automatically zips the files, for a prefix)
+    # This operation is not supported by the S3 API.
+    return StreamingResponse(
+        stream_file(
+            f'https://{MINIO_FQDN}:{MINIO_SERVICE_PORT_MINIO_CONSOLE}/api/v1/buckets/{MINIO_WORKFLOW_BUCKET}/objects/download?prefix={encoded_str}', 
+            cookies), 
+        media_type="application/zip")
+    

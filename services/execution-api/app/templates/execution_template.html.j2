@@ -151,14 +151,6 @@
             }
             }
 
-            /*
-            {'_id': '64c7a3a6923084b56dc97f9f', 
-            'owner': 'public', 
-            'status': 'completed', 
-            'state': [
-                {'id': '1f3f218c-f3f4-4dcc-a09c-369320a34566', 'workflow': '64c7a3a6923084b56dc97f9f', 'job_status': 'completed'}, 
-                {'id': 'c4651190-865c-4961-81b7-2766a32db8d5', 'workflow': '64c7a3a6923084b56dc97f9f', 'job_status': 'completed'}]}
-            */
 
             Workflow.fromJson = function(json) {
                 // Need to figure out the solution for need to parse twice!
@@ -192,11 +184,9 @@
                     if (wf_state.status !== new_wf_state.status){
                         // Update Workflow State Display and update existing object
                         
-                        
-                        
-                        existing_text_node = document.getElementById('wf-status')
+                        wf_existing_text_node = document.getElementById('wf-status')
                         const newNode = document.createTextNode(`Workflow; ${wf_state.id} is ${new_wf_state.status}`);
-                        existing_text_node.replaceChild(newNode, existing_text_node.childNodes[0]);
+                        wf_existing_text_node.replaceChild(newNode, wf_existing_text_node.childNodes[0]);
                         wf_state.status = new_wf_state.status
 
                     }
@@ -205,17 +195,29 @@
                     old_state_length = wf_state.state.length
                     new_wf_state.state.forEach(function (item, index) {
                         if (index >= old_state_length){
-                            // A new state has been added
+                        // A job state has been added
                             var message = document.createElement('li')
                             message.setAttribute("id",item.id);
                             console.log(item.job_status == 'awaiting_interaction')
                             var content
+                            // if the job status is awaiting_interaction, create a clickable hyperlink (to redirect to the service's frontend)
                             if (item.job_status == 'awaiting_interaction'){
                                 // creates a clickable hyperlink and puts the job_status as the text inside a span
                                 content = document.createElement('a')
                                 content.setAttribute("href",item.url)
                                 content_text = document.createTextNode(`${item.service_name} - ${item.job_status}`);
                                 content.appendChild(content_text)
+
+                            }
+                            // if the job status is completed, create a clickable hyperlink (to download the results as zip file)
+                            else if (item.job_status == 'completed') {
+                                // creates a clickable hyperlink and puts the job_status as the text inside a span
+                                content = document.createElement('a')
+                                content_text = document.createTextNode(`${item.service_name} - ${item.job_status}`);
+                                content.appendChild(content_text)
+                                content.addEventListener('click', function() {
+                                    downloadJobZip(item.id)
+                                })
                             }
                             else{
                                 // creates a span with the job_status as the text
@@ -226,39 +228,77 @@
                             document.getElementById('wf-state-container').appendChild(message)
                         }
                         else {
+                        // A job state may have been updated
                             if (item.job_status != wf_state.state[index].job_status){
+                            // A job state has been updated
+
+                            // get the existing text node
                             existing_text_node = document.getElementById(item.id)
-                            // console.log(wf_state.state[index])
-                            // console.log(item.job_status + " " + wf_state.state[index].job_status)
-                            // console.log(item.job_status != wf_state.state[index].job_status)
+
+                            // create a new node
                             let newNode;
+                            // if the job status is awaiting_interaction, create a clickable hyperlink (to redirect to the service's frontend)
                             if (item.job_status == 'awaiting_interaction') {
                                 newNode = document.createElement('a')
                                 newNode.setAttribute("href",item.url)
                                 content_text = document.createTextNode(`${item.service_name} - ${item.job_status}`);
                                 newNode.appendChild(content_text)
+                                // Add a class to the li element
+                                existing_text_node.classList.add('has-link');
+
+                            }
+                            // if the job status is completed, create a clickable hyperlink (to download the results as zip file)
+                            else if (item.job_status == 'completed') {
+                                newNode = document.createElement('a')
+                                content_text = document.createTextNode(`${item.service_name} - ${item.job_status}`);
+                                newNode.appendChild(content_text)
+                                newNode.addEventListener('click', function() {
+                                    downloadJobZip(item.id)
+                                })
+
+                                existing_text_node.classList.remove('has-link');
                             }
                             else{
+
                                 newNode = document.createTextNode(`${item.service_name} - ${item.job_status}`);
+                                // remove class from the li element
+                                existing_text_node.classList.remove('has-link');
                             }
 
-                            
+                            // replace the existing text node with the new node
                             existing_text_node.replaceChild(newNode, existing_text_node.childNodes[0]);
                         }
                     }
                     // console.log(item, index);
                     });
+                    // Update the state of the workflow
                     wf_state.state = new_wf_state.state
                 }
                 // the variable is undefined - therefore needs to be initialised
                 else {
                     wf_state = Workflow.fromJson(event.data)
-                    document.getElementById('wf-status').appendChild(document.createTextNode(`Workflow; ${wf_state.id} is ${wf_state.status}`))
+
+                    // create a text node with the workflow status
+                    if (wf_state.status == 'completed') {
+                        // create a clickable hyperlink (to download the results as zip file)
+                        var wf_content = document.createElement('a')
+                        var wf_content_text = document.createTextNode(`Workflow; ${wf_state.id} is ${wf_state.status}`);
+                        wf_content.appendChild(wf_content_text)
+                        wf_content.addEventListener('click', function() {
+                            downloadWorkflowZip(wf_state.id)
+                        })
+                    }
+                    else{
+                        var wf_content = document.createTextNode(`Workflow; ${wf_state.id} is ${wf_state.status}`);
+                    }
+
+                    document.getElementById('wf-status').appendChild(wf_content)
 
                     wf_state.state.forEach(function (item, index) {
                         var message = document.createElement('li')
                         message.setAttribute("id",item.id);
                         var content;
+                        // if the job status is awaiting_interaction, create a clickable hyperlink (to redirect to the service's frontend)
                         if (item.job_status == 'awaiting_interaction') {
                             // creates a hyperlink and puts the job_status as the text inside a span
                             content = document.createElement('a');
@@ -267,21 +307,32 @@
                             var content_text = document.createTextNode(`${item.service_name} - ${item.job_status}`);
                             link.appendChild(content_text);
                             content.appendChild(link)
-                            
                              // Add a class to the li element
-                             message.classList.add('has-link');;
+                             message.classList.add('has-link');
                             
                         }
+                        // if the job status is completed, create a clickable hyperlink (to download the results as zip file)
+                        else if (item.job_status == 'completed') {
+                            // creates a hyperlink and puts the job_status as the text inside a span
+                            content = document.createElement('a');
+                            var link = document.createElement('span');
+                            var content_text = document.createTextNode(`${item.service_name} - ${item.job_status}`);
+                            link.appendChild(content_text);
+                            content.appendChild(link);
+                            content.addEventListener('click', function() {
+                                downloadJobZip(item.id)
+                            });
+                        }
+
                         else{
                             content = document.createElement('span');
                             var content_text = document.createTextNode(`${item.service_name} - ${item.job_status}`);
                             content.appendChild(content_text);
-
-                           
                         }
 
-                        // var content = document.createTextNode(item.job_status)
+                        // append the content to the message
                         message.appendChild(content)
+                        // append the message to the wf-state-container
                         document.getElementById('wf-state-container').appendChild(message)
                     });
                     
@@ -291,10 +342,38 @@
               
             };
 
-            // download zip files
-            function downloadZip(prefix) {   
-                    
+            // download zip file(s)
+            function downloadJobZip(job_id) {   
+                // makes a request to the data-manager's endpoint to get the job data as a zip file
+                var apiEndpoint = `/{{ dataUploadIngress }}/get-job-data-as-zip/${job_id}`;
+
+                // Create a new anchor element
+                var link = document.createElement('a');
+                // set the href attribute to the apiEndpoint
+                link.href = apiEndpoint;
+                // set the download attribute to the ${job_id}.zip
+                link.download = `${job_id}.zip`;
+
+                // Trigger the click event on the anchor element
+                link.click();
             }
+
+            function downloadWorkflowZip(workflow_id) {
+                // makes a request to the data-manager's endpoint to get the workflow data as a zip file
+                var apiEndpoint = `/{{ dataUploadIngress }}/get-workflow-data-as-zip/${workflow_id}`;
+
+                // Create a new anchor element
+                var link = document.createElement('a');
+                // set the href attribute to the apiEndpoint
+                link.href = apiEndpoint;
+                // set the download attribute to the ${workflow_id}.zip
+                link.download = `${workflow_id}.zip`;
+
+                // Trigger the click event on the anchor element
+                link.click();
+            }
+
+
 
 
             // Send Echo every second for Websocket to stay open
