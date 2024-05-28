@@ -51,6 +51,7 @@ class UpdateJobState(BaseModel):
     data: typing.Optional[dict]
     frontend: typing.Optional[str]
     url: typing.Optional[str]
+    root_prefix: typing.Optional[str]
 
 class CreateJobState(BaseModel):
     workflow: str

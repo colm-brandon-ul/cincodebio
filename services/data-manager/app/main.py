@@ -279,14 +279,14 @@ def get_job_as_zip(job_id: str,
     # Get the session token (for Minio Console API)
     cookies = get_minio_session_token()
 
-    logging.warning(f"Cookies: {job_id}")
+
 
     # To get all the files with a prefix, (i.e. workflow id, is straightforward)
     # For intermediate results, it's slightly more complicated
     # As the prefix is WORKFLOW_ID/YYYY-MM-DD-HH-MM-SS-ROUTING_KEY
     
     prefix = retrieve_prefix_for_job(job_id)
-    logging.warning(f"Prefix: {prefix}")
+
 
     # If the prefix is None, the job does not exist (or there was an error in the request to the jobs API)
     if prefix is None:
