@@ -160,7 +160,9 @@ class ConnectionManager:
 
     async def send_json(self, message: str, websocket: WebSocket):
         await websocket.send_json(message)
+        
 manager = ConnectionManager()
+
 @app.websocket("/state/ws/{workflow_id}")
 async def websocket_endpoint(websocket: WebSocket,workflow_id: str):
     logging.warning(f"WS COOKIES: {websocket.cookies}")
@@ -184,7 +186,7 @@ async def websocket_endpoint(websocket: WebSocket,workflow_id: str):
 
 # Workflow Retrieval Endpoints
 
-@app.get("/get-workflows", response_model=List[WorkflowState])
+@app.get("/get-workflows", response_model=List[WorkflowState], response_model_by_alias=False)
 async def get_all_workflow_objects():
     # retrieve all workflows from the database
     # return them as a list of WorkflowState objects
@@ -198,7 +200,6 @@ async def get_workflow_by_id(workflow_id: str):
 
 
 # TEST API ENDPOINT & HANDLER
-
 # Function to dispatch model to code generator
 def test_code_submission_handler(workflow_id, model):
 
@@ -214,7 +215,6 @@ def test_code_submission_handler(workflow_id, model):
                         json={"code": model.replace("WORKFLOW_ID", workflow_id), 
                               "workflow_id": workflow_id})
     logging.warning(str(res.status_code))
-
 
 @app.post("/test/python-code/submit")
 async def root(request: Request, background_tasks: BackgroundTasks, model: UploadFile = File(...)):
