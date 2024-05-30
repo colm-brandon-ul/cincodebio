@@ -207,7 +207,7 @@
                 // set the href to the workflow detail page
                 link.href = `/{{ executionApiIngress }}/frontend/${workflow.id}`
                 const span = document.createElement("span");
-                span.textContent = workflow.name + " - " + workflow.status;
+                span.textContent = workflow.id + " - " + workflow.status;
                 link.appendChild(span);
 
                 listItem.appendChild(link);
