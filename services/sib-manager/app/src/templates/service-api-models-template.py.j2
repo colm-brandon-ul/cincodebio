@@ -162,6 +162,12 @@ class MissileNeighbourhoodsSymbolicLink(RootModel[str]):
 class MissileNeighbourhoods(BaseModel):
     url: MissileNeighbourhoodsSymbolicLink
 
+class PlotSymbolicLink(RootModel[str]):
+    ...
+    
+class Plot(BaseModel):
+    url: PlotSymbolicLink
+
 
 
 # Data Models for the Dataprocess Services (Input/Output)
