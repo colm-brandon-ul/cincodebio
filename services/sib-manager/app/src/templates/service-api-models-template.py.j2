@@ -165,6 +165,7 @@ class MissileNeighbourhoods(BaseModel):
 
 
 # Data Models for the Dataprocess Services (Input/Output)
+{%- macro render_metadata(metadata)%}{%- set map_dict = {'max': 'lt', 'min': 'ge'} -%}{%- for k,v in metadata.items() %},{{ map_dict[k] }}={{ v }}{%- endfor %}{%- endmacro %}
 {%- macro render_classdef(services, parent_name, indent = 0) %}
 {%- for k,v in services.items() %}
 {%- if k != 'CLASS_TYPE' and k != 'FIELDS'%} {#2#}
@@ -192,12 +193,18 @@ class MissileNeighbourhoods(BaseModel):
 {{ '\t' * indent }}{{- field['name'] -}}: Optional[{{ field['type'] }}] = {{ field['default_value'] }}              
                     {%- elif field['optional'] == false and field['default_value'] == none %}
 {{ '\t' * indent }}{{- field['name'] -}}: {{ field['type'] }}
+                    {%- elif field['optional'] == false and field['default_value'] != none %}
+{{ '\t' * indent }}{{- field['name'] -}}: {{ field['type'] }} = {{ field['default_value'] }}
                     {%- endif %}
                 {%- else %}
                     {%- if field['optional'] == true and field['default_value'] == none %}
-{{ '\t' * indent }}{{- field['name'] -}}: Optional[{{ field['type'] }}] = Field({{ None, field['metadata'] }})
+{{ '\t' * indent }}{{- field['name'] -}}: Optional[{{ field['type'] }}] = Field(... {{- render_metadata(field['metadata']) -}})
                     {%- elif field['optional'] == true and field['default_value'] != none %}
-{{ '\t' * indent }}{{- field['name'] -}}: Optional[{{ field['type'] }}] = Field({{ field['default_value'] , field['metadata'] }})
+{{ '\t' * indent }}{{- field['name'] -}}: Optional[{{ field['type'] }}] = Field({{ field['default_value'] }} {{- render_metadata(field['metadata']) -}})
+                    {%- elif field['optional'] == false and field['default_value'] != none %}
+{{ '\t' * indent }}{{- field['name'] -}}: {{ field['type'] }} = Field({{ field['default_value'] }} {{- render_metadata(field['metadata']) -}})
+                    {%- elif field['optional'] == false and field['default_value'] == none %}
+{{ '\t' * indent }}{{- field['name'] -}}: {{ field['type'] }} = Field(... {{- render_metadata(field['metadata']) -}})
                     {%- endif %}
                 {%- endif %}
             {%- else %}
@@ -287,7 +294,3 @@ class {{ parent_name }}(BaseModel):
 {{- Print_InteractiveOutputResponse(v['cincodebio.schema']['service_name'],v['cincodebio.schema']['process_output'])}}
 {%- endif %}
 {% endfor %}
-
-
-
-
