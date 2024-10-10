@@ -20,7 +20,8 @@
                 --heading: #61dafb;
                 --submit-button-color: #3498db;
                 --submit-button-color-hover: #2186c4;
-        
+                --modal-completed-background: #d4edda;
+                --modal-failed-background: #f8d7da;    
             }
             
             body {
@@ -113,6 +114,10 @@
 
             #wf-state-container li.has-link {
             background-color: #007BFF; /* Adjust this color to your liking */
+            }
+
+            #wf-state-container li.job-completed {
+                background-color: var(--modal-completed-background);
             }
 
             #wf-state-container li.has-link:hover {
@@ -257,6 +262,7 @@
                                 })
 
                                 existing_text_node.classList.remove('has-link');
+                                existing_text_node.classList.add('job-completed');
                             }
                             else{
 
@@ -322,6 +328,7 @@
                             content.addEventListener('click', function() {
                                 downloadJobZip(item.id)
                             });
+                            content.classList.add('job-completed');
                         }
 
                         else{

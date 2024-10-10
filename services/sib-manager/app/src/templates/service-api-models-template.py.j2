@@ -97,8 +97,8 @@ class WsiSymbolicLink(RootModel[str]):
 class WsiProteinChannel(BaseModel):
     url: WsiSymbolicLink
 
-class WholeSlideImage(BaseModel):
-    channels: dict[str,WsiProteinChannel]
+class WholeSlideImage(RootModel[Dict[str, WsiProteinChannel]]):
+    ...
 
 class WholeSlideImageCellSegmentationMaskSymbolicLink(RootModel[str]):
     ...
