@@ -188,7 +188,13 @@ def check_if_local_state_exists() -> bool:
         with open(state_path / INSTALLED_SIBS, "r") as f:
             json.load(f)
 
-            return True
+        with open(state_path / CURRENT_SIBS_IME_JSON, "r") as f:
+            json.load(f)
+        
+        with open(state_path / UTD_SIB_FILE, "r") as f:
+            json.load(f)
+
+        return True
 
     except FileNotFoundError:
         return False
