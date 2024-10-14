@@ -192,7 +192,7 @@ def check_if_local_state_exists() -> bool:
             json.load(f)
         
         with open(state_path / UTD_SIB_FILE, "r") as f:
-            json.load(f)
+            f.read()
 
         return True
 

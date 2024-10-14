@@ -176,6 +176,12 @@
                 console.log(time)
                 ws.send('echo')
             }
+
+            function deleteAllChildren(node) {
+                while (node.firstChild) {
+                node.removeChild(node.firstChild);
+                }
+            }
     
             ws.onmessage = function(event) {
                 var message = document.createElement('li')
@@ -190,8 +196,28 @@
                         // Update Workflow State Display and update existing object
                         
                         wf_existing_text_node = document.getElementById('wf-status')
-                        const newNode = document.createTextNode(`Workflow; ${wf_state.id} is ${new_wf_state.status}`);
-                        wf_existing_text_node.replaceChild(newNode, wf_existing_text_node.childNodes[0]);
+                    
+
+                        // delete all children of the existing text node
+                        deleteAllChildren(wf_existing_text_node)
+
+                        // replace the existing text node with the new node
+                        // create a text node with the workflow status
+                        if (wf_state.status == 'completed') {
+                            // create a clickable hyperlink (to download the results as zip file)
+                            var new_node = document.createElement('a')
+                            var new_node_text = document.createTextNode(`Workflow; ${wf_state.id} is ${wf_state.status}`);
+                            new_node.appendChild(new_node_text)
+                            new_node.addEventListener('click', function() {
+                                downloadWorkflowZip(wf_state.id)
+                            })
+                        }
+                        else{
+                            var new_node = document.createTextNode(`Workflow; ${wf_state.id} is ${wf_state.status}`);
+                        }
+
+                        wf_existing_text_node.appendChild(newNode)
+
                         wf_state.status = new_wf_state.status
 
                     }
