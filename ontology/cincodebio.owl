@@ -7,6 +7,31 @@
 	xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
 	xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
 
+
+	 <!-- License Annotations -->
+    <Annotation>
+        <AnnotationProperty IRI="http://purl.org/dc/terms/license"/>
+        <IRI>https://opensource.org/licenses/MIT</IRI>
+    </Annotation>
+    
+    <Annotation>
+        <AnnotationProperty IRI="http://purl.org/dc/terms/rights"/>
+        <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#string">This ontology is available under the MIT License</Literal>
+    </Annotation>
+    
+    <Annotation>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#string">MIT License
+
+Copyright (c) Cinco De Bio
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this ontology and associated documentation files, to deal in the ontology without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the ontology, and to permit persons to whom the ontology is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the ontology.
+
+THE ONTOLOGY IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE ONTOLOGY OR THE USE OR OTHER DEALINGS IN THE ONTOLOGY.</Literal>
+    </Annotation>
+
 <!-- <rdf:Description rdf:about="https://raw.githubusercontent.com/colm-brandon-ul/cincodebio/master/ontology/cincodebio.owl">
 	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Ontology"/>
 </rdf:Description> -->
