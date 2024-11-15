@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <rdf:RDF
-	xmlns:cdb="http://www.cincodebio.org/cdbontology#"
+	xmlns="http://www.cincodebio.org/cdbontology#"
 	xmlns:owl="http://www.w3.org/2002/07/owl#"
 	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
 	xmlns:xml="http://www.w3.org/XML/1998/namespace"
@@ -50,7 +50,7 @@
 	<rdfs:domain rdf:resource="http://www.cincodebio.org/cdbontology#List"/>
 	<rdfs:range rdf:resource="http://www.cincodebio.org/cdbontology#Data"/>
 	<rdfs:comment>Relates a list to its elements.</rdfs:comment>
-	<rdfs:label>contains</rdfs:label>
+	<rdfs:label>listContains</rdfs:label>
 </rdf:Description>
 
 <!-- Attaching attributes to classes -->
@@ -62,14 +62,36 @@
 </rdf:Property>
 
 <owl:DatatypeProperty rdf:about="http://www.cincodebio.org/cdbontology#attributeName">
-	<rdfs:domain rdf:resource="#hasAttribute"/>
+	<rdfs:domain rdf:resource="http://www.cincodebio.org/cdbontology#hasAttribute"/>
 	<rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
 	<rdfs:comment>For attaching a name for an attribute attached to a to class.</rdfs:comment>
 	<rdfs:label>attributeName</rdfs:label>
 </owl:DatatypeProperty>
 
+<rdf:Property rdf:about="http://www.cincodebio.org/cdbontology#hasSchemaColumnType">
+	<rdfs:domain rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+	<rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
+	<rdfs:comment>For adding schema column types</rdfs:comment>
+	<rdfs:label>hasSchemaColumnType</rdfs:label>
+</rdf:Property>
+
+<owl:DatatypeProperty rdf:about="http://www.cincodebio.org/cdbontology#schemaColumnName">
+	<rdfs:domain rdf:resource="http://www.cincodebio.org/cdbontology#hasSchemaColumnType"/>
+	<rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+	<rdfs:comment>For attaching a name for an schema column attached to a to class.</rdfs:comment>
+	<rdfs:label>schemaColumnName</rdfs:label>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="http://www.cincodebio.org/cdbontology#schemaColumnConstraint">
+	<rdfs:domain rdf:resource="http://www.cincodebio.org/cdbontology#hasSchemaColumnType"/>
+	<rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+	<rdfs:comment>For attaching a contraint to a schema column</rdfs:comment>
+	<rdfs:label>schemaColumnConstraint</rdfs:label>
+</owl:DatatypeProperty>
+
+
+
 <!-- Properties -->
-<!-- <owl:ObjectProperty rdf:about="#hasModelSpecification"/> -->
 
 <rdf:Description rdf:about="http://www.cincodebio.org/cdbontology#hasModelSpecification">
 	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
@@ -91,8 +113,23 @@
 	<rdfs:domain rdf:resource="http://www.cincodebio.org/cdbontology#hasModelSpecification"/>
 	<rdfs:range rdf:resource="http://www.cincodebio.org/cdbontology#Data"/>
 	<rdfs:comment>Defining input for process concept model</rdfs:comment>
-	<rdfs:label>hasInput</rdfs:label>
+	<rdfs:label>hasOutput</rdfs:label>
 </rdf:Description>
+
+<!-- Attaching attributes to classes -->
+<rdf:Property rdf:about="http://www.cincodebio.org/cdbontology#hasFile">
+	<rdfs:domain rdf:resource="http://www.cincodebio.org/cdbontology#Experiment"/>
+	<rdfs:range rdf:resource="http://www.cincodebio.org/cdbontology#File"/>
+	<rdfs:comment>For adding attributes to classes.</rdfs:comment>
+	<rdfs:label>hasFile</rdfs:label>
+</rdf:Property>
+
+<owl:DatatypeProperty rdf:about="http://www.cincodebio.org/cdbontology#fileName">
+	<rdfs:domain rdf:resource="http://www.cincodebio.org/cdbontology#hasFile"/>
+	<rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+	<rdfs:comment>For attaching a name for an attribute attached to a to class.</rdfs:comment>
+	<rdfs:label>fileName</rdfs:label>
+</owl:DatatypeProperty>
 
 
 
@@ -137,7 +174,7 @@
 <!--  -->
 <!-- http://www.cincodebio.org/DICOM -->
 
-<rdf:Description rdf:about="http://www.cincodebio.org/DICOM">
+<rdf:Description rdf:about="http://www.cincodebio.org/cdbontology#DICOM">
 	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
 	<rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#Image"/>
 	<rdfs:comment>This represents a DICOM file.</rdfs:comment>
@@ -172,7 +209,7 @@
 <rdf:Description rdf:about="http://www.cincodebio.org/cdbontology#Audio">
 	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
 	<rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#File"/>
-	<rdfs:comment>This represents a video file.</rdfs:comment>
+	<rdfs:comment>This represents a audio file.</rdfs:comment>
 	<rdfs:label>Audio</rdfs:label>
 </rdf:Description>
 <!--  -->
