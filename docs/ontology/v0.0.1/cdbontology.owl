@@ -45,7 +45,7 @@
 
 	<owl:Ontology
 		rdf:about="https://colm-brandon-ul.github.io/cincodebio/ontology/v0.0.1/cdbontology.owl">
-		<rdfs:label>cellmaps</rdfs:label>
+		<rdfs:label>cincodebio</rdfs:label>
 		<owl:versionInfo rdf:datatype="http://www.w3.org/2001/XMLSchema#string">0.0.1</owl:versionInfo>
 	</owl:Ontology>
 	<!--  -->
