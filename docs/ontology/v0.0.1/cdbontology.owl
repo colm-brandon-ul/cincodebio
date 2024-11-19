@@ -153,14 +153,14 @@
 	<rdf:Property rdf:about="http://www.cincodebio.org/cdbontology#hasFile">
 		<rdfs:domain rdf:resource="http://www.cincodebio.org/cdbontology#Experiment" />
 		<rdfs:range rdf:resource="http://www.cincodebio.org/cdbontology#File" />
-		<rdfs:comment>For adding attributes to classes.</rdfs:comment>
+		<rdfs:comment>For attaching files to an experiment class</rdfs:comment>
 		<rdfs:label>hasFile</rdfs:label>
 	</rdf:Property>
 
 	<owl:DatatypeProperty rdf:about="http://www.cincodebio.org/cdbontology#fileName">
 		<rdfs:domain rdf:resource="http://www.cincodebio.org/cdbontology#hasFile" />
 		<rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string" />
-		<rdfs:comment>For attaching a name for an attribute attached to a to class.</rdfs:comment>
+		<rdfs:comment>For attaching a name to an experiment file.</rdfs:comment>
 		<rdfs:label>fileName</rdfs:label>
 	</owl:DatatypeProperty>
 
