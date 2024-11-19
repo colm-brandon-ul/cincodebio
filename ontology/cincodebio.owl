@@ -32,13 +32,11 @@ The above copyright notice and this permission notice shall be included in all c
 THE ONTOLOGY IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE ONTOLOGY OR THE USE OR OTHER DEALINGS IN THE ONTOLOGY.</Literal>
     </Annotation>
 
-<!-- <rdf:Description rdf:about="https://raw.githubusercontent.com/colm-brandon-ul/cincodebio/master/ontology/cincodebio.owl">
-	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Ontology"/>
-</rdf:Description> -->
-
-<owl:Ontology rdf:about="https://raw.githubusercontent.com/colm-brandon-ul/cincodebio/master/ontology/cincodebio.owl">
-        <owl:versionInfo rdf:datatype="http://www.w3.org/2001/XMLSchema#string">0.0.1</owl:versionInfo>
-</owl:Ontology>
+<owl:Ontology
+		rdf:about="https://colm-brandon-ul.github.io/cincodebio/ontology/v0.0.1/cdbontology.owl">
+		<rdfs:label>cellmaps</rdfs:label>
+		<owl:versionInfo rdf:datatype="http://www.w3.org/2001/XMLSchema#string">0.0.1</owl:versionInfo>
+	</owl:Ontology>
 <!--  -->
 <!--  -->
 <!-- ################################################################# -->
