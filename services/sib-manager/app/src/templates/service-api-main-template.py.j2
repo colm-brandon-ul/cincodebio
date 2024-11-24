@@ -128,7 +128,7 @@ async def {{ ServiceName | to_snake }}_submit(
 
 {# Get Interactive Front-end #}
 
-@app.get("/{{ AbstractConcept | to_kebab }}/{{ ServiceName | to_kebab }}/frontend/{job_id}", 
+@app.get("/{{ AbstractConcept | to_kebab }}/{{ ServiceName | to_kebab }}/ext/frontend/{job_id}", 
          response_class={{ ServiceName | to_camel }}_FrontEnd_Response)
 async def {{ ServiceName | to_snake }}_frontend(job_id: str):
     
@@ -146,7 +146,7 @@ async def {{ ServiceName | to_snake }}_frontend(job_id: str):
 
 
 {# Submit Interaction #}
-@app.post("/{{ AbstractConcept | to_kebab }}/{{ ServiceName | to_kebab }}/submit/{job_id}",
+@app.post("/{{ AbstractConcept | to_kebab }}/{{ ServiceName | to_kebab }}/ext/submit/{job_id}",
           response_model={{ ServiceName | to_camel }}_InteractionInput_Response)
 async def {{ ServiceName | to_snake }}_submit_interaction(
     job_id: str, 

@@ -1,0 +1,9 @@
+jinja2-strcase
+Jinja2
+fastapi==0.68.0
+pydantic
+uvicorn[standard]
+requests
+watchgod
+aiofiles
+pathlib

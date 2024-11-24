@@ -12,24 +12,9 @@ import logging
 import time
 import datetime
 
-# Do I want to use env vars for this?
-KANIKO_DOCKER_HUB_AUTH_VOLUME = "kaniko-secret"
-DOCKER_BUILD_CONTEXT_VOLUME = os.getenv('DOCKER_BUILD_CONTEXT_VOLUME')
-DOCKER_BUILD_CONTEXT_MOUNT_PATH = os.getenv('DOCKER_BUILD_CONTEXT_MOUNT_PATH')
-
-# Container Registry details - do I want to use env vars for this?
-REGISTRY_NAME = os.getenv('REGISTRY_NAME')
-REGISTRY_NAMESPACE = os.getenv('REGISTRY_NAMESPACE')
-REGISTRY_PORT = os.getenv('REGISTRY_PORT')
-
-# This should be an env var 
-CONTAINER_REGISTRY_DOMAIN_ON_HOST = os.getenv('CONTAINER_REGISTRY_DOMAIN_ON_HOST')
-
-# Kaniko image (maybe an env var)
-KANIKO_IMAGE = os.getenv('KANIKO_IMAGE')
-
-# This should be an env var
-KANIKO_BUILD_NAMESPACE = os.getenv('KANIKO_BUILD_NAMESPACE')
+from config import (KANIKO_BUILD_NAMESPACE, KANIKO_IMAGE, KANIKO_DOCKER_HUB_AUTH_VOLUME, DOCKER_BUILD_CONTEXT_MOUNT_PATH, 
+                    DOCKER_BUILD_CONTEXT_VOLUME, REGISTRY_NAME, REGISTRY_NAMESPACE,
+                    REGISTRY_PORT, KANIKO_DOCKER_HUB_AUTH_VOLUME, CONTAINER_REGISTRY_DOMAIN_ON_HOST)
 
 
 """

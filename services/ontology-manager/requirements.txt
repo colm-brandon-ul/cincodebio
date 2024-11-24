@@ -1,0 +1,10 @@
+fastapi
+pydantic
+uvicorn
+jinja2
+rdflib
+httpx
+matplotlib
+networkx
+requests
+urlparse

@@ -1,0 +1,40 @@
+from enum import Enum
+from pydantic import BaseModel, Field,root_validator, RootModel
+from typing import List, Any, Union, Optional, Dict
+
+{%- macro printDataStructure(ClassName, InheritanceDataStructure, TypeParameters, Docs)%}
+class {{ ClassName }}(RootModel[{{ InheritanceDataStructure }}[{{ TypeParameters | join(', ') }}]]):
+    ...
+{%- endmacro %}
+{%- macro printPrimitive(ClassName, primitiveType, Docs) %}
+class {{ ClassName }}(RootModel[{{ primitiveType }}]):
+    """{{ Docs }}"""
+    ...
+{%- endmacro %}
+{%- macro printAtomicFile(ClassName,Docs) %}
+class {{ ClassName }}SymbolicLink(RootModel[str]):
+    ...
+
+class {{ ClassName }}(BaseModel):
+    """{{ Docs }}"""
+    url: {{ ClassName }}SymbolicLink
+{%- endmacro %}
+{%- macro printClassWithAttributes(ClassName, attributes, Docs) %}
+class {{ ClassName }}(BaseModel):
+    """{{ Docs }}"""
+{%- for attribute in attributes %}
+    {{ attribute['attributeName'] }}: {{ attribute['type'] }}
+{%- endfor %}
+{%- endmacro %}
+{# Iterate over all dataModels #}
+{%- for dm in dataModels -%}
+{%- if dm['type'] == 'DataStructure' %}
+{{- printDataStructure(dm['name'], dm['inheritance'], dm['typeParameters'],dm['docs']) }}
+{%- elif dm['type'] == 'Primitive' %}
+{{- printPrimitive(dm['name'], dm['primitiveType'],dm['docs']) }}
+{%- elif dm['type'] == 'AtomicFile' %}
+{{- printAtomicFile(dm['name'],dm['docs']) }}
+{%- elif dm['type'] == 'ClassWithAttributes' %}
+{{- printClassWithAttributes(dm['name'], dm['attributes'],dm['docs']) }}
+{%- endif %}
+{% endfor %}

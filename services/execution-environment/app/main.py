@@ -26,4 +26,7 @@ async def root(code: Code, background_tasks: BackgroundTasks):
     background_tasks.add_task(run_code, code)
     return {"message": "Welcome to the root endpoint of the execution API"}
 
-
+@app.get("/health")
+def health_check():
+    # perhaps we should do some checks here
+    return {"status": "healthy"}

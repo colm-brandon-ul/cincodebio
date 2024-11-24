@@ -1,6 +1,7 @@
-from typing import List
+from typing import Dict, List
 from config import (STATIC_CODE_DIR,PERSISTENT_STATE_MOUNT_PATH,LATEST_SIBS,
-                  OTHER_SIBS,INSTALLED_SIBS, JINJA_ENV, CURRENT_SIBS_IME_JSON, SIB_MAP_FILE, UTD_SIB_FILE)
+                  OTHER_SIBS,INSTALLED_SIBS, JINJA_ENV, CURRENT_SIBS_IME_JSON, 
+                  SIB_MAP_FILE, UTD_SIB_FILE, SERVICE_API_NAME)
 import pathlib
 import utils
 import k8s_interface, cinco_interface
@@ -23,6 +24,25 @@ def health_check_with_timeout(url, timeout):
             pass
 
     return False
+
+def get_api_data_models() -> List[Dict]:
+    """
+        This function retrieves the data models from the ontology manager and generates the data model code.
+
+        Args:
+            None
+
+        Returns:
+            None
+    """
+    try:
+        '/api-data-models'
+        response = requests.get(url)
+        if response.status_code == 200:
+            return True
+    except requests.exceptions.RequestException:
+        pass
+
 
 def update_code_gen_maps(new_sib_maps: dict) -> bool:
     """
@@ -69,8 +89,11 @@ def initial_build_service_api(dh_namespace: str) -> bool:
     static_path = pathlib.Path(STATIC_CODE_DIR)
     state_path = pathlib.Path(PERSISTENT_STATE_MOUNT_PATH)
     # Retrieve the set of sibs available from DH
+    logging.warning("Retrieving the set of sibs available from DH")
     latest, rest = utils.get_valid_images_from_namespace(dh_namespace)
+    data_models = get_api_data_models()
 
+    logging.warning("Latest SIBs: {}".format(latest))
     # WRITE THEM TO LOCAL STATE - LATEST, INSTALLED, OTHER
         # Initially, we will assume that all latest sibs are installed
     with open(state_path / LATEST_SIBS, "w") as f:
@@ -82,16 +105,18 @@ def initial_build_service_api(dh_namespace: str) -> bool:
     with open(state_path / OTHER_SIBS, "w") as f:
         json.dump(rest,f)
 
+    logging.warning("Wrote the sibs to local state")
 
+    logging.warning("Generating the code for the service-api")
     # Generate the code for the service-api
     api_code, model_code = utils.code_gen(
         template_env=JINJA_ENV,
-        service_models=latest,   
+        service_models=latest,
+        data_models= ...   
     )
 
 
     # Need to create the docker context
-
     # Read the Dockerfile, k8s jobs and requirements.txt from static_code dir
     with open(static_path / 'Dockerfile.txt', 'r') as f:
         dfile = f.read()
@@ -105,7 +130,8 @@ def initial_build_service_api(dh_namespace: str) -> bool:
     with open(static_path / 'utils.py', 'r') as f:
         utils_content = f.read()
 
-
+    # Prepare the build context for kaniko build
+    logging.warning("Preparing the build context for kaniko build")
     if k8s_interface.prepare_build_context(
         pfile_content=api_code,
         mfile_content=model_code,
@@ -114,31 +140,33 @@ def initial_build_service_api(dh_namespace: str) -> bool:
         requiremnts_txt_content=requirements_content,
         utils_content = utils_content
     ):
-
+        logging.warning("Successfully prepared the build context for kaniko build")
+        logging.warning("Submitting the kaniko job to build the service api image")
         # Submit the kaniko job to build the service api image image
         kaniko_job_name = k8s_interface.submit_kaniko_build(
-            image_name=os.getenv('SERVICE_API_NAME')
+            image_name=SERVICE_API_NAME
         )
         
+
         if k8s_interface.get_kaniko_build_status(kaniko_job_name):
             # Successfully built the service api image and pushed the image to the local registry
             # Trigger rolling updates - currently assuming default namespace
+            logging.warning("Successfully built the service api image")
+            logging.warning("Triggering rolling updates")
             k8s_interface.submit_rolling_update(
-                image_name=os.getenv('SERVICE_API_NAME'),
-                service_api_deployment_name=os.getenv('SERVICE_API_NAME')
+                image_name=SERVICE_API_NAME,
+                service_api_deployment_name=SERVICE_API_NAME
             )
 
             # If the service api image was successfully built, update the sib maps and code gen schema
 
+            logging.warning("Updating the sib maps and code gen schema")
             # from the new set of installed sibs, generate the new sib maps and code gen schema
             sib_i_map, sib_o_map, sib_ab_map, utd_sib_schemas = cinco_interface.cincodebio_schema_to_sibfile_format(latest)
-
-
             # resolve differences between the new and old sib schemas -> no existing IME schema will be present (pass in empty list)
             new_ime_sib_library_schema = cinco_interface.get_new_ime_sib_library([],utd_sib_schemas)
-
             new_lib_dot_sibs = cinco_interface.code_gen(JINJA_ENV,new_ime_sib_library_schema)
-
+            logging.warning('Writing the new lib.sibs to the state code dir')
             # Write the new lib.sibs to the static code dir
             with open(state_path / UTD_SIB_FILE, "w") as f:
                 f.write(new_lib_dot_sibs)
@@ -241,7 +269,7 @@ def update_service_api_and_sibs(to_be_installed_sibs: List) -> bool:
     static_path = pathlib.Path(STATIC_CODE_DIR)
     state_path = pathlib.Path(PERSISTENT_STATE_MOUNT_PATH)
 
-
+    data_models = get_api_data_models()
 
     # with open(state_path / INSTALLED_SIBS, "r") as f:
     #     # opens the list of installed sibs
@@ -250,7 +278,8 @@ def update_service_api_and_sibs(to_be_installed_sibs: List) -> bool:
     # Generate the code for the service-api
     api_code, model_code = utils.code_gen(
         template_env=JINJA_ENV,
-        service_models=to_be_installed_sibs,   
+        service_models=to_be_installed_sibs,
+        data_models= ...   
     )
 
     # Read the Dockerfile, k8s jobs and requirements.txt from static_code dir
@@ -278,15 +307,15 @@ def update_service_api_and_sibs(to_be_installed_sibs: List) -> bool:
 
         # Submit the kaniko job to build the service api image image
         kaniko_job_name = k8s_interface.submit_kaniko_build(
-            image_name=os.getenv('SERVICE_API_NAME')
+            image_name=SERVICE_API_NAME
         )
         
         if k8s_interface.get_kaniko_build_status(kaniko_job_name):
             # Successfully built the service api image and pushed the image to the local registry
             # Trigger rolling updates - currently assuming default namespace
             k8s_interface.submit_rolling_update(
-                image_name=os.getenv('SERVICE_API_NAME'),
-                service_api_deployment_name=os.getenv('SERVICE_API_NAME')
+                image_name=SERVICE_API_NAME,
+                service_api_deployment_name=SERVICE_API_NAME
             )
             
             # If the service api image was successfully built, update the sib maps and code gen schema

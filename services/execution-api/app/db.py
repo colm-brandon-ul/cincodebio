@@ -1,13 +1,11 @@
 import pymongo
 import os 
 
+from config import MONGODB_HOST, MONGODB_PORT, WORKFLOW_DB, WORKFLOW_COLLECTION
+
 # MY_SERVICE_SERVICE_HOST
 # MY_SERVICE_SERVICE_PORT
 
-MONGODB_HOST = os.environ.get("MONGODB_SERVICE_HOST")
-MONGODB_PORT = os.environ.get("MONGODB_SERVICE_PORT")
-WORKFLOW_DB = os.environ.get("WORKFLOW_DB")
-WORKFLOW_COLLECTION = os.environ.get("WORKFLOW_COLLECTION")
 
 mdbclient = pymongo.MongoClient(MONGODB_HOST, int(MONGODB_PORT),minPoolSize=0, maxPoolSize=200)
 

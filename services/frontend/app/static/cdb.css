@@ -1,0 +1,72 @@
+ /* Add your CSS styles here */
+ :root {
+    --background: #ffffff;
+    --modal-background-color: #f9f9f9;
+    --modal-border-color: #ccc;
+    --modal-border-radius: 8px;
+    --clickable-modal-background-color: #f8f8f8;
+    --clickable-text: #007bff;
+    --text: #000000;
+    --heading: #61dafb;
+    --modal-completed-background: #d4edda;
+    --modal-failed-background: #f8d7da;
+    --background: #ffffff;
+    --secondary: #007bff;
+    --submit-button-color: #3498db;
+    --submit-button-color-hover: #2186c4;
+}
+
+body {
+    background-color: var(--background);
+    color: var(--text);
+    font-family: Arial, sans-serif;
+}
+
+nav {
+    background-color: var(--modal-background-color);
+    border: 1px solid var(--modal-border-color);
+    border-radius: var(--modal-border-radius);
+    padding: 10px;
+    display: flex;
+    justify-content: flex-end;
+    /* Modified: right-align the nav */
+    align-items: center;
+    margin-bottom: 1vh;
+}
+
+#cdbLogo {
+    height: 5vh;
+    margin-right: auto;
+}
+
+nav ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+}
+
+nav ul li {
+    margin-right: 20px;
+}
+
+nav ul li a {
+    color: var(--text);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+nav ul li a:hover {
+    color: var(--heading);
+}
+
+
+body {
+    background-color: var(--background);
+    color: var(--text);
+    font-family: Arial, sans-serif;
+}
+
+h1 {
+    color: var(--heading)
+}

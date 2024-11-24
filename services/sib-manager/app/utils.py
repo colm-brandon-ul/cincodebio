@@ -390,7 +390,7 @@ def get_valid_images_from_namespace(namespace: str) -> Tuple[List,List]:
     return latest_images, rest_of_images
 
 
-def code_gen(template_env: jinja2.Environment, service_models: List) -> Tuple[str, str]:
+def code_gen(template_env: jinja2.Environment, service_models: List, data_models) -> Tuple[str, str]:
     """
     Generate code for service API and data models.
 
@@ -408,7 +408,9 @@ def code_gen(template_env: jinja2.Environment, service_models: List) -> Tuple[st
         services=service_models
     )
 
+    
     data_model_code = template_env.get_template("service-api-models-template.py.j2").render(
+        dataModels = data_models,
         services=service_models
     )
 

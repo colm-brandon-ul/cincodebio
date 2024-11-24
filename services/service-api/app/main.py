@@ -14,7 +14,7 @@ JMS_ADDRESS = f"{os.environ.get('JOBS_API_SERVICE_HOST')}:{os.environ.get('JOBS_
 
 @app.get("/health", include_in_schema=False)
 async def health():
-    return {"status": "ok"}
+    return {"status": "unhealthy"}
 
 
 # # INIT TMA

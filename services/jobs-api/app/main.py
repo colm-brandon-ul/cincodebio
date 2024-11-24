@@ -1,32 +1,30 @@
 # Job Management Imports
 from typing import List
-from fastapi import BackgroundTasks, FastAPI, HTTPException, Request, WebSocket
-from fastapi.responses import HTMLResponse, JSONResponse
+from fastapi import BackgroundTasks, FastAPI, HTTPException, Request
+from fastapi.responses import JSONResponse
 from fastapi.encoders import jsonable_encoder
 
 
-from .models import JobState,JobStatus, CreateJobState, UpdateJobState
-import uuid
+from models import JobState,JobStatus, CreateJobState, UpdateJobState
+from config import MONGODB_HOST, MONGODB_PORT, JOBS_DB, JOBS_COLLECTION, EXECUTION_ADDRESS
 
 import requests 
 import json
 import logging 
-import time 
-import os
 
 import pymongo
 from bson.objectid import ObjectId
 
 # Service Discovery ENV variables
-EXECUTION_ADDRESS = f"{os.environ.get('EXECUTION_API_SERVICE_HOST')}:{os.environ.get('EXECUTION_API_SERVICE_PORT')}" # jobsapi
-MONGODB_HOST = os.environ.get("MONGODB_SERVICE_HOST")
-MONGODB_PORT = os.environ.get("MONGODB_SERVICE_PORT")
-# Database Table and Collection ENV variables
-JOBS_DB = os.environ.get('JOBS_DB')
-JOBS_COLLECTION = os.environ.get('JOBS_COLLECTION')
+
 
 app = FastAPI()
 mdbclient = pymongo.MongoClient(MONGODB_HOST, int(MONGODB_PORT),minPoolSize=0, maxPoolSize=200)
+
+@app.get("/health")
+def health_check():
+    # perhaps we should do some checks here
+    return {"status": "healthy"}
 
 
 # Callback to execution API after create and update events

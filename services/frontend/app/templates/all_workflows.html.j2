@@ -1,0 +1,135 @@
+{# Template for displaying all workflows to the user #}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Workflow List</title>
+    {% include 'cdb_css_link.html.j2' with context %}
+    <style>
+        #workflowList {
+            overflow: scroll;
+            height: 90vh;
+        }
+
+
+        #workflowList li {
+            background-color: var(--modal-background-color);
+            /* padding: 10px; */
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+
+        }
+
+        #workflowList li.processing {
+            background-color: #f8f8f8;
+        }
+
+        #workflowList li.completed {
+            background-color: var(--modal-completed-background);
+        }
+
+        #workflowList li.failed {
+            background-color: var(--modal-failed-background);
+        }
+
+        #workflowList li a {
+            display: block;
+            text-decoration: none;
+            /* Removes the underline */
+            width: 100%;
+        }
+
+        #workflowList li a>span {
+            color: var(--clickable-text);
+            padding: 10px;
+
+        }
+
+        #workflowList li>span {
+            color: var(--text);
+            padding: 10px;
+
+        }
+    </style>
+</head>
+
+<body>
+    {% include 'navbar.html.j2' with context %}
+    <div id="workflowList">
+        <!-- Workflow modals will be dynamically added here -->
+    </div>
+    <script>
+        // JavaScript code to fetch and display workflow data
+        // You can mock the API response for now
+
+        // Mocked workflow data
+        
+        // class for Workflows that has id, owner and status
+        class WorkflowState {
+            constructor(id, owner, status) {
+                this.id = id;
+                this.owner = owner;
+                this.status = status;
+            }
+        }
+
+        WorkflowState.fromJson = function (json) {
+            // Need to figure out the solution for need to parse twice!
+            var data = JSON.parse(json); // Parsing the json string.
+            return new Workflow(data.id, data.owner, data.status);
+        };
+
+        // Function to create and display workflow modals
+        function displayWorkflows(workflows) {
+            const workflowList = document.getElementById("workflowList");
+
+            workflows.forEach(workflow => {
+                const listItem = document.createElement("li");
+                listItem.classList.add(workflow.status);
+                listItem.id = workflow.id;
+                const link = document.createElement("a");
+                // set the href to the workflow detail page
+                link.href = `/workflows/${workflow.id}`
+                const span = document.createElement("span");
+                span.textContent = workflow.id + " - " + workflow.status;
+                link.appendChild(span);
+                listItem.appendChild(link);
+                workflowList.appendChild(listItem);
+            });
+        }
+
+        function getWorkflows() {
+            // Fetch the workflows from the API
+            // You can use the fetch API to make a GET request to the API endpoint
+            // For now, we will use the mocked data
+            const workflows = [];
+
+
+            apiEndpoint = '{{ execution_api_address }}get-workflows";
+
+            // Make a GET request to the API endpoint
+            fetch(apiEndpoint)
+                .then(response => response.json())
+                .then(data => {
+                    // Parse the JSON response and create WorkflowState objects
+                    data.forEach(workflow => {
+                        workflows.push(new WorkflowState(workflow.id, workflow.owner, workflow.status));
+                    });
+                    // Call the function to display the workflows
+                    displayWorkflows(workflows);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+
+            return workflows;
+
+        }
+
+        // Call the function to display workflows
+        //displayWorkflows();
+        getWorkflows();
+    </script>
+</body>
+
+</html>
