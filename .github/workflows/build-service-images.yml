@@ -1,41 +1,65 @@
-name: Build, Test and Push Cellmaps Services to Dockerhub on Trigger
+name: Build, Test and Push Changed CincoDeBio Core Services to Dockerhub on Trigger
+
 on:
-    workflow_dispatch
+  workflow_dispatch:
+  push:
+    branches:
+      - main    # Triggers on direct pushes to main
+  pull_request:
+    types:
+      - closed    # Trigger when PR is closed
+    branches:
+      - main     # Only for PRs targeting main branch
 
 jobs:
-    build:
-        runs-on: ubuntu-latest 
-        steps:
-            - name: Checkout code
-              uses: actions/checkout@v2
-        
-            - name: Set up Docker Buildx
-              uses: docker/setup-buildx-action@v1
+  build:
+    # Only run if PR is merged or if it's a direct push to main
+    if: github.event.pull_request.merged == true || github.event_name == 'push' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 2   # Need at least 2 commits to compare changes
+
+      - name: Get changed files
+        id: changed-files
+        run: |
+          echo "::set-output name=all_changed_files::$(git diff --name-only HEAD^ HEAD | tr '\n' ' ')"
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and push changed images
+        run: |
+          # Get all changed files
+          CHANGED_FILES="${{ steps.changed-files.outputs.all_changed_files }}"
+          
+          # Find all Dockerfiles
+          for dockerfile in $(find . -name Dockerfile); do
+            dir_of_image=$(dirname $dockerfile)
+            relative_dir=${dir_of_image#./}  # Remove leading ./
+            
+            # Check if any files in this directory have changed
+            if echo "$CHANGED_FILES" | grep -q "$relative_dir"; then
+              image_name=$(basename $dir_of_image)
+              image_name=${image_name//\//-}
+              docker_image_name="${image_name//[^a-zA-Z0-9]/-}"
               
-            - name: Login to DockerHub
-              uses: docker/login-action@v1 
-              with:
-                username: ${{ secrets.DOCKERHUB_USERNAME }}
-                password: ${{ secrets.DOCKERHUB_TOKEN }}
-
-            - name: Build and push Image
-              run: |
-                for dockerfile in $(find . -name Dockerfile); do
-                    dir_of_image=$(dirname $dockerfile)
-                    image_name=$(basename $dir_of_image)
-                    image_name=${image_name//\//-}
-                    docker_image_name="${image_name//[^a-zA-Z0-9]/-}"
-                    if [[ $docker_image_name != "rpy2-base-image" ]]; then  
-                    if [[ $docker_image_name == "sib-manager" || $docker_image_name == "execution-api" ]]; then
-                        echo "Building $docker_image_name"
-                        docker buildx build --platform linux/amd64,linux/arm64 -t ${{ secrets.DOCKERHUB_USERNAME }}/$docker_image_name:latest $dir_of_image --push
-                    fi  
-                    fi
-                done;
-
-                
-
-
-
-
-
+              if [[ $docker_image_name != "rpy2-base-image" ]]; then
+                echo "Changes detected in $relative_dir"
+                echo "Building $docker_image_name"
+                docker buildx build --platform linux/amd64,linux/arm64 \
+                  -t ${{ secrets.DOCKERHUB_USERNAME }}/$docker_image_name:latest \
+                  $dir_of_image --push
+              fi
+            else
+              echo "No changes in $relative_dir - skipping build"
+            fi
+          done
