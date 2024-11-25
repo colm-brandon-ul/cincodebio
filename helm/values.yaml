@@ -17,7 +17,7 @@ minio:
   #     # This is the workaround for accessing the minio console - need to resolve (as it depends on the ip address of the multipass VM for microk8s)
   #     - name: MINIO_BROWSER_REDIRECT_URL
   #       value: "http://192.168.64.2/minio-console/"
-  
+
 
 rabbitmq:
   nameOverride: "rabbitmq"
@@ -78,7 +78,6 @@ executionEnvironment:
 frontend:
   image: sccecincodebio/frontend:latest
   name: frontend
-
 
 global:
   ontology:
