@@ -1,9 +1,0 @@
-dependencies:
-- name: minio
-  repository: https://charts.bitnami.com/bitnami
-  version: 12.8.15
-- name: rabbitmq
-  repository: https://charts.bitnami.com/bitnami
-  version: 12.15.0
-digest: sha256:d88b62c0ed0f73991111de6252041dcee902d33b611716ddca8c1b267da8cd8b
-generated: "2024-03-08T15:25:41.999959Z"
