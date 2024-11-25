@@ -4,7 +4,8 @@ import httpx
 from urllib.parse import urlparse
 from minio import Minio
 
-from config import JMS_ADDRESS, MINIO_FQDN, MINIO_SERVICE_PORT_MINIO_CONSOLE, MINIO_ACCESS_KEY, MINIO_SECRET_KEY, MINIO_SERVICE_PORT, MINIO_PRESIGNED_EXTERNAL_PATH
+from config import (JMS_ADDRESS, MINIO_FQDN, MINIO_SERVICE_PORT_MINIO_CONSOLE, MINIO_ACCESS_KEY, 
+                    MINIO_SECRET_KEY, MINIO_SERVICE_PORT, MINIO_PRESIGNED_EXTERNAL_PATH)
 
 def get_minio_client():
     """
