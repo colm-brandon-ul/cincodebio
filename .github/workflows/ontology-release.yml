@@ -50,7 +50,8 @@ jobs:
       - name: Copy Ontology File
         run: |
           # Copy the .owl file to the version directory
-          cp "${{ env.owl_file }}" ontology/v${{ env.version }}/
+          cp $GITHUB_WORKSPACE/${{ env.owl_file }} ontology/v${{ env.version }}/
+
 
       - name: Commit and Push
         run: |
