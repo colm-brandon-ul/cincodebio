@@ -58,4 +58,8 @@ spec:
               value: {{ .Values.global.ingress_paths.data_manager_ingress_path }}
             - name: ONTOLOGY_URL
               value: {{ .Values.global.ontology.default_url }}
+            - name: CINCO_DE_BIO_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
             

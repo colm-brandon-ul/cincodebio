@@ -56,8 +56,8 @@ spec:
                 fieldPath: metadata.namespace
           - name: DEFAULT_ONTOLOGY_URL
             value: {{ .Values.global.ontology.default_url }}
-        
-
+          - name: ONTOLOGY_MANAGER_STATE_PATH
+            value: /ontology-manager-state
       volumes:
         - name: ontology-manager-state-volume
           persistentVolumeClaim:
