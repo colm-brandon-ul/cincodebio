@@ -9,9 +9,6 @@ on:
 jobs:
   publish-ontology:
     runs-on: ubuntu-latest
-    env:
-      GITHUB_USERNAME: ${{ github.repository_owner }}
-      REPO_NAME: ${{ github.repository }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -20,8 +17,8 @@ jobs:
 
       - name: Configure Git
         run: |
-          git config user.name "$GITHUB_ACTOR"
-          git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
+          git config user.name "${{ github.actor }}"
+          git config user.email "${{ github.actor }}@users.noreply.github.com"
 
       - name: Extract Ontology Version
         id: get-version
@@ -48,18 +45,18 @@ jobs:
       - name: Make version directory
         run: |
           # Create version directory in gh-pages branch
-          mkdir -p gh-pages/ontology/v${{ env.version }}
+          mkdir -p ontology/v${{ env.version }}
 
       - name: Copy Ontology File
         run: |
           # Copy the .owl file to the version directory
-          cp "${{ env.owl_file }}" gh-pages/ontology/v${{ env.version }}/
+          cp "${{ env.owl_file }}" ontology/v${{ env.version }}/
 
       - name: Commit and Push
         run: |
-          git config user.name "${{ env.GITHUB_USERNAME }}"
-          git config user.email "${{ env.GITHUB_USERNAME }}@users.noreply.github.com"
           cd gh-pages
+          git config user.name "${{ github.actor }}"
+          git config user.email "${{ github.actor }}@users.noreply.github.com"
           git add .
           git commit -m "Published ontology version ${{ env.version }}"
           git push
