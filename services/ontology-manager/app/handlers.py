@@ -39,7 +39,7 @@ def get_current_ontology_version() -> str:
             str: The current ontology version.
     """
     ont_state = OntologyState.load(PERSISTENT_STATE_MOUNT_PATH / ONTOLOGY_STATE_FILE)
-    return ont_state.get_current_ontology()
+    return ont_state.get_current_ontology_version()
     
 
 def parse_new_ontology(ontology_url: str) -> str:  
@@ -75,7 +75,7 @@ def handle_api_data_model_gen() -> List[ModelSchema]:
 
     # load the ontology state and the parser object.
     ont_state = OntologyState.load(PERSISTENT_STATE_MOUNT_PATH / ONTOLOGY_STATE_FILE)
-    parser = OWLParser.load(PERSISTENT_STATE_MOUNT_PATH / f'{ont_state.get_current_ontology()}.pkl')
+    parser = OWLParser.load(PERSISTENT_STATE_MOUNT_PATH / f'{ont_state.get_current_ontology_version()}.pkl')
     return [ModelSchema.model_validate(model) for model in ApiDataModelCodeGen(parser).get_datamodels()]
 
 def handle_form_schema_gen() -> FormSchema:
@@ -90,7 +90,7 @@ def handle_form_schema_gen() -> FormSchema:
     """
     # load the ontology state and the parser object.
     ont_state = OntologyState.load(PERSISTENT_STATE_MOUNT_PATH / ONTOLOGY_STATE_FILE)
-    parser = OWLParser.load(PERSISTENT_STATE_MOUNT_PATH / f'{ont_state.get_current_ontology()}.pkl')
+    parser = OWLParser.load(PERSISTENT_STATE_MOUNT_PATH / f'{ont_state.get_current_ontology_version()}.pkl')
     return FormSchema.model_validate(FormGen(parser).get_form_schema())
 
 
