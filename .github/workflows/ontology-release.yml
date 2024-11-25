@@ -36,11 +36,11 @@ jobs:
           echo "version=$VERSION" >> $GITHUB_ENV
           echo "owl_file=$OWL_FILE" >> $GITHUB_ENV
 
+      # Step 4: Switch to the gh-pages branch
       - name: Checkout gh-pages branch
-        uses: actions/checkout@v4
-        with:
-          ref: gh-pages
-          path: gh-pages
+        run: |
+          git fetch origin gh-pages:gh-pages
+          git checkout gh-pages
 
       - name: Make version directory
         run: |
@@ -58,4 +58,4 @@ jobs:
           git config user.email "${{ github.actor }}@users.noreply.github.com"
           git add .
           git commit -m "Published ontology version ${{ env.version }}"
-          git push gh-pages
+          git push origin gh-pages
