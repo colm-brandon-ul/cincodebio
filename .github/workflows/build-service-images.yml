@@ -5,11 +5,15 @@ on:
   push:
     branches:
       - main    # Triggers on direct pushes to main
+    paths:
+    - 'services/**'
   pull_request:
     types:
       - closed    # Trigger when PR is closed
     branches:
       - main     # Only for PRs targeting main branch
+    paths:
+    - 'services/**'
 
 jobs:
   build:
