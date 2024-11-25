@@ -10,7 +10,7 @@ jobs:
   release:
     runs-on: ubuntu-latest
     env:
-      GITHUB_USERNAME: ${{ secrets.GITHUB_USERNAME }}
+      GITHUB_USERNAME: ${{ github.repository_owner }}
       REPO_NAME: ${{ github.repository }}
       CHART_PATH: ./helm
       
