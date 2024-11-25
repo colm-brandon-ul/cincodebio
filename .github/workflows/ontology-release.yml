@@ -1,0 +1,60 @@
+name: Publish Ontology Versions
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'ontology/**/*.owl'
+jobs:
+  publish-ontology:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0  # Ensures full history is fetched
+    
+    - name: Extract Ontology Version
+      id: get-version
+      run: |
+        # Find the .owl file in the ontology directory
+        OWL_FILE=$(find ontology -name "cincodebio.owl" | head -n 1)
+
+        # Check if file exists
+        if [ -z "$OWL_FILE" ]; then
+          echo "No .owl file found in ontology directory"
+          exit 1
+        fi
+        
+        # Extract version using grep and sed
+        VERSION=$grep -o 'owl:versionInfo rdf:datatype="http://www.w3.org/2001/XMLSchema#string">[^<]*' "$OWL_FILE"  | cut -d'>' -f2
+        
+        echo "Extracted version: $VERSION"
+        echo "version=$VERSION" >> $GITHUB_OUTPUT
+        echo "owl_file=$OWL_FILE" >> $GITHUB_OUTPUT
+    
+    - name: Checkout gh-pages branch
+      uses: actions/checkout@v4
+      with:
+        ref: gh-pages
+        path: gh-pages
+    
+    - name: Make version directory
+      run: |
+        # Create version directory in gh-pages branch
+        mkdir -p ontology/v${{ steps.get-version.outputs.version }}
+
+    - name: Copy Ontology File
+      run: |
+        # Copy the .owl file to the version directory
+        cp "${{ steps.get-version.outputs.owl_file }}" ontology/v${{ steps.get-version.outputs.version }}/
+    
+    - name: Commit and Push
+      run: |
+        git config user.name github-actions
+        git config user.email github-actions@github.com
+        git add .
+        git commit -m "Published ontology version ${{ steps.get-version.outputs.version }}"
+        git push origin gh-pages
+
+    
