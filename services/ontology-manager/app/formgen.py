@@ -3,9 +3,10 @@ from ontparse import OWLParser
 import rdflib
 from typing import List, Dict
 from rdflib import RDF, OWL
-class FormGen:
+from utils import Serializable
+class FormGen(Serializable):
     def __init__(self,ontology_path, parser = None, template_path = './templates',only_descendants_of=rdflib.URIRef('http://www.cincodebio.org/cdbontology#Experiment')):
-        if parser:
+        if parser and not ontology_path:
             self.parser = parser
         else:
             self.parser = OWLParser()

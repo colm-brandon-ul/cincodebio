@@ -6,6 +6,20 @@ from models import FormSchema, ModelSchema, OntologyState
 # parse new ontology.
 from config import PERSISTENT_STATE_MOUNT_PATH, ONTOLOGY_STATE_FILE
 import pickle
+import logging
+import os
+
+def make_state_dir():
+    """
+        This function creates the state directory if it does not exist.
+
+        Args:
+            None
+
+        Returns:
+            None
+    """
+    PERSISTENT_STATE_MOUNT_PATH.mkdir(exist_ok=True)
 
 def check_if_local_state_exists() -> bool:
     """
@@ -20,7 +34,7 @@ def check_if_local_state_exists() -> bool:
 
     
     try:
-        with open(PERSISTENT_STATE_MOUNT_PATH / ONTOLOGY_STATE_FILE, "r") as f:
+        with open(PERSISTENT_STATE_MOUNT_PATH / ONTOLOGY_STATE_FILE, "rb") as f:
             pickle.load(f)
 
         return True
@@ -52,11 +66,14 @@ def parse_new_ontology(ontology_url: str) -> str:
         Returns:
             str: The name of the ontology and version.
     """
-    parser = OWLParser()
-    parser.load_ontology(ontology_url)
-    ds_version, cdb_version, ds_ontology_name = parser.get_version_info()
+    api_gen = ApiDataModelCodeGen(ontology_url)
+    form_gen = FormGen(ontology_url)
+    ds_version, cdb_version, ds_ontology_name = api_gen.parser.get_version_info()
     # serialize the parser object for future use.
-    parser.save(PERSISTENT_STATE_MOUNT_PATH / f"{ds_ontology_name}-{ds_version}-{cdb_version}.pkl")
+    os.makedirs(PERSISTENT_STATE_MOUNT_PATH/ 'api', exist_ok=True)
+    api_gen.save(PERSISTENT_STATE_MOUNT_PATH / 'api' / f"{ds_ontology_name}-{ds_version}-{cdb_version}.pkl")
+    os.makedirs(PERSISTENT_STATE_MOUNT_PATH/ 'form' , exist_ok=True)
+    form_gen.save(PERSISTENT_STATE_MOUNT_PATH / 'form' / f"{ds_ontology_name}-{ds_version}-{cdb_version}.pkl")
 
     return f"{ds_ontology_name}-{ds_version}-{cdb_version}"
 
@@ -75,8 +92,10 @@ def handle_api_data_model_gen() -> List[ModelSchema]:
 
     # load the ontology state and the parser object.
     ont_state = OntologyState.load(PERSISTENT_STATE_MOUNT_PATH / ONTOLOGY_STATE_FILE)
-    parser = OWLParser.load(PERSISTENT_STATE_MOUNT_PATH / f'{ont_state.get_current_ontology_version()}.pkl')
-    return [ModelSchema.model_validate(model) for model in ApiDataModelCodeGen(parser).get_datamodels()]
+    logging.warning(f"Ontology state: {ont_state.get_current_ontology_version()}")
+    parser = ApiDataModelCodeGen.load(PERSISTENT_STATE_MOUNT_PATH / 'api' / f'{ont_state.get_current_ontology_version()}.pkl')
+
+    return [ModelSchema.model_validate(model) for model in parser.get_datamodels()]
 
 def handle_form_schema_gen() -> FormSchema:
     """
@@ -90,7 +109,8 @@ def handle_form_schema_gen() -> FormSchema:
     """
     # load the ontology state and the parser object.
     ont_state = OntologyState.load(PERSISTENT_STATE_MOUNT_PATH / ONTOLOGY_STATE_FILE)
-    parser = OWLParser.load(PERSISTENT_STATE_MOUNT_PATH / f'{ont_state.get_current_ontology_version()}.pkl')
-    return FormSchema.model_validate(FormGen(parser).get_form_schema())
+    logging.warning(f"Ontology state: {ont_state.get_current_ontology_version()}")
+    parser = FormGen.load(PERSISTENT_STATE_MOUNT_PATH / 'form' / f'{ont_state.get_current_ontology_version()}.pkl')
+    return FormSchema.model_validate(parser.get_form_schema())
 
 

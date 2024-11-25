@@ -2,6 +2,8 @@ from ontparse import OWLParser
 import rdflib
 import enum
 from jinja2 import Environment, FileSystemLoader
+import logging
+from utils import Serializable
 
 class DataModelType(str, enum.Enum):
     DataStructure = 'DataStructure'
@@ -9,7 +11,7 @@ class DataModelType(str, enum.Enum):
     AtomicFile = 'AtomicFile'
     ClassWithAttributes = 'ClassWithAttributes'
 
-class ApiDataModelCodeGen:
+class ApiDataModelCodeGen(Serializable):
     def __init__(self,ontology_path, parser=None, template_path = './', only_descendants_of = 'http://www.cincodebio.org/cdbontology#Data'):
         """
         
@@ -19,14 +21,14 @@ class ApiDataModelCodeGen:
         template_path (str, optional): Path to the directory containing the Jinja2 template. Defaults to './'.
         only_descendants_of (str, optional): The URI of the class that all data models must be descendants of. Defaults to 'http://www.cincodebio.org/cdbontology#Data'.
         """
-        if parser:
+        if parser and ontology_path == None:
             self.parser = parser
         else:
             self.parser = OWLParser()
             self.parser.load_ontology(ontology_path,only_descendants_of)
-            
-        self.env = Environment(loader=FileSystemLoader(template_path))
-        self.template = self.env.get_template('api_data_model_template.py.j2')
+
+        # self.env = Environment(loader=FileSystemLoader(template_path))
+        # self.template = self.env.get_template('api_data_model_template.py.j2')
         self.file_class = rdflib.URIRef('http://www.cincodebio.org/cdbontology#File')
         self.data_structure_class = rdflib.URIRef('http://www.cincodebio.org/cdbontology#DataStructure')
         self.primitive_class = rdflib.URIRef('http://www.cincodebio.org/cdbontology#Primitive')
@@ -41,6 +43,7 @@ class ApiDataModelCodeGen:
         }
 
     def strip_namespace(self,uri):
+        logging.warning(uri)
         return uri.split('#')[-1]
     
     def serialize_type(self, py_type):
