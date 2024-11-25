@@ -36,6 +36,12 @@ jobs:
           echo "version=$VERSION" >> $GITHUB_ENV
           echo "owl_file=$OWL_FILE" >> $GITHUB_ENV
 
+      - name: Remove prefix from owl_file
+        run: |
+            # Remove the 'cincodebio/' prefix from owl_file
+            OWL_FILE=$(echo "${{ env.owl_file }}" | sed 's|^cincodebio/||')
+            echo "owl_file=$OWL_FILE" >> $GITHUB_ENV
+
       # Step 4: Switch to the gh-pages branch
       - name: Checkout gh-pages branch
         run: |
