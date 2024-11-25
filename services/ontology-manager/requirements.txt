@@ -7,4 +7,3 @@ httpx
 matplotlib
 networkx
 requests
-urlparse

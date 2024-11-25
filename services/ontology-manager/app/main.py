@@ -1,9 +1,7 @@
 from typing import List
-from fastapi import FastAPI, Request
-from fastapi.responses import HTMLResponse
-import logging, os
+from fastapi import FastAPI
+import logging
 
-from urllib.parse import urlparse
 
 # For creating a zip file
 

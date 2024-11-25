@@ -3,7 +3,6 @@ from ontparse import OWLParser
 from apigen import ApiDataModelCodeGen
 from formgen import FormGen
 from models import FormSchema, ModelSchema, OntologyState
-from pathlib import Path
 # parse new ontology.
 from config import PERSISTENT_STATE_MOUNT_PATH, ONTOLOGY_STATE_FILE
 import pickle
