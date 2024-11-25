@@ -1,8 +1,6 @@
 name: Release Cinco De Bio Chart
 on:
   push:
-    tags:
-      - 'v*.*.*'
     paths:
       - 'charts/**'
 
@@ -18,7 +16,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
         with:
-            fetch-depth: 0
+            fetch-depth: 5
 
       - name: Configure Git
         run: |
