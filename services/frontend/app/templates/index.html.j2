@@ -1,0 +1,37 @@
+{# Landing page template for Cinco de Bio #}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Cinco de Bio</title>
+    {% include 'cdb_css_link.html.j2' with context %}
+    <style>
+        /* Landing page specific styles */
+        body {
+            background-color: var(--modal-background-color);
+        }
+
+        .hero {
+            color: var(--text);
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .cta-button {
+            background-color: var(--clickable-text);
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    {% include 'navbar.html.j2' with context %}
+    
+    <div class="hero">
+        <h1>Cinco de Bio</h1>
+        <p>Simplifying Biological Analaysis Workflows</p>
+    </div>
+</body>
+</html>

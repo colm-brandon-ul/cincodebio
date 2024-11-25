@@ -16,6 +16,7 @@ from handlers import get_health, get_form_details, get_sib_details
 
 
 map2service = {
+    'homepage': None,
     "workflow_manager": EXECUTION_API_INGRESS_PATH,
     "data_manager": DATA_MANAGER_API_INGRESS,
     "sib_manager": SIB_MANAGER_API_INGRESS
@@ -24,6 +25,16 @@ app = FastAPI()
 env = Environment(loader=FileSystemLoader(Path(BASE_DIR,"templates")))
 app.mount("/static", StaticFiles(directory=Path(BASE_DIR,"static")), name="static")
 manager = ConnectionManager()
+
+# Endpoint for the main page
+@app.get("", response_class=HTMLResponse)
+async def main_page(request: Request):
+    template = env.get_template("index.html.j2")
+    html_content = template.render(
+        request=request,
+        service_name="homepage",
+    )
+    return HTMLResponse(content=html_content)
 
 
 
@@ -116,6 +127,11 @@ async def websocket_endpoint(websocket: WebSocket):
             if service is None:
                 await manager.send_json({"status": "unhealthy"},websocket)
                 continue
+
+            if data['service'] == "homepage":
+                await manager.send_json({"status": "healthy"},websocket)
+                manager.disconnect(websocket)
+                break
 
             url = f"http://{service}/health"
 
