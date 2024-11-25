@@ -4,7 +4,7 @@ on:
     tags:
       - 'v*.*.*'
     paths:
-      - 'helm/**'
+      - 'charts/**'
 
 jobs:
   release:
@@ -35,5 +35,7 @@ jobs:
             helm dependency update
       - name: Run chart-releaser    
         uses: helm/chart-releaser-action@v1.6.0
+        with:
+            charts_dir: $CHART_PATH
         env:
          CR_TOKEN: "${{ secrets.ACCESS_TOKEN }}"
