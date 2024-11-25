@@ -67,37 +67,3 @@ async def websocket_endpoint(websocket: WebSocket,workflow_id: str):
     except WebSocketDisconnect:
         logging.warning("Client disconnected")
         manager.disconnect(websocket)
-
-
-# # FRONT END RENDERING
-# # Endpoint for displaying the progress of a single workflow
-# @app.get("/frontend/{workflow_id}", response_class=HTMLResponse)
-# async def render_front_end(request: Request, workflow_id: str):
-#     logging.warning(f"FRONT END REQUEST: {request.base_url}")
-
-#     # Create the appropriate WS address
-#     ws_address = f"{request.base_url.__str__().replace('http','ws')}/{EXECUTION_INGRESS_PATH}/state/ws/{workflow_id}"
-
-#     template = env.get_template("execution_template.html.j2")
-#     html_content = template.render(request=request,
-#                                    executionApiIngress=EXECUTION_INGRESS_PATH,
-#                                    dataUploadIngress=DATA_MANAGER_API_INGRESS,
-#                                    sibManagerIngress=SIB_MANAGER_INGRESS_PATH,
-#                                    ws_address=ws_address)
-
-#     return HTMLResponse(content=html_content)
-
-# # Endpoint for displaying all workflows
-# @app.get("/", response_class=HTMLResponse)
-# async def workflow_frontend(request: Request):
-#     logging.warning(f"FRONT END REQUEST: {request.base_url}")
-#     # Create the appropriate WS address
-#     template = env.get_template("all_workflows.html.j2")
-    
-#     html_content = template.render(
-#         request=request, 
-#         executionApiIngress=EXECUTION_INGRESS_PATH,
-#         dataUploadIngress=DATA_MANAGER_API_INGRESS,
-#         sibManagerIngress=SIB_MANAGER_INGRESS_PATH,
-#         getWorkflowsEndpoint=f'/{EXECUTION_INGRESS_PATH}/get-workflows')
-#     return HTMLResponse(content=html_content)

@@ -5,7 +5,9 @@ from fastapi.encoders import jsonable_encoder
 import json
 from bson.objectid import ObjectId
 
-from config import RABBIT_MQ_HOST, RABBIT_MQ_PORT, RABBITMQ_USERNAME, RABBITMQ_PASSWORD, EXCHANGE_NAME, EXCHANGE_TYPE, ROUTING_KEY
+from config import (RABBIT_MQ_HOST, RABBIT_MQ_PORT, 
+                    RABBITMQ_USERNAME, RABBITMQ_PASSWORD, 
+                    EXCHANGE_NAME, EXCHANGE_TYPE, ROUTING_KEY)
 from models import JobState, UpdateWorkflow, Workflow
 from db import get_db_client
 
@@ -39,14 +41,16 @@ def update_workflow_in_db(workflow_id, workflow: UpdateWorkflow) -> None:
 def add_job_state_to_workflow_in_db(workflow_id, job_state: JobState) -> None:
     # jsonable-encoder by default uses alias, whereas pydantic json serializer does not.
     wri_res = get_db_client().update_one({"_id": workflow_id}, {"$push": {"state" : jsonable_encoder(job_state, by_alias=False)}})
-    # logging.warning(f"Write Result {wri_res.raw_result}")
 
 def update_job_status_in_workflow_in_db(workflow_id, job_state: JobState) -> None:
     logging.warning('UPDATE JOB STATE')
     logging.warning(f'ID {job_state.id}')
     logging.warning(f'ID {job_state.job_status}')
 
-    wri_res = get_db_client().update_one({"_id": workflow_id, "state.id": job_state.id.__str__()}, {"$set" : {"state.$.job_status" : job_state.job_status, "state.$.url": job_state.url}})
+    wri_res = get_db_client().update_one(
+        {"_id": workflow_id, "state.id": job_state.id.__str__()}, 
+        {"$set" : {"state.$.job_status" : job_state.job_status, "state.$.url": job_state.url}})
+    
     logging.warning(wri_res.modified_count)
     
 def get_workflow_from_db_by_id(workflow_id) -> Workflow:
