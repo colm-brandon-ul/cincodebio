@@ -3,7 +3,7 @@ kind: Ingress
 metadata:
   name: frontend-ingress
   annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /$1
+    nginx.ingress.kubernetes.io/rewrite-target: /
     nginx.ingress.kubernetes.io/ssl-redirect: "false"
     nginx.ingress.kubernetes.io/enable-rewrite-log: "true"
 spec:
@@ -11,7 +11,7 @@ spec:
   - host:
   - http:
       paths:
-      - path: /app/(.*)$
+      - path: /app/(.*)
         pathType: Prefix
         backend:
           service:
@@ -20,7 +20,7 @@ spec:
               number: 80
 
       # Definitely needs to be available outside the cluster
-      - path: /{{ .Values.global.ingress_paths.minio_console_ingress_path }}/(.*)$
+      - path: /{{ .Values.global.ingress_paths.minio_console_ingress_path }}/(.*)
         pathType: Prefix
         backend:
           service:
@@ -56,7 +56,7 @@ spec:
   - http:
       paths:
       # Definitely needs to be available outside the cluster
-      - path: /{{ .Values.global.ingress_paths.minio_presigned_ingress_path }}/(.*)$
+      - path: /{{ .Values.global.ingress_paths.minio_presigned_ingress_path }}/(.*)
         pathType: Prefix
         backend:
           service:
@@ -80,7 +80,7 @@ spec:
   - http:
       paths:
       # Definitely needs to be available outside the cluster
-      - path: /{{ .Values.global.ingress_paths.execution_api_ingress_path }}/ext/(.*)$
+      - path: /{{ .Values.global.ingress_paths.execution_api_ingress_path }}/ext/(.*)
         pathType: Prefix
         backend:
           service:
@@ -88,7 +88,7 @@ spec:
             port:
               number: 80
 
-      - path: /{{ .Values.global.ingress_paths.jobs_api_ingress_path }}/ext/(.*)$
+      - path: /{{ .Values.global.ingress_paths.jobs_api_ingress_path }}/ext/(.*)
         pathType: Prefix
         backend:
           service:
@@ -96,7 +96,7 @@ spec:
             port:
               number: 80
       # Definitely needs to be available outside the cluster
-      - path: /{{ .Values.global.ingress_paths.services_api_ingress_path }}/ext/(.*)$
+      - path: /{{ .Values.global.ingress_paths.services_api_ingress_path }}/ext/(.*)
         pathType: Prefix
         backend:
           service:
@@ -104,7 +104,7 @@ spec:
             port:
               number: 80
       # Definitely needs to be available outside the cluster
-      - path: /{{ .Values.global.ingress_paths.sib_manager_ingress_path }}/ext/(.*)$
+      - path: /{{ .Values.global.ingress_paths.sib_manager_ingress_path }}/ext/(.*)
         pathType: Prefix
         backend:
           service:
@@ -112,7 +112,7 @@ spec:
             port:
               number: 80
 
-      - path: /{{ .Values.global.ingress_paths.data_manager_ingress_path }}/ext/(.*)$
+      - path: /{{ .Values.global.ingress_paths.data_manager_ingress_path }}/ext/(.*)
         pathType: Prefix
         backend:
           service:
