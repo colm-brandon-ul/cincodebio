@@ -13,6 +13,5 @@ PERSISTENT_STATE_MOUNT_PATH = Path("/ontology-manager-state")
 ONTOLOGY_STATE_FILE = "ontology-state.pkl"
 
 JINJA_ENV = jinja2.Environment(
-    loader=jinja2.FileSystemLoader(TEMPLATE_DIR), 
-    extensions=['jinja2_strcase.StrcaseExtension'])
+    loader=jinja2.FileSystemLoader(TEMPLATE_DIR))
 

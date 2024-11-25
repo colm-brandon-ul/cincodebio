@@ -1,5 +1,5 @@
 import os
-from pika import ExchangeType
+from pika.exchange_type import ExchangeType
 # Import Environment Variables
 EXECUTION_ADDRESS = f'http://{os.environ.get("EXECUTION_ENVIRONMENT_SERVICE_HOST")}:{os.environ.get("EXECUTION_ENVIRONMENT_SERVICE_PORT")}'
 EXECUTION_API_ADDRESS = f'http://{os.environ.get("EXECUTION_API_SERVICE_HOST")}:{os.environ.get("EXECUTION_API_SERVICE_PORT")}'

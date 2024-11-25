@@ -11,7 +11,8 @@ from config import (PERSISTENT_STATE_MOUNT_PATH, UTD_SIB_FILE,
                     LATEST_SIBS, INSTALLED_SIBS, OTHER_SIBS)
 from models import (CheckSibFileHashRequest, CheckSibFilesHashesRequest,HashValid, CheckSibFilesHashesResponse,UtdSibFileResponse, UtdSibFilesRequest, UtdSibFilesResponse)
 import handlers
-from utils import compute_local_hash, convert_newlines, check_if_windows
+# from utils import compute_local_hash, convert_newlines, check_if_windows
+from cinco_interface import compute_local_hash, convert_newlines, check_if_windows
 router = APIRouter()
 
 # --- ENDPOINTS FOR THE ECLIPSE BASED IME ---
