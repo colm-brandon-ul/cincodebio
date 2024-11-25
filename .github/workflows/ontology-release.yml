@@ -57,8 +57,8 @@ jobs:
 
       - name: Commit and Push
         run: |
-          git config user.name ${{ env.GITHUB_USERNAME }}
-          git config user.email ${{ env.GITHUB_USERNAME }}@users.noreply.github.com
+          git config user.name "${{ env.GITHUB_USERNAME }}"
+          git config user.email "${{ env.GITHUB_USERNAME }}@users.noreply.github.com"
           cd gh-pages
           git add .
           git commit -m "Published ontology version ${{ env.version }}"
