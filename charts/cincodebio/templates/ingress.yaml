@@ -7,7 +7,6 @@ metadata:
     nginx.ingress.kubernetes.io/ssl-redirect: "false"
     nginx.ingress.kubernetes.io/enable-rewrite-log: "true"
 spec:
-  ingressClassName: nginx
   rules:
   - host:
   - http:
@@ -39,8 +38,8 @@ metadata:
     nginx.ingress.kubernetes.io/ssl-redirect: "false"
     nginx.ingress.kubernetes.io/enable-rewrite-log: "true"
     nginx.ingress.kubernetes.io/proxy-body-size: "0"
-    nginx.ingress.kubernetes.io/proxy-read-timeout: "600"
-    nginx.ingress.kubernetes.io/proxy-send-timeout: "600"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
     nginx.ingress.kubernetes.io/proxy-buffering: "off"
     nginx.ingress.kubernetes.io/proxy-request-buffering: "off"
     nginx.ingress.kubernetes.io/configuration-snippet: |
@@ -52,7 +51,6 @@ metadata:
       proxy_set_header Connection "";
       chunked_transfer_encoding off;
 spec:
-  ingressClassName: nginx
   rules:
   - host:
   - http:
@@ -76,9 +74,7 @@ metadata:
     nginx.ingress.kubernetes.io/rewrite-target: /ext/$1
     nginx.ingress.kubernetes.io/ssl-redirect: "false"
     nginx.ingress.kubernetes.io/enable-rewrite-log: "true"
-
 spec:
-  ingressClassName: nginx
   rules:
   - host:
   - http:
