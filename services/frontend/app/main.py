@@ -4,16 +4,16 @@ import json
 import logging
 from pathlib import Path
 from typing import Dict
-from fastapi import BackgroundTasks, FastAPI, HTTPException, Request, WebSocket, WebSocketDisconnect
-from fastapi.responses import FileResponse, HTMLResponse, StreamingResponse
+from fastapi import FastAPI, Request, WebSocket, WebSocketDisconnect
+from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from jinja2 import Environment, FileSystemLoader
-import requests
-from config import EXECUTION_API_INGRESS_PATH, DATA_MANAGER_API_INGRESS, SIB_MANAGER_API_INGRESS
+from config import (EXECUTION_API_INGRESS_PATH, DATA_MANAGER_API_INGRESS, 
+                    SIB_MANAGER_API_INGRESS, BASE_DIR)
 from ws import ConnectionManager
 from handlers import get_health, get_form_details, get_sib_details
 
-BASE_DIR = Path(__file__).resolve().parent
+
 
 map2service = {
     "workflow_manager": EXECUTION_API_INGRESS_PATH,
@@ -57,10 +57,7 @@ async def get_form_details(request: Request):
 async def sib_manager(request: Request):
     # get latest, installed and rest sibs from sib-manager
     
-    latest,rest,installed = get_sib_details()
-
-    # sib_manager_address = f'{request.base_url.__str__()}/{SIB_MANAGER_API_INGRESS}/ext/'
-  
+    latest,rest,installed = get_sib_details()  
     submit_url = f'/{SIB_MANAGER_API_INGRESS}/ext/update-installed-sibs'
     return HTMLResponse(content=env.get_template("sib-manager.html.j2").render(**{
         "submit_url": submit_url,
