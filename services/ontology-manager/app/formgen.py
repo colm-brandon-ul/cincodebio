@@ -9,8 +9,9 @@ class FormGen:
             self.parser = parser
         else:
             self.parser = OWLParser()
+            self.parser.load_ontology(ontology_path,only_descendants_of)
+        
         self.only_descendants_of = only_descendants_of
-        self.parser.load_ontology(ontology_path,only_descendants_of)
         self.CDB = rdflib.Namespace('http://www.cincodebio.org/cdbontology#')
         self.XSD = rdflib.Namespace('http://www.w3.org/2001/XMLSchema#')
 

@@ -23,7 +23,8 @@ class ApiDataModelCodeGen:
             self.parser = parser
         else:
             self.parser = OWLParser()
-        self.parser.load_ontology(ontology_path,only_descendants_of)
+            self.parser.load_ontology(ontology_path,only_descendants_of)
+            
         self.env = Environment(loader=FileSystemLoader(template_path))
         self.template = self.env.get_template('api_data_model_template.py.j2')
         self.file_class = rdflib.URIRef('http://www.cincodebio.org/cdbontology#File')
