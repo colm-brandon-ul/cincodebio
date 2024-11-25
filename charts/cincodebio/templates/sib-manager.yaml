@@ -89,8 +89,6 @@ spec:
             value: {{ .Values.global.ingress_paths.execution_api_ingress_path }}
           - name: DATA_MANAGER_API_INGRESS
             value: {{ .Values.global.ingress_paths.data_manager_ingress_path }}
-          - name : DUMMY_VALUE
-            value: "dummy"
           - name: CINCO_DE_BIO_NAMESPACE
             valueFrom:
               fieldRef:

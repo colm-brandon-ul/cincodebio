@@ -58,8 +58,6 @@ spec:
             value: {{ .Values.global.ontology.default_url }}
           - name: ONTOLOGY_MANAGER_STATE_PATH
             value: /ontology-manager-state
-          - name : DUMMY_VALUE
-            value: "dummy"
       volumes:
         - name: ontology-manager-state-volume
           persistentVolumeClaim:
