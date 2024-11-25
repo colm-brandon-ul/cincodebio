@@ -32,11 +32,19 @@ The execution environment is rather unsophisticated currently. It simply receive
 
 *Tightly Coupled with: Execution Environment*
 
+### Frontend
+
+...
+
 ### Jobs API
 
 The Jobs API manages the lifecycle of a single data processing step and the data processing services interface with it to update it of the jobs status and to write the results or the front-end data to the database when the dataprocessing is complete.
 
 *Interfaces with: MongoDB, Execution API*
+
+### Ontology Manager
+
+...
 
 ### Service API
 

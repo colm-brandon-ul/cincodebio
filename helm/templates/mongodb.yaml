@@ -32,3 +32,8 @@ spec:
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 27017
+
+# valueFrom:
+  # secretKeyRef:
+  #   name: cinco-cloud-main-secrets
+  #   key: postgresUserPassword

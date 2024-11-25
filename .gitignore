@@ -136,3 +136,5 @@ dep_cincodebio.owl
 mock-front-end-design/
 deployment_scripts/
 test.html
+execution-env-v2/
+local_playground/

@@ -51,11 +51,11 @@ spec:
             - name: JOBS_API_SERVICE_HOSTNAME
               value: {{ .Values.jobsApi.name }}
             - name: EXECUTION_API_INGRESS_PATH
-              value: {{ .Values.global.execution_api_ingress_path }}
+              value: {{ .Values.global.ingress_paths.execution_api_ingress_path }}
             - name: SERVICES_API_SERVICE_HOSTNAME
-              value: {{ .Values.global.services_api_ingress_path }}
+              value: {{ .Values.global.ingress_paths.services_api_ingress_path }}
             - name: MINIO_PRESIGNED_INGRESS_PATH
-              value: {{ .Values.global.minio_presigned_ingress_path }}
+              value: {{ .Values.global.ingress_paths.minio_presigned_ingress_path }}
 
             - name: CINCO_DE_BIO_NAMESPACE
               valueFrom:

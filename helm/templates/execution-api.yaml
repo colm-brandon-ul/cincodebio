@@ -66,13 +66,13 @@ spec:
             - name: CODE_GENERATOR_ROUTING_KEY
               value: {{ .Values.codeGenerator.routing_key }}
             - name: EXECUTION_API_INGRESS_PATH
-              value: {{ .Values.global.execution_api_ingress_path }}
+              value: {{ .Values.global.ingress_paths.execution_api_ingress_path }}
             - name: SERVICES_API_INGRESS_PATH
-              value: {{ .Values.global.services_api_ingress_path }}
+              value: {{ .Values.global.ingress_paths.services_api_ingress_path }}
             - name: SIB_MANAGER_API_INGRESS_PATH
-              value: {{ .Values.global.sib_manager_ingress_path }}
+              value: {{ .Values.global.ingress_paths.sib_manager_ingress_path }}
             - name: DATA_MANAGER_API_INGRESS
-              value: {{ .Values.global.data_manager_ingress_path }}
+              value: {{ .Values.global.ingress_paths.data_manager_ingress_path }}
             - name: RABBITMQ_USERNAME
               value: {{ .Values.rabbitmq.auth.username }}
             - name: RABBITMQ_PASSWORD

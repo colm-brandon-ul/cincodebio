@@ -13,10 +13,10 @@ minio:
   mode: "standalone"
   # creates the original buckets
   defaultBuckets: experiment-bucket;workflow-bucket;results-bucket
-  extraEnvVars:
-      # This is the workaround for accessing the minio console - need to resolve (as it depends on the ip address of the multipass VM for microk8s)
-      - name: MINIO_BROWSER_REDIRECT_URL
-        value: "http://192.168.64.2/minio-console/"
+  # extraEnvVars:
+  #     # This is the workaround for accessing the minio console - need to resolve (as it depends on the ip address of the multipass VM for microk8s)
+  #     - name: MINIO_BROWSER_REDIRECT_URL
+  #       value: "http://192.168.64.2/minio-console/"
 
 rabbitmq:
   nameOverride: "rabbitmq"
@@ -34,10 +34,6 @@ mongodb:
   jobsdb:
     name: "jobsdb"
     collection: "jobs"
-
-nginxProxy:
-  image: nginx:latest
-  name: nginxproxy
 
 jobsApi:
   image: sccecincodebio/jobs-api:latest
@@ -61,6 +57,10 @@ codeGenerator:
   exchange_name: "code-generator-exchange"
   routing_key: "code-generator"
 
+ontologyManager:
+  image: sccecincodebio/ontology-manager:latest
+  name: ontology-manager
+
 sibManager:
   image: sccecincodebio/sib-manager:latest
   name: sib-manager
@@ -74,26 +74,35 @@ executionEnvironment:
   image: sccecincodebio/execution-environment:latest
   name: execution-environment
 
+frontend:
+  image: sccecincodebio/frontend:latest
+  name: frontend
+
 
 global:
-  ontology_url: "https://raw.githubusercontent.com/colm-brandon-ul/cellmaps/master/ontology/cellmaps.owl"
-  dps_registry: "http://"
-  docker_hub_namespace: "sccecellmaps"
+  ontology:
+    default_url: "https://colm-brandon-ul.github.io/cellmaps/ontology/v0.0.1/cellmaps.owl"
+  containers:
+    dps_registry: "http://"
+    docker_hub_namespace: "sccecellmaps"
+    # not default values (therefore they need to be set via the command line)
+    docker_hub_password:
+    docker_hub_username:
+    cluster_image_registry:
+      name: "registry"
+      namespace: "container-registry"
+      port: 5000
+      domain_on_host: "localhost:32000" # This is the domain name that the registry is exposed on the host (i.e. inside the VM) - this is the default value for microk8s registry
+  ingress_paths:
+    execution_api_ingress_path: 'execution-api'
+    services_api_ingress_path: 'services-api'
+    sib_manager_ingress_path: 'sib-manager'
+    data_manager_ingress_path: 'data-manager'
+    jobs_api_ingress_path: 'jobs-api'
+    minio_console_ingress_path: 'minio-console'
+    minio_presigned_ingress_path: 'minio-presigned'
+
+  application_namespace: "default"
   workflow_log_path: "data/workflow-logs"
   dps_name_space: "dataprocessing-service-namespace"
-  # These are the default values for the cluster image registry with microk8s
-  # However these may need to be changed depending on the cluster
-  cluster_image_registry:
-    name: "registry"
-    namespace: "container-registry"
-    port: 5000
-    domain_on_host: "localhost:32000" # This is the domain name that the registry is exposed on the host (i.e. inside the VM)
-  execution_api_ingress_path: 'execution-api'
-  services_api_ingress_path: 'services-api'
-  sib_manager_ingress_path: 'sib-manager'
-  data_manager_ingress_path: 'data-manager'
-  jobs_api_ingress_path: 'jobs-api'
-  minio_console_ingress_path: 'minio-console'
-  minio_presigned_ingress_path: 'minio-presigned'
-  application_namespace: "default"
   

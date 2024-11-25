@@ -51,11 +51,11 @@ spec:
             - name: MINIO_SERVICE_HOSTNAME
               value: {{ .Values.minio.nameOverride }}
             - name: SIB_MANAGER_API_INGRESS_PATH
-              value: {{ .Values.global.sib_manager_ingress_path }}
+              value: {{ .Values.global.ingress_paths.sib_manager_ingress_path }}
             - name: EXECUTION_API_INGRESS_PATH
-              value: {{ .Values.global.execution_api_ingress_path }}
+              value: {{ .Values.global.ingress_paths.execution_api_ingress_path }}
             - name: DATA_MANAGER_API_INGRESS
-              value: {{ .Values.global.data_manager_ingress_path }}
+              value: {{ .Values.global.ingress_paths.data_manager_ingress_path }}
             - name: ONTOLOGY_URL
-              value: {{ .Values.global.ontology_url }}
+              value: {{ .Values.global.ontology.default_url }}
             

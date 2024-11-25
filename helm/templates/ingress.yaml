@@ -1,11 +1,87 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: http-ingress
+  name: frontend-ingress
   annotations:
-    nginx.ingress.kubernetes.io/proxy-body-size: "0"
     nginx.ingress.kubernetes.io/rewrite-target: /$1
-    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    nginx.ingress.kubernetes.io/enable-rewrite-log: "true"
+spec:
+  ingressClassName: nginx
+  defaultBackend:
+    service:
+      name: nginx
+      port:
+        number: 80
+  rules:
+    - host: 
+    - http:
+        paths:
+          - : /app/(.*)$
+            pathType: Prefix
+            backend:
+              service:
+                name: frontend
+                port:
+                  number: 80
+         
+          # Definitely needs to be available outside the cluster
+          - path: /{{ .Values.global.ingress_paths.minio_console_ingress_path }}/(.*)$
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Values.minio.fullnameOverride }}
+                port:
+                  number: 9001
+          
+
+     
+---
+# minio-ingress
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: minio-presigned-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /$1
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    nginx.ingress.kubernetes.io/enable-rewrite-log: "true"
+    nginx.ingress.kubernetes.io/proxy-body-size: "0"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "600"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "600"
+    nginx.ingress.kubernetes.io/proxy-buffering: "off"
+    nginx.ingress.kubernetes.io/proxy-request-buffering: "off"
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      proxy_set_header Host {{ .Values.minio.nameOverride }}.{{ .Values.global.application_namespace }}.svc.cluster.local:9000;
+      proxy_set_header X-Real-IP $remote_addr;
+      proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+      proxy_set_header X-Forwarded-Proto $scheme;
+      proxy_http_version 1.1;
+      proxy_set_header Connection "";
+      chunked_transfer_encoding off;
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: 
+    - http:
+        paths:
+        # Definitely needs to be available outside the cluster
+          - path: /{{ .Values.global.ingress_paths.minio_presigned_ingress_path }}/(.*)$
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Values.minio.fullnameOverride }}
+                port:
+                  number: 9000
+
+# external access to apis
+--- 
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: api-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /ext/$1
     nginx.ingress.kubernetes.io/ssl-redirect: "false"
     nginx.ingress.kubernetes.io/enable-rewrite-log: "true"
 
@@ -20,15 +96,8 @@ spec:
     - host: 
     - http:
         paths:
-          - path: /api/(.*)$
-            pathType: Prefix
-            backend:
-              service:
-                name: service1
-                port:
-                  number: 80
-          # Definitely needs to be available outside the cluster
-          - path: /{{ .Values.global.execution_api_ingress_path }}/(.*)$
+         # Definitely needs to be available outside the cluster
+          - path: /{{ .Values.global.ingress_paths.execution_api_ingress_path }}/ext/(.*)$
             pathType: Prefix
             backend:
               service:
@@ -36,7 +105,7 @@ spec:
                 port:
                   number: 80
 
-          - path: /{{ .Values.global.jobs_api_ingress_path }}/(.*)$
+          - path: /{{ .Values.global.ingress_paths.jobs_api_ingress_path }}/ext/(.*)$
             pathType: Prefix
             backend:
               service:
@@ -44,7 +113,7 @@ spec:
                 port:
                   number: 80
           # Definitely needs to be available outside the cluster
-          - path: /{{ .Values.global.services_api_ingress_path }}/(.*)$
+          - path: /{{ .Values.global.ingress_paths.services_api_ingress_path }}/ext/(.*)$
             pathType: Prefix
             backend:
               service:
@@ -52,23 +121,7 @@ spec:
                 port:
                   number: 80
           # Definitely needs to be available outside the cluster
-          - path: /{{ .Values.global.minio_console_ingress_path }}/(.*)$
-            pathType: Prefix
-            backend:
-              service:
-                name: {{ .Values.minio.fullnameOverride }}
-                port:
-                  number: 9001
-          # Definitely needs to be available outside the cluster
-          - path: /{{ .Values.global.minio_presigned_ingress_path }}/(.*)$
-            pathType: Prefix
-            backend:
-              service:
-                name: {{ .Values.nginxProxy.name }}
-                port:
-                  number: 80
-          # Definitely needs to be available outside the cluster
-          - path: /{{ .Values.global.sib_manager_ingress_path }}/(.*)$
+          - path: /{{ .Values.global.ingress_paths.sib_manager_ingress_path }}/ext/(.*)$
             pathType: Prefix
             backend:
               service:
@@ -76,12 +129,10 @@ spec:
                 port:
                   number: 80
           
-          - path: /{{ .Values.global.data_manager_ingress_path }}/(.*)$
+          - path: /{{ .Values.global.ingress_paths.data_manager_ingress_path }}/ext/(.*)$
             pathType: Prefix
             backend:
               service:
                 name: {{ .Values.dataManager.name }}
                 port:
                   number: 80
-
-     

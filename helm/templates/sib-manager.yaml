@@ -72,23 +72,23 @@ spec:
           - name: KANIKO_BUILD_NAMESPACE
             value: {{ .Values.sibManager.kaniko.namespace }}
           - name: REGISTRY_NAME
-            value: {{ .Values.global.cluster_image_registry.name }}
+            value: {{ .Values.global.containers.cluster_image_registry.name }}
           - name: REGISTRY_NAMESPACE
-            value: {{ .Values.global.cluster_image_registry.namespace }}
+            value: {{ .Values.global.containers.cluster_image_registry.namespace }}
           - name: REGISTRY_PORT
-            value: {{ .Values.global.cluster_image_registry.port | quote }}
+            value: {{ .Values.global.containers.cluster_image_registry.port | quote }}
           - name: CONTAINER_REGISTRY_DOMAIN_ON_HOST
-            value: {{ .Values.global.cluster_image_registry.domain_on_host }}
+            value: {{ .Values.global.containers.cluster_image_registry.domain_on_host }}
           - name: SERVICE_API_NAME
             value: {{ .Values.serviceApi.name }}
           - name: DOCKER_HUB_NAMESPACE
-            value: {{ .Values.global.docker_hub_namespace}}
+            value: {{ .Values.global.containers.docker_hub_namespace}}
           - name: SIB_MANAGER_API_INGRESS_PATH
-            value: {{ .Values.global.sib_manager_ingress_path }}
+            value: {{ .Values.global.ingress_paths.sib_manager_ingress_path }}
           - name: EXECUTION_API_INGRESS_PATH
-            value: {{ .Values.global.execution_api_ingress_path }}
+            value: {{ .Values.global.ingress_paths.execution_api_ingress_path }}
           - name: DATA_MANAGER_API_INGRESS
-            value: {{ .Values.global.data_manager_ingress_path }}
+            value: {{ .Values.global.ingress_paths.data_manager_ingress_path }}
           - name: CINCO_DE_BIO_NAMESPACE
             valueFrom:
               fieldRef:
