@@ -5,8 +5,8 @@ from fastapi.responses import JSONResponse
 from fastapi.encoders import jsonable_encoder
 
 
-from models import JobState,JobStatus, CreateJobState, UpdateJobState
-from config import MONGODB_HOST, MONGODB_PORT, JOBS_DB, JOBS_COLLECTION, EXECUTION_ADDRESS
+from models import JobState, CreateJobState, UpdateJobState
+from config import (MONGODB_HOST, MONGODB_PORT, JOBS_DB, JOBS_COLLECTION, EXECUTION_ADDRESS)
 
 import requests 
 import json
