@@ -1,12 +1,12 @@
-<link rel="stylesheet" type="text/css" href="/static/cdb.css">
-<script src="/static/healthcheck_modal.js"></script>
+<link rel="stylesheet" type="text/css" href="/app/static/cdb.css">
+<script src="/app/static/healthcheck_modal.js"></script>
 <script>
 var health_flag = false;
 document.addEventListener('DOMContentLoaded', (event) => {
     if (health_flag) {
         return;
     }
-    const hs = checkHealth("/ws/healthcheck", "{{ service_name }}");
+    const hs = checkHealth("/app/ws/healthcheck", "{{ service_name }}");
     console.log(hs);
     health_flag = true
 });

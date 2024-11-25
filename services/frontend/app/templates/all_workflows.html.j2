@@ -89,7 +89,7 @@
                 listItem.id = workflow.id;
                 const link = document.createElement("a");
                 // set the href to the workflow detail page
-                link.href = `/workflows/${workflow.id}`
+                link.href = `/app/workflows/${workflow.id}`
                 const span = document.createElement("span");
                 span.textContent = workflow.id + " - " + workflow.status;
                 link.appendChild(span);
