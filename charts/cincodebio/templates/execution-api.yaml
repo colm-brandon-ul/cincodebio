@@ -96,6 +96,8 @@ spec:
               value: {{ .Values.codeGenerator.exchange_name }}
             - name: CODE_GENERATOR_ROUTING_KEY
               value: {{ .Values.codeGenerator.routing_key }}
+            - name : DUMMY_VALUE
+              value: "dummy"
             - name: CINCO_DE_BIO_NAMESPACE
               valueFrom:
                 fieldRef:

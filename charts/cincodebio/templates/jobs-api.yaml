@@ -40,6 +40,8 @@ spec:
               value: {{ .Values.mongodb.jobsdb.name }}
             - name: JOBS_COLLECTION
               value: {{ .Values.mongodb.jobsdb.collection }}
+            - name : DUMMY_VALUE
+              value: "dummy"
             - name: CINCO_DE_BIO_NAMESPACE
               valueFrom:
                 fieldRef:
