@@ -1,5 +1,6 @@
 import jinja2
 import os
+import pathlib
 
 # K8S ENVIRONMENT VARIABLES (used in app)
 #     - CONTAINER_REGISTRY_DOMAIN_ON_HOST
@@ -17,6 +18,7 @@ import os
 #     - SIB_MANAGER_API_INGRESS_PATH
 
 # Get Ingress Paths
+BASE_DIR = pathlib.Path(__file__).resolve().parent
 EXECUTION_INGRESS_PATH = os.environ.get('EXECUTION_API_INGRESS_PATH')
 DATA_MANAGER_API_INGRESS = os.environ.get('DATA_MANAGER_API_INGRESS')
 SIB_MANAGER_API_INGRESS = os.environ.get('SIB_MANAGER_API_INGRESS_PATH')

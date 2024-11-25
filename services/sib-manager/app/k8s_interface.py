@@ -1,7 +1,6 @@
 from typing import List
 from kubernetes import client, config
 from kubernetes.client.rest import ApiException
-import json
 import logging
 import os
 
@@ -12,9 +11,10 @@ import logging
 import time
 import datetime
 
-from config import (KANIKO_BUILD_NAMESPACE, KANIKO_IMAGE, KANIKO_DOCKER_HUB_AUTH_VOLUME, DOCKER_BUILD_CONTEXT_MOUNT_PATH, 
-                    DOCKER_BUILD_CONTEXT_VOLUME, REGISTRY_NAME, REGISTRY_NAMESPACE,
-                    REGISTRY_PORT, KANIKO_DOCKER_HUB_AUTH_VOLUME, CONTAINER_REGISTRY_DOMAIN_ON_HOST)
+from config import (KANIKO_BUILD_NAMESPACE, KANIKO_IMAGE, KANIKO_DOCKER_HUB_AUTH_VOLUME, 
+                    DOCKER_BUILD_CONTEXT_MOUNT_PATH, DOCKER_BUILD_CONTEXT_VOLUME, 
+                    REGISTRY_NAME, REGISTRY_NAMESPACE, REGISTRY_PORT, 
+                    KANIKO_DOCKER_HUB_AUTH_VOLUME, CONTAINER_REGISTRY_DOMAIN_ON_HOST)
 
 
 """
