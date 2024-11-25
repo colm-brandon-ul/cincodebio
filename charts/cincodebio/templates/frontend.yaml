@@ -13,7 +13,6 @@ spec:
     app: {{ .Values.frontend.name }}
   type: ClusterIP
 ---
-
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -38,7 +37,7 @@ spec:
             - containerPort: 80
           env:
             - name: SIB_MANAGER_API_INGRESS_PATH
-                value: {{ .Values.global.ingress_paths.sib_manager_ingress_path }}
+              value: {{ .Values.global.ingress_paths.sib_manager_ingress_path }}
             - name: DATA_MANAGER_API_INGRESS
               value: {{ .Values.global.ingress_paths.data_manager_ingress_path }}
             - name: EXECUTION_API_INGRESS_PATH
