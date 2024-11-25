@@ -36,11 +36,12 @@ jobs:
           echo "version=$VERSION" >> $GITHUB_ENV
           echo "owl_file=$OWL_FILE" >> $GITHUB_ENV
 
-      - name: Remove prefix from owl_file
+    # Step 4: Stash the .owl file temporarily
+      - name: Stash Ontology File
         run: |
-            # Remove the 'cincodebio/' prefix from owl_file
-            OWL_FILE=$(echo "${{ env.owl_file }}" | sed 's|^cincodebio/||')
-            echo "owl_file=$OWL_FILE" >> $GITHUB_ENV
+            # Create a temporary directory for stashing the file
+            mkdir -p temp-stash
+            cp ${{ env.owl_file }} temp-stash/
 
       # Step 4: Switch to the gh-pages branch
       - name: Checkout gh-pages branch
@@ -56,7 +57,7 @@ jobs:
       - name: Copy Ontology File
         run: |
           # Copy the .owl file to the version directory
-          cp $GITHUB_WORKSPACE/${{ env.owl_file }} ontology/v${{ env.version }}/
+          cp temp-stash/$(basename "${{ env.owl_file }}") ontology/v${{ env.version }}/
 
 
       - name: Commit and Push
