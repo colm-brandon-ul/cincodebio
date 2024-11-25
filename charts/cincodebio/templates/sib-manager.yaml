@@ -89,6 +89,10 @@ spec:
             value: {{ .Values.global.ingress_paths.execution_api_ingress_path }}
           - name: DATA_MANAGER_API_INGRESS
             value: {{ .Values.global.ingress_paths.data_manager_ingress_path }}
+          - name: DOCKER_HUB_PASSWORD
+            value: {{ required "A value for .Values.global.containers.docker_hub_password is required!" .Values.global.containers.docker_hub_password }}
+          - name: DOCKER_HUB_USERNAME
+            value: {{ required "A value for .Values.global.containers.docker_hub_username is required!" .Values.global.containers.docker_hub_username }}
           - name: CINCO_DE_BIO_NAMESPACE
             valueFrom:
               fieldRef:
