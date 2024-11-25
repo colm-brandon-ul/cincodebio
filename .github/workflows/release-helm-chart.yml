@@ -12,7 +12,7 @@ jobs:
     env:
       GITHUB_USERNAME: ${{ github.repository_owner }}
       REPO_NAME: ${{ github.repository }}
-      CHART_PATH: ./helm
+      CHART_PATH: ./charts/cincodebio
       
     steps:
       - name: Checkout code
