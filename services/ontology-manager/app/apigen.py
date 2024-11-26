@@ -43,7 +43,6 @@ class ApiDataModelCodeGen(Serializable):
         }
 
     def strip_namespace(self,uri):
-        logging.warning(uri)
         return uri.split('#')[-1]
     
     def serialize_type(self, py_type):
@@ -104,9 +103,9 @@ class ApiDataModelCodeGen(Serializable):
                                         ...
                                     else:
                                         if type(v1) == type:
-                                            local_temp[self.strip_namespace(k1)] = self.serialize_type(v1)
+                                            local_temp[self.strip_namespace(k1).strip()] = self.serialize_type(v1).strip()
                                         else:
-                                            local_temp[self.strip_namespace(k1)] = self.strip_namespace(v1)
+                                            local_temp[self.strip_namespace(k1).strip()] = self.strip_namespace(v1).strip()
                                 # temporary fix for now -> need to handle schema properties
                                 if is_class_with_attributes:    
                                     temp.get('attributes').append(local_temp)
@@ -150,7 +149,8 @@ class ApiDataModelCodeGen(Serializable):
         
 
 if __name__ == '__main__':
-    api_gen = ApiDataModelCodeGen('/Users/colmbrandon/Desktop/cellmaps/ontology/cellmaps.owl')
-    api_gen.generate_api()
+    api_gen = ApiDataModelCodeGen('https://colm-brandon-ul.github.io/cellmaps/ontology/v0.0.1/cellmaps.owl')
+    import pprint
+    print(pprint.pformat(api_gen.get_datamodels()))
 
     # Generate API
