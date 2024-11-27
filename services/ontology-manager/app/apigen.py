@@ -153,4 +153,3 @@ if __name__ == '__main__':
     import pprint
     print(pprint.pformat(api_gen.get_datamodels()))
 
-    # Generate API
