@@ -104,4 +104,3 @@ global:
   application_namespace: "default"
   workflow_log_path: "data/workflow-logs"
   dps_name_space: "dataprocessing-service-namespace"
-  
