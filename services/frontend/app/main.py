@@ -56,7 +56,7 @@ async def data_manager(request: Request):
     return HTMLResponse(content=html_content)
 
 @app.get("/data-manager/get-form-details", response_class=Dict)
-async def get_form_details(request: Request):
+async def form_details_endpoint(request: Request):
     # get the form details from the ontology manager
     form_details = get_form_details()
     return form_details
