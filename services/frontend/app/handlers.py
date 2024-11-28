@@ -58,4 +58,4 @@ def get_health(url: str) -> Dict:
         logging.warning(f"An error occurred: {req_err}")
         return {"status": "unhealthy"}
     
-    return json.loads(response.json())
+    return response.json()
