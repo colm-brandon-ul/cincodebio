@@ -67,8 +67,8 @@ async def get_form_details(request: Request):
 @app.get("/sib-manager")
 async def sib_manager(request: Request):
     # get latest, installed and rest sibs from sib-manager
-    
-    latest,rest,installed = get_sib_details()  
+
+    latest,installed,rest = get_sib_details()  
     submit_url = f'/{SIB_MANAGER_API_INGRESS}/ext/update-installed-sibs'
     return HTMLResponse(content=env.get_template("sib-manager.html.j2").render(**{
         "submit_url": submit_url,
