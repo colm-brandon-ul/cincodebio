@@ -1,6 +1,6 @@
 from codegen.graph_transformer import ComputationalGraphTransformer
 from codegen.parser import HippoFlowParser
-from codegen.parsev2 import HippoFlowParserV2
+from codegen.parserv2 import HippoFlowParserV2
 
 import os
 from jinja2 import Template
