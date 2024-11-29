@@ -33,7 +33,7 @@ THE ONTOLOGY IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
     </Annotation>
 
 <owl:Ontology
-		rdf:about="https://colm-brandon-ul.github.io/cincodebio/ontology/v0.0.1/cincodebio.owl">
+		rdf:about="https://cincodebio.colmb.me/ontology/v0.0.1/cincodebio.owl">
 		<rdfs:label>cincodebio</rdfs:label>
 		<owl:versionInfo rdf:datatype="http://www.w3.org/2001/XMLSchema#string">0.0.1</owl:versionInfo>
 	</owl:Ontology>
