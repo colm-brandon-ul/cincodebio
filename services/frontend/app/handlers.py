@@ -6,12 +6,13 @@ from models import FormSchema
 # from config import 
 from config import SIB_MANAGER_SERVICE_HOST, ONTOLOGY_MANAGER_SERVICE_HOST
 
-def get_form_details() -> Dict:
+def get_form_details() -> dict:
     """
         This function retrieves the form details from the ontology manager service.
     """
 
     response = requests.get(f'http://{ONTOLOGY_MANAGER_SERVICE_HOST}/form-models')
+    logging.warning(f"Response: {response.content}")
 
     if response.status_code == 200:
         data = response.json()

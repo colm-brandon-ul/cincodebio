@@ -5,7 +5,7 @@ import logging
 from pathlib import Path
 from typing import Dict
 from fastapi import FastAPI, Request, WebSocket, WebSocketDisconnect
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from jinja2 import Environment, FileSystemLoader
 from config import (EXECUTION_API_INGRESS_PATH, DATA_MANAGER_API_INGRESS, 
@@ -55,7 +55,7 @@ async def data_manager(request: Request):
 
     return HTMLResponse(content=html_content)
 
-@app.get("/data-manager/get-form-details", response_class=Dict)
+@app.get("/data-manager/get-form-details", response_class=JSONResponse)
 async def form_details_endpoint(request: Request):
     # get the form details from the ontology manager
     form_details = get_form_details()
