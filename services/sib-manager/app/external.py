@@ -103,8 +103,11 @@ def get_uninstalled_sibs():
 @router.post("/update-installed-sibs")
 def update_installed_sibs(body: List, request: Request, background_task: BackgroundTasks):
 
+    # this shoudl check if there are any changes, if there aren't do nothing
+
     # get the list of sibs to be installed from the request body
     tbi_sib_list = handlers.resolve_to_be_installed_sibs(body)
+
 
     if handlers.update_service_api_and_sibs(tbi_sib_list):
         return {"status": "success"}, 200

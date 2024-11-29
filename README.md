@@ -2,6 +2,8 @@
 
 ## Architecture Overview
 
+CincoDeBio is a cloud-native application designed for bioinformatics workflow management. It leverages a microservices architecture, orchestrated through Kubernetes, and employs several key components and technologies to ensure scalability, reliability, and flexibility.
+
 ### Code Generator
 
 The code generator is pretty simple. It takes the workflow model (currently in Gratext, but soon to be updated to a JSON syntax), parses it and generates a python program which orchestrates the workflow, to do this it pulls in some additional metadata from the sib-manager (that is not currently stored in the SIB models directly). Once it generated the workflow program it dispatches it to the execution environemnt and notifies the execution API of the updated status.
@@ -90,3 +92,17 @@ Cinco de bio is built as a kubernetes native application and it leverages the k8
 
 - Refactor Frontend:
   Currently each service that has a client facing front end serves it from directly. I will soon refactor this to a single frotend service that the client interfaces with, that then interfaces with the various services as needed. The current structure is as a result as components being tacked on as their need became evident, but is quite clunky and unwei
+
+## Technologies Used
+- **Programming Languages:** Python
+- **Frameworks:** FastAPI, Jinja2
+- **Databases:** MongoDB
+- **Messaging:** RabbitMQ
+- **Cloud Storage:** MinIO
+- **Containerization:** Docker
+- **Container Registry:** Kaniko
+- **Orchestration:** Kubernetes
+- **Package Management:** Helm
+- **Version Control:** Git
+
+This comprehensive architecture description provides an overview of the various services and technologies used in the CincoDeBio application.
