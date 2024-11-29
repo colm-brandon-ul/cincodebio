@@ -11,7 +11,7 @@ def get_form_details() -> Dict:
         This function retrieves the form details from the ontology manager service.
     """
 
-    response = requests.get(f'http://{ONTOLOGY_MANAGER_SERVICE_HOST}/form-details')
+    response = requests.get(f'http://{ONTOLOGY_MANAGER_SERVICE_HOST}/form-models')
 
     if response.status_code == 200:
         data = response.json()
@@ -24,6 +24,10 @@ def get_sib_details() -> Tuple[List, List, List]:
     """
         This function retrieves the latest, installed, and rest SIBs from the SIB Manager service.
     """
+    health = get_health(f'http://{SIB_MANAGER_SERVICE_HOST}/sib-manager-state')
+    if health["status"] == "unhealthy":
+        return [], [], []
+
     response = requests.get(f'http://{SIB_MANAGER_SERVICE_HOST}/sib-manager-state')
 
     if response.status_code == 200:
