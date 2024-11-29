@@ -8,7 +8,7 @@ import os
 import json
 import logging
 from config import (PERSISTENT_STATE_MOUNT_PATH, UTD_SIB_FILE, 
-                    LATEST_SIBS, INSTALLED_SIBS, OTHER_SIBS)
+                    LATEST_SIBS, INSTALLED_SIBS, OTHER_SIBS, UTD_SIB_FILE_V2)
 from models import (CheckSibFileHashRequest, CheckSibFilesHashesRequest,HashValid, CheckSibFilesHashesResponse,UtdSibFileResponse, UtdSibFilesRequest, UtdSibFilesResponse)
 import handlers
 # from utils import compute_local_hash, convert_newlines, check_if_windows
@@ -69,7 +69,7 @@ def get_utd_sib_file(body: UtdSibFilesRequest,request: Request):
     state_path = pathlib.Path(PERSISTENT_STATE_MOUNT_PATH)
     for fid in body.file_ids:
         # get the file and return it
-        with open(state_path / UTD_SIB_FILE , 'r') as f:
+        with open(state_path / UTD_SIB_FILE_V2 , 'r') as f:
             files.append(f.read())
        
     return UtdSibFilesResponse(

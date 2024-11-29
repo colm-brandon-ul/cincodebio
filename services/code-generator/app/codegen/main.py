@@ -1,5 +1,6 @@
 from codegen.graph_transformer import ComputationalGraphTransformer
 from codegen.parser import HippoFlowParser
+from codegen.parsev2 import HippoFlowParserV2
 
 import os
 from jinja2 import Template
@@ -12,7 +13,7 @@ class HippoFlowCodegenrator:
         ...
 
     @staticmethod
-    def generate(model: str, workflow_id: str, cdb_external_url: str, sib_mapping: dict):
+    def generate(model: str, workflow_id: str, cdb_external_url: str, sib_mapping: dict, v2=False):
         """
         Generate code based on the given model and workflow ID.
         
@@ -24,7 +25,11 @@ class HippoFlowCodegenrator:
         """
 
         # Parse the model - returns a dictionary of all the parsed data
-        parsed_model = HippoFlowParser.parse_model_file(model)
+        if v2:
+            parser_model = HippoFlowParserV2.transform(json.loads(model))
+        else:
+            parsed_model = HippoFlowParser.parse_model_file(model)
+
 
         logging.warning(f"Model: \n \n {parsed_model}")
 
@@ -53,13 +58,15 @@ class HippoFlowCodegenrator:
 
 if __name__ == "__main__":
     
-    with open('/Users/colmbrandon/Desktop/hippoflow_codegen/sib_map.json', 'r') as f:
+    with open('test-data/sib_map.json', 'r') as f:
         sib_mapping = json.load(f)
 
 
-    with open('/Users/colmbrandon/Desktop/hippoflow_codegen/test1.flow', 'r') as f:
-        code  = HippoFlowCodegenrator.generate(f.read(), '12345678', 'http://localhost:8080/', sib_mapping=sib_mapping)
+    with open('test-data/sib_map.json', 'r') as f:
+        code  = HippoFlowCodegenrator.generate(f.read(), '12345678', 'http://localhost:8080/', sib_mapping=sib_mapping, v2=True)
 
 
     with open(os.getcwd() + '/test_output_workflow_program.py', 'w') as f:
         f.write(code)
+
+    

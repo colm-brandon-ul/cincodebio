@@ -1,0 +1,148 @@
+{%- macro addLabel(name,label,id,x,y,w,h,icon) %}
+{
+    "id": "{{ id }}",
+    "type": "siblibrary:label",
+    "_attributes": {
+        "name": "{{ name }}",
+        "label": "{{ label }}",
+        "icon": "{{ icon }}" 
+    },
+    "_position": {
+        "x": {{ x }},
+        "y": {{ y }}
+    },
+    "_size": {
+        "width": {{ w }},
+        "height": {{ h }}
+    }
+}
+{% endmacro %}
+{%- macro addInput(input) %}
+{
+    "id": "{{ input.id }}",
+    "type": "siblibrary:input",
+    "_attributes": {
+        "name": "{{ input.name }}",
+        "typeName": "{{ input.type }}",
+        "isList": "{{ input.isList }}"
+    },
+    "_size": {
+        "width": {{ input.w }},
+        "height": {{ input.h }}
+    },
+    "_position": {
+        "x": {{ input.x }},
+        "y": {{ input.y }}
+    }
+}
+{% endmacro %}
+{%- macro addOutput(output) %}
+{
+    "id": "{{ output.id }}",
+    "type": "siblibrary:output",
+    "_attributes": {
+        "name": "{{ output.name }}",
+        "typeName": "{{ output.type }}",
+        "isList": "{{ output.isList }}"
+    },
+    "_position": {
+        "x": {{ output.x }},
+        "y": {{ output.y }}
+    },
+    "_size": {
+        "width": {{ output.w }},
+        "height": {{ output.h }}
+    }
+}
+{% endmacro %}
+{%- macro addBranch(branch) %}
+{
+    "id": "{{ branch.id }}",
+    "type": "siblibrary:branch",
+    "_attributes": {
+        "name": "{{ branch.name }}"
+    },
+    "_size": {
+        "width": {{ branch.w }},
+        "height": {{ branch.h }}
+    },
+    "_position": {
+        "x": {{ branch.x }},
+        "y": {{ branch.y }}
+    }
+}
+{% endmacro %}
+{%- macro addTask(service) %}
+{
+    "id": "{{ service.id }}",
+    "type": "siblibrary:task",
+    "_attributes": {
+        "name": "{{ service.name }}",
+        "label": "{{ service.label }}",
+        "documentation": "{{ service.documentation }}"
+    },
+    "_containments": [
+        {%- for input in service.inputs %}
+        {{ addInput(input)|indent(4) }},
+        {% endfor %}
+        {{ addLabel(service.name,service.label,service.label_id,service.label_x,service.label_y,service.label_w,service.label_h, "icons/task.png")|indent(4) }}{{ "," if service.outputs | length > 0 }}
+        {%- for output in service.outputs %}
+        {{ addOutput(output)|indent(4) }}{{ "," if not loop.last }}
+        {% endfor %}
+    ],
+    "_size": {
+        "width": {{ service.w }},
+        "height": {{ service.h }}
+    },
+    "_position": {
+        "x": {{ service.x }},
+        "y": {{ service.y }}
+    }
+}
+{% endmacro %}
+{%- macro addService(service) %}
+{
+    "id": "{{ service.id }}",
+    "type": "siblibrary:service",
+    "_attributes": {
+        "name": "{{ service.name }}",
+        "label": "{{ service.label }}",
+        "documentation": "{{ service.documentation }}"
+    },
+    "_containments": [
+        {%- for input in service.inputs %}
+        {{ addInput(input)|indent(4) }},
+        {% endfor %}
+        {{ addLabel(service.name,service.label,service.label_id,service.label_x,service.label_y,service.label_w,service.label_h, "icons/service.png")|indent(4) }}{{ "," if service.outputs | length > 0 }}
+        {%- for output in service.outputs %}
+        {{ addOutput(output)|indent(4) }}{{ "," if not loop.last }}
+        {% endfor %}
+    ],
+    "_size": {
+        "width": {{ service.w }},
+        "height": {{ service.h }}
+    },
+    "_position": {
+        "x": {{ service.x }},
+        "y": {{ service.y }}
+    }
+}
+{% endmacro %}
+{%- macro addSibLibrary(siblibrary) %}
+{
+    "id": "{{ siblibrary.id }}",
+    "_containments": [
+        {% for service in siblibrary.services %}
+        {% if service.type == "automated" %}
+        {{- addService(service)|indent(4) }}{{ "," if not loop.last }}
+        {% else %}
+        {{- addTask(service)|indent(4) }}{{ "," if not loop.last }}
+        {% endif %}
+        {% endfor %}
+    ],
+    "_edges": [],
+    "type": "siblibrary:siblibrary",
+    "_attributes": {}
+}
+{%- endmacro %}
+{{- addSibLibrary(siblibrary) }}

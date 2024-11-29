@@ -9,6 +9,21 @@ from config import (STATIC_CODE_DIR,PERSISTENT_STATE_MOUNT_PATH,LATEST_SIBS,UTD_
 
 OS_REGEX = re.compile(r'\((.*?)\;')
 EXCLUDED_LABELS = ['id','label_id']
+SCALING_FACTOR = 1.5
+LABEL_FONT = 8 / SCALING_FACTOR
+PORT_FONT = 5 / SCALING_FACTOR
+
+def estimate_length(*args, fontsize_scale = 8) -> int:
+    """
+    Estimate the length of a string by concatenating the string representations of the arguments.
+
+    Args:
+        *args: A variable number of arguments.
+
+    Returns:
+        int: The estimated length of the string.
+    """
+    return len(' '.join(args))*fontsize_scale
 
 def check_if_windows(user_agent: str) -> bool:
     """
@@ -73,17 +88,23 @@ def convert_newlines(input_file: pathlib.Path) -> str:
     return output_string
 
 
-def get_cinco_entity_id() -> str:
+def _get_cinco_entity_id(*args) -> str:
     """
     Generate a unique id for a Cinco entity.
+
+    Args:
+        *args: A variable number of arguments.
 
     Returns:
         str: The unique id for the Cinco entity.
     
     """
-    return f"_{str(uuid.uuid4()).replace('-', '_')}"
+    hash_object = hashlib.md5(" ".join([str(a) for a in args]).encode())
+    
+    # turn the hash into a uuid (with dashes)
+    return f"{hash_object.hexdigest()}"
 
-def make_sib(type: str, name: str, inputs: list, outputs: list, branches: list) -> Dict:
+def make_sib(type: str, name: str, inputs: list, outputs: list, branches: list, context: dict) -> Dict:
     """
     Create a SIB JSON object from the specified parameters.
 
@@ -93,46 +114,52 @@ def make_sib(type: str, name: str, inputs: list, outputs: list, branches: list) 
         inputs (list): The list of input ports.
         outputs (list): The list of output ports.
         branches (list): The list of branches.
+        context (dict): The context dictionary (for storing the length of the strings in the SIB).
 
     Returns:
         Dict: The SIB JSON object.
     
     """
+    fs = estimate_length(name,fontsize_scale=PORT_FONT)
+    if context.get('length', 0) < fs:
+        context['length'] = fs
+        
 
     return {
-            "type" : type,
-            "id" : get_cinco_entity_id(),
-            "x" : 0,
-            "y" : 0,
-            "w" : 100,
-            "h" : 100,
             "name" : name,
             "label" : name,
-            "inputs" : [make_data_port(i[0],i[1]) for i in inputs],
-            "label_id" : get_cinco_entity_id(),
+            "inputs" : [make_data_port(i[0],i[1], context, type, name, name,'input') for i in inputs],
+            "label_id" : _get_cinco_entity_id(type,name,name,'label'),
             "label_x" : 0,
             "label_y" : 0,
             "label_w" : 100,
             "label_h" : 100,
-            "outputs" : [make_data_port(o[0],o[1]) for o in outputs],
-            "branches" : [make_branch(b) for b in branches]
+            "outputs" : [make_data_port(o[0],o[1], context, name, name,'output') for o in outputs],
+            "branches" : [make_branch(b,type,name,name,'branch') for b in branches],
+            "type" : type,
+            "id" : _get_cinco_entity_id(type,name,name),
+            "x" : 0,
+            "y" : 0,
+            "w" : context.get('length', 100),
+            "h" : 100
         }
 
 
 
-def make_branch(name: str) -> Dict:
+def make_branch(name: str, *args) -> Dict:
     """
         Create a cinco branch JSON object from the specified name.
 
         Args:
             name (str): The name of the branch.
+            *args: Used to generate the id for the branch
         
         Returns:
             Dict: The branch JSON object.
     
     """
     return {
-        "id" : get_cinco_entity_id(),
+        "id" : _get_cinco_entity_id(name,*args),
         "x" : 0,
         "y" : 0,
         "w" : 100,
@@ -140,23 +167,31 @@ def make_branch(name: str) -> Dict:
         "name" : name
     }
 
-def make_data_port(name: str, type: str, isList: bool=False) -> Dict:
+def make_data_port(name: str, type: str, context: dict, *args, isList: bool=False) -> Dict:
     """
         Create a cinco data port (input or output) JSON object from the specified name and type.
 
         Args:
             name (str): The name of the data port.
             type (str): The type of the data port.
+            context (dict): The context dictionary (for storing the length of the strings in the data port).
+            *args: Used to generate the id for the data port
             isList (bool): Whether the data port is a list. (currently not used)
+
         
         Returns:
             Dict: The data port JSON object.
     
     """
 
+    fs = estimate_length(f'{name} : {type}',fontsize_scale=LABEL_FONT)
+
+    if context.get('length', 0) < fs:
+        context['length'] = fs
+        
     
     return {
-        "id" : get_cinco_entity_id(),
+        "id" : _get_cinco_entity_id(name,type,*args),
         "x" : 0,
         "y" : 0,
         "w" : 100,
@@ -190,7 +225,7 @@ def copy_dict_exclude_keys(d: dict, keys_to_exclude: list) -> dict:
     return new_dict
 
 
-def cincodebio_schema_to_sibfile_format(lsibs: List[Dict], include_services_params = False) -> Tuple[Dict, Dict, Dict, List]:
+def cincodebio_schema_to_sibfile_format(lsibs: List[Dict], context, include_services_params = False) -> Tuple[Dict, Dict, Dict, List]:
     """
     Convert CincoDeBio schema (from the Docker Image label) to the expected format for the SIB file format.
     Also returns mappings for inputs, outputs, and abstract concepts.
@@ -258,16 +293,18 @@ def cincodebio_schema_to_sibfile_format(lsibs: List[Dict], include_services_para
         if 'Control'in sib['cincodebio.schema'][output_key].keys():
             for f in sib['cincodebio.schema'][output_key]['Control']['FIELDS']:
                 branches.append(f['name'])
-
+        context['length'] = 0
         all_cinco_sib_schemas.append(make_sib(
             stype,
             sname,
             sib_inputs,
             sib_outputs,
-            branches
+            branches,
+            context
         ))
 
     return sibInputMappings, sibOutputMappings, sibAbstractMappings, all_cinco_sib_schemas
+
 
 # check what's changed;
 def resolve_sib_library_changes(current_sib_library: List, new_sib_library: List) -> List:
@@ -329,7 +366,7 @@ def formatSibMap(sib_ab_map2: Dict, sib_i_map2: Dict, sib_o_map2: Dict) -> Dict:
 
 
 
-def code_gen(template_env: jinja2.Environment, sib_library: Dict) -> str:
+def code_gen(template_env: jinja2.Environment, sib_library: Dict) -> Tuple[str, str]:
     """
     Generate code for lib.sibs file for the IME.
 
@@ -338,14 +375,21 @@ def code_gen(template_env: jinja2.Environment, sib_library: Dict) -> str:
         service_models (List): A list of service models.
 
     Returns:
-        Tuple[str, str]: A tuple containing the generated API code [index 0] and data model code [index 1].
+        Tuple[str, str]: The generated code for the lib.sibs file for the IME (Eclipse), IME (CincoCloud) .
     """
 
     # perhaps rather than the tag I should use the digest (as the tag can be updated)
-    
-    libs_dot_sibs = template_env.get_template("template.sibs.j2").render(
+
+
+    # use the v2 template for cinco cloud
+    libs_dot_sibs_v2 = template_env.get_template("cinco-cloud-template.sibs.j2").render(
         siblibrary=sib_library
     )
 
+    # use the v1 template for cinco desktop
+    libs_dot_sibs_v1 = template_env.get_template("template.sib.j2").render(
+    siblibrary=sib_library
+    )
 
-    return libs_dot_sibs
+
+    return libs_dot_sibs_v1, libs_dot_sibs_v2

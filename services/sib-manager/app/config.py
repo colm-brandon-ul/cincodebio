@@ -58,6 +58,7 @@ INSTALLED_SIBS = "installed_sibs.json"
 
 CURRENT_SIBS_IME_JSON = "current_ime_sibs.json"
 UTD_SIB_FILE = "lib.sibs"
+UTD_SIB_FILE_V2 = "cclib.sibs"
 SIB_MAP_FILE = "sib_map.json"
 
 # Common constants

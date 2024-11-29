@@ -1,13 +1,12 @@
 from typing import Dict, List
 from config import (STATIC_CODE_DIR,PERSISTENT_STATE_MOUNT_PATH,LATEST_SIBS,
                   OTHER_SIBS,INSTALLED_SIBS, JINJA_ENV, CURRENT_SIBS_IME_JSON, 
-                  SIB_MAP_FILE, UTD_SIB_FILE, SERVICE_API_NAME, ONTOLOGY_MANAGER_SERVICE_HOST)
+                  SIB_MAP_FILE, UTD_SIB_FILE,UTD_SIB_FILE_V2, SERVICE_API_NAME, ONTOLOGY_MANAGER_SERVICE_HOST)
 import pathlib
 import utils
 import k8s_interface, cinco_interface
 import json
 import logging
-
 import requests
 import time
 
@@ -164,11 +163,14 @@ def initial_build_service_api(dh_namespace: str) -> bool:
             sib_i_map, sib_o_map, sib_ab_map, utd_sib_schemas = cinco_interface.cincodebio_schema_to_sibfile_format(latest)
             # resolve differences between the new and old sib schemas -> no existing IME schema will be present (pass in empty list)
             new_ime_sib_library_schema = cinco_interface.get_new_ime_sib_library([],utd_sib_schemas)
-            new_lib_dot_sibs = cinco_interface.code_gen(JINJA_ENV,new_ime_sib_library_schema)
+            new_lib_dot_sibs ,new_lib_dot_sibs_v2 = cinco_interface.code_gen(JINJA_ENV,new_ime_sib_library_schema)
             logging.warning('Writing the new lib.sibs to the state code dir')
             # Write the new lib.sibs to the static code dir
             with open(state_path / UTD_SIB_FILE, "w") as f:
                 f.write(new_lib_dot_sibs)
+
+            with open(static_path / UTD_SIB_FILE_V2, "w") as f:
+                f.write(new_lib_dot_sibs_v2)
 
             # Write the new sib schema to the current sib schema file
             with open(state_path / CURRENT_SIBS_IME_JSON, "w") as f:
@@ -219,6 +221,9 @@ def check_if_local_state_exists() -> bool:
             json.load(f)
         
         with open(state_path / UTD_SIB_FILE, "r") as f:
+            f.read()
+
+        with open(state_path / UTD_SIB_FILE_V2, "r") as f:
             f.read()
 
         return True
@@ -330,13 +335,17 @@ def update_service_api_and_sibs(to_be_installed_sibs: List) -> bool:
             logging.warning("Current IME SIB Schema: {}".format(current_ime_sib_schema))
             new_ime_sib_library_schema = cinco_interface.get_new_ime_sib_library(current_ime_sib_schema,utd_sib_schemas)
 
-            new_lib_dot_sibs = cinco_interface.code_gen(
+            new_lib_dot_sibs_v1, new_lib_dot_sibs_v2 = cinco_interface.code_gen(
                 JINJA_ENV,
                 new_ime_sib_library_schema)
 
             # Write the new lib.sibs to the static code dir
             with open(static_path / UTD_SIB_FILE, "w") as f:
-                f.write(new_lib_dot_sibs)
+                f.write(new_lib_dot_sibs_v1)
+
+            with open(static_path / UTD_SIB_FILE_V2, "w") as f:
+                f.write(new_lib_dot_sibs_v2)
+
 
             # Write the new sib schema to the current sib schema file
             with open(state_path / CURRENT_SIBS_IME_JSON, "w") as f:
