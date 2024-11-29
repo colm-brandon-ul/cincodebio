@@ -57,7 +57,7 @@ async def startup_event():
     
     local_state_exists = handlers.check_if_local_state_exists()
 
-    logging.warning(f"Service Deployment Health Check: {service_deployment_health_check}, Container Registry Health Check: {container_registry_health_check}, Local State Exists: {local_state_exists}")
+    logging.warning(f"Service Deployment Health Check: {service_deployment_health_check}, Container Registry Health Check: {container_registry_health_check}, Ontology Manager Health Check: {ontology_manager_health_check}, Local State Exists: {local_state_exists}")
     
     # Depending on the health of the service-api and the local registry, we can decide whether to rebuild the service-api
     # also if the local state exists

@@ -235,6 +235,7 @@ def cincodebio_schema_to_sibfile_format(lsibs: List[Dict], context, include_serv
     """
     # to be used by the workflow code generator for resolving paths and also correctly formatting json requests / and retrieiving data from responses
     sibInputMappings,sibOutputMappings,sibAbstractMappings = {},{},{}
+    context = {}
     
     # these are the sib schemas that will be used to generate the sib file
     all_cinco_sib_schemas = []
