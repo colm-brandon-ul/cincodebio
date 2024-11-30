@@ -30,7 +30,7 @@ async def check_sib_file_hash(body: CheckSibFileHashRequest):
 async def check_sib_file_hashes(body: CheckSibFilesHashesRequest):
     # need to have a db which stores the hashes of the sib files
     for file_hash in body.fileHashes:
-        local_hash, local_hash_nl = compute_local_hash()
+        local_hash, local_hash_nl = compute_local_hash(v2=True)
         logging.info(f"Local hash: {local_hash}, {local_hash_nl}")
         logging.info(f"File hash received: {body}")
         # if hash is equal to nither, it's incorrect

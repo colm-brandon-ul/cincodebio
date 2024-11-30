@@ -1,4 +1,4 @@
-from config import (PERSISTENT_STATE_MOUNT_PATH,UTD_SIB_FILE)
+from config import (PERSISTENT_STATE_MOUNT_PATH,UTD_SIB_FILE, UTD_SIB_FILE_V2)
 
 import hashlib
 import re
@@ -42,7 +42,7 @@ def check_if_windows(user_agent: str) -> bool:
             return True
     return False
 
-def compute_local_hash() -> tuple[str, str]:
+def compute_local_hash(v2: bool = True) -> tuple[str, str]:
     """
     Compute the SHA-256 hash of a the locally stored sib fiel and return the hash values.
     Computes two hash values, one with and one without a newline character at the end of the file (as the local IDE may add it).
@@ -52,8 +52,12 @@ def compute_local_hash() -> tuple[str, str]:
     """
     # read the file
     state_path = pathlib.Path(PERSISTENT_STATE_MOUNT_PATH)
-    with open(state_path / UTD_SIB_FILE, 'rb') as f:
-        og_str = f.read()
+    if v2:
+        with open(state_path / UTD_SIB_FILE_V2, 'r') as f:
+            og_str = f.read()
+    else:
+        with open(state_path / UTD_SIB_FILE, 'rb') as f:
+            og_str = f.read()
     
     # some OS's / IDE may add a newline at the end of the file
     

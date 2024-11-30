@@ -170,7 +170,7 @@ def initial_build_service_api(dh_namespace: str) -> bool:
             with open(state_path / UTD_SIB_FILE, "w") as f:
                 f.write(new_lib_dot_sibs)
 
-            with open(static_path / UTD_SIB_FILE_V2, "w") as f:
+            with open(state_path / UTD_SIB_FILE_V2, "w") as f:
                 f.write(new_lib_dot_sibs_v2)
 
             # Write the new sib schema to the current sib schema file
