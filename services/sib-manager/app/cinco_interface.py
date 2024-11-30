@@ -225,7 +225,7 @@ def copy_dict_exclude_keys(d: dict, keys_to_exclude: list) -> dict:
     return new_dict
 
 
-def cincodebio_schema_to_sibfile_format(lsibs: List[Dict], context, include_services_params = False) -> Tuple[Dict, Dict, Dict, List]:
+def cincodebio_schema_to_sibfile_format(lsibs: List[Dict], include_services_params = False) -> Tuple[Dict, Dict, Dict, List]:
     """
     Convert CincoDeBio schema (from the Docker Image label) to the expected format for the SIB file format.
     Also returns mappings for inputs, outputs, and abstract concepts.

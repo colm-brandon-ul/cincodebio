@@ -73,3 +73,5 @@ JINJA_ENV = jinja2.Environment(
 
 DOCKER_HUB_PASSWORD = os.environ.get('DOCKER_HUB_PASSWORD')
 DOCKER_HUB_USERNAME = os.environ.get('DOCKER_HUB_USERNAME')
+
+MAX_WORKERS = 10
