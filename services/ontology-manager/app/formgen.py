@@ -1,7 +1,7 @@
 import rdflib.term
 from ontparse import OWLParser
 import rdflib
-from typing import List, Dict
+from typing import Dict
 from rdflib import RDF, OWL
 from utils import Serializable
 class FormGen(Serializable):
@@ -20,7 +20,7 @@ class FormGen(Serializable):
         return uri.split('#')[-1]
     
     def get_form_schema(self) -> Dict:
-        pn = self.parser.get_primary_namespace()
+        self.parser.get_primary_namespace()
         experiments = {}
 
         for node in self.parser.topo_sort_nodes_inheritance_and_attributes_graph:

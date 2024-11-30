@@ -1,5 +1,4 @@
 from fastapi import APIRouter, HTTPException
-from minio import Minio
 from minio.commonconfig import Tags
 from fastapi import BackgroundTasks, Request
 from fastapi.responses import StreamingResponse
@@ -31,7 +30,7 @@ def check_prefix(prefix: str):
         return True
 
     # List objects with the prefix (list_objects returns partial matches as well, so we need to check if the object is a directory and the name matches the prefix exactly)
-    objects = [c._object_name for c in client.list_objects(MINIO_EXPERIMENT_BUCKET, prefix) if c._object_name == prefix and c.is_dir == True]
+    objects = [c._object_name for c in client.list_objects(MINIO_EXPERIMENT_BUCKET, prefix) if c._object_name == prefix and c.is_dir is True]
 
     # If the iterator has at least one object, the prefix exists
     try:

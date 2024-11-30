@@ -3,7 +3,6 @@ import pika
 import os
 from fastapi.encoders import jsonable_encoder
 import json
-from bson.objectid import ObjectId
 
 from config import (RABBIT_MQ_HOST, RABBIT_MQ_PORT, 
                     RABBITMQ_USERNAME, RABBITMQ_PASSWORD, 
@@ -40,7 +39,7 @@ def update_workflow_in_db(workflow_id, workflow: UpdateWorkflow) -> None:
 
 def add_job_state_to_workflow_in_db(workflow_id, job_state: JobState) -> None:
     # jsonable-encoder by default uses alias, whereas pydantic json serializer does not.
-    wri_res = get_db_client().update_one({"_id": workflow_id}, {"$push": {"state" : jsonable_encoder(job_state, by_alias=False)}})
+    get_db_client().update_one({"_id": workflow_id}, {"$push": {"state" : jsonable_encoder(job_state, by_alias=False)}})
 
 def update_job_status_in_workflow_in_db(workflow_id, job_state: JobState) -> None:
     logging.warning('UPDATE JOB STATE')

@@ -4,15 +4,12 @@ from kubernetes.client.rest import ApiException
 import logging
 import os
 
-import os
 import pathlib
 import uuid
-import logging
 import time
 import datetime
 
-from config import (KANIKO_BUILD_NAMESPACE, KANIKO_IMAGE, KANIKO_DOCKER_HUB_AUTH_VOLUME, 
-                    DOCKER_BUILD_CONTEXT_MOUNT_PATH, DOCKER_BUILD_CONTEXT_VOLUME, 
+from config import (KANIKO_BUILD_NAMESPACE, KANIKO_IMAGE, DOCKER_BUILD_CONTEXT_MOUNT_PATH, DOCKER_BUILD_CONTEXT_VOLUME, 
                     REGISTRY_NAME, REGISTRY_NAMESPACE, REGISTRY_PORT, 
                     KANIKO_DOCKER_HUB_AUTH_VOLUME, CONTAINER_REGISTRY_DOMAIN_ON_HOST)
 
@@ -50,8 +47,8 @@ def create_build_namespace(namespace: str):
     namespace = client.V1Namespace(metadata=client.V1ObjectMeta(name=namespace))
     try:
         api_instance.create_namespace(body=namespace)
-    except ApiException as e:
-        logging.info(f"Exception when calling CoreV1Api->create_namespace")
+    except ApiException:
+        logging.info("Exception when calling CoreV1Api->create_namespace")
 
 
 
@@ -164,8 +161,8 @@ def submit_kaniko_build(image_name: str,context_path: str = DOCKER_BUILD_CONTEXT
             namespace="default", 
             body=pvc)
         logging.info("PersistentVolumeClaim created successfully.")
-    except client.ApiException as e:
-        logging.warning(f"Exception when calling CoreV1Api->create_namespaced_persistent_volume_claim")
+    except client.ApiException:
+        logging.warning("Exception when calling CoreV1Api->create_namespaced_persistent_volume_claim")
 
     
 
@@ -199,7 +196,7 @@ def submit_kaniko_build(image_name: str,context_path: str = DOCKER_BUILD_CONTEXT
 
 
     # ARGS for Kaniko
-    dfile_location = f"--dockerfile=Dockerfile"
+    dfile_location = "--dockerfile=Dockerfile"
     context_location = f"--context=dir://{context_path}/"
     dest = f"--destination={REGISTRY_NAME}.{REGISTRY_NAMESPACE}.svc.cluster.local:{REGISTRY_PORT}/{image_name}"
     
@@ -270,8 +267,8 @@ def get_kaniko_build_status(job_name: str, namespace: str = KANIKO_BUILD_NAMESPA
                 # Set status code to true (so next function knows it's done)
                 status_code = True
                 break
-        except client.ApiException as e:
-            logging.warning(f"Exception when calling BatchV1Api->read_namespaced_job_status")
+        except client.ApiException:
+            logging.warning("Exception when calling BatchV1Api->read_namespaced_job_status")
         
         curent_time = time.time()
 
@@ -312,7 +309,7 @@ def submit_rolling_update(image_name: str,service_api_deployment_name: str, serv
     deployment.spec.template.metadata.annotations['kubectl.kubernetes.io/restartedAt'] = datetime.datetime.now().isoformat()
 
     # Patch the deployment
-    api_response = api_instance.patch_namespaced_deployment(
+    api_instance.patch_namespaced_deployment(
         name=deployment.metadata.name,
         namespace=deployment.metadata.namespace,
         body=deployment

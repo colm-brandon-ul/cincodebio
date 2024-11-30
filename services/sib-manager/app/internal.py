@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException, Request
+from fastapi import APIRouter, Request
 from pathlib import Path
 from config import PERSISTENT_STATE_MOUNT_PATH, SIB_MAP_FILE
 import json

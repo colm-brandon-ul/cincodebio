@@ -1,5 +1,4 @@
 import pickle
-import os
 
 class Serializable:
     def save(self, filename):

@@ -1,6 +1,6 @@
 from rdflib import Graph, URIRef, Literal, term, XSD
 from rdflib.namespace import RDF, RDFS, OWL
-from typing import Dict, List, Set, Tuple, Optional
+from typing import Dict, Set, Tuple
 import networkx as nx
 import requests
 from urllib.parse import urlparse
@@ -379,7 +379,8 @@ class OWLParser(Serializable):
     
     def _build_network(self) -> None:
         # change_ns = lambda k:  k.replace('http://www.cincodebio.org/cdbontology#','cdb:').replace('http://www.cellmaps.org/cellmapsontology#','cm:')
-        change_ns = lambda k:  k
+        def change_ns(k):
+            return k
         nodes = []
         edges = []
         attri_edges = []
@@ -474,7 +475,6 @@ class OWLParser(Serializable):
         ds = None
         cdb = None
         # Collect results
-        version_info = []
         results = list(results)
 
         assert len(results) == 2, 'There should be exactly two version info properties in the ontology'

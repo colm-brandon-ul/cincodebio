@@ -1,13 +1,10 @@
 # Standrad imports
 from typing import Dict, List, Tuple, Union
-from urllib.parse import urljoin,urlparse
 import jinja2
 import requests
 from requests.auth import HTTPBasicAuth
 import json
 import logging
-import pprint
-import json
 # Relative imports
 from k8s_interface import get_available_architectures
 import concurrent.futures
@@ -80,7 +77,7 @@ def get_repo_from_namespace_dh(namespace: str) -> List[Dict]:
     print(f'NUM REPOS: {len(repositories)}')
 
     if 'next' in response.json().keys():
-        while response.json()['next'] != None:
+        while response.json()['next'] is not None:
             response = requests.get(response.json()['next'])
             response.raise_for_status()
             if response.status_code == 200:
@@ -94,7 +91,7 @@ def get_repo_from_namespace_dh(namespace: str) -> List[Dict]:
     # Filter out the non-image repositories
     for repo in repositories:
         # for some reason the images type is set to none rather than image (need to resolve this in future)
-        if  repo['is_private'] == False:
+        if  repo['is_private'] is False:
             relevant_repos.append({
                 'name': repo['name'],
                 'namespace': namespace,
@@ -129,7 +126,7 @@ def get_tags_from_repo_dh(repository: Dict) -> List:
     print(f'NUM TAGS: {len(tags)}')
 
     if 'next' in response.json().keys():
-            while response.json()['next'] != None:
+            while response.json()['next'] is not None:
                 response = requests.get(response.json()['next'])
                 print(response.status_code)
                 response.raise_for_status()
@@ -182,7 +179,7 @@ def retrieve_valid_cdb_images(
     # ensure the request was successful
     try:
         res.raise_for_status()
-    except requests.exceptions.HTTPError as e:
+    except requests.exceptions.HTTPError:
         logging.error(f"Error retrieving manifest for {namespace}/{repository}:{tag}")
         return None
 
@@ -216,7 +213,7 @@ def retrieve_valid_cdb_images(
         # ensure the request was successful
         try:
             res.raise_for_status()
-        except requests.exceptions.HTTPError as e:
+        except requests.exceptions.HTTPError:
             logging.error(f"Error retrieving manifest for {namespace}/{repository}:{tag}")
             return None
 

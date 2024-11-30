@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field, EmailStr
+from pydantic import BaseModel, Field
 import typing 
 from enum import Enum
 from bson import ObjectId

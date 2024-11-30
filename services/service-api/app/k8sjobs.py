@@ -115,7 +115,7 @@ def submit_k8s_job(
     ]
 
     # If it's an interactive service, add the base_url to the env variables
-    if base_url != None:
+    if base_url is not None:
         env_vars.append(
             client.V1EnvVar(
                 name="CINCODEBIO_BASE_URL",

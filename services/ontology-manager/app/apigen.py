@@ -1,8 +1,6 @@
 from ontparse import OWLParser
 import rdflib
 import enum
-from jinja2 import Environment, FileSystemLoader
-import logging
 from utils import Serializable
 
 class DataModelType(str, enum.Enum):
@@ -21,7 +19,7 @@ class ApiDataModelCodeGen(Serializable):
         template_path (str, optional): Path to the directory containing the Jinja2 template. Defaults to './'.
         only_descendants_of (str, optional): The URI of the class that all data models must be descendants of. Defaults to 'http://www.cincodebio.org/cdbontology#Data'.
         """
-        if parser and ontology_path == None:
+        if parser and ontology_path is None:
             self.parser = parser
         else:
             self.parser = OWLParser()

@@ -1,5 +1,4 @@
-from enum import Enum
-from typing import List, Dict, Any, Optional
+from typing import List, Dict
 from pydantic import BaseModel, ConfigDict, Field, RootModel
 
 class FileDetails(BaseModel):

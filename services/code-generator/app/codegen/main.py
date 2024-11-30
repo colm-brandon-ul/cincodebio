@@ -26,7 +26,7 @@ class HippoFlowCodegenrator:
 
         # Parse the model - returns a dictionary of all the parsed data
         if v2:
-            parser_model = HippoFlowTransformerV2.transform(json.loads(model))
+            HippoFlowTransformerV2.transform(json.loads(model))
         else:
             parsed_model = HippoFlowParser.parse_model_file(model)
 

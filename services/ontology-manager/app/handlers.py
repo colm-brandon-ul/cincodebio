@@ -1,5 +1,4 @@
 from typing import List
-from ontparse import OWLParser
 from apigen import ApiDataModelCodeGen
 from formgen import FormGen
 from models import FormSchema, ModelSchema, OntologyState

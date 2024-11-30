@@ -1,14 +1,12 @@
-from fastapi import APIRouter, HTTPException
-from fastapi.responses import HTMLResponse
+from fastapi import APIRouter
 from fastapi.requests import Request
 from fastapi import BackgroundTasks
 from typing import List
 import pathlib
-import os
 import json
 import logging
 from config import (PERSISTENT_STATE_MOUNT_PATH, UTD_SIB_FILE, 
-                    LATEST_SIBS, INSTALLED_SIBS, OTHER_SIBS, UTD_SIB_FILE_V2)
+                    INSTALLED_SIBS, OTHER_SIBS, UTD_SIB_FILE_V2)
 from models import (CheckSibFileHashRequest, CheckSibFilesHashesRequest,HashValid, CheckSibFilesHashesResponse,UtdSibFileResponse, UtdSibFilesRequest, UtdSibFilesResponse)
 import handlers
 # from utils import compute_local_hash, convert_newlines, check_if_windows
@@ -28,7 +26,7 @@ async def check_sib_file_hash(body: CheckSibFileHashRequest):
     return HashValid.VALID
 
 @router.post("/check-sib-files-hashes", response_model=CheckSibFilesHashesResponse)
-async def check_sib_file_hash(body: CheckSibFilesHashesRequest):
+async def check_sib_file_hashes(body: CheckSibFilesHashesRequest):
     # need to have a db which stores the hashes of the sib files
     for file_hash in body.fileHashes:
         local_hash, local_hash_nl = compute_local_hash()
@@ -64,7 +62,7 @@ def get_utd_sib_file(request: Request):
             )
     
 @router.get("/get-utd-sib-files", response_model=UtdSibFilesResponse)
-def get_utd_sib_file(body: UtdSibFilesRequest,request: Request):
+def get_utd_sib_files(body: UtdSibFilesRequest,request: Request):
     files = []
     state_path = pathlib.Path(PERSISTENT_STATE_MOUNT_PATH)
     for fid in body.file_ids:

@@ -13,7 +13,7 @@ class TestAPI(unittest.TestCase):
         job.job_status = JobStatus.completed
 
         # Call the API function
-        result = handles_callbacks("workflow_id", job)
+        handles_callbacks("workflow_id", job)
 
         # Assert that the appropriate functions are called
         update_job_status_in_workflow_in_db.assert_called_with(workflow_id="workflow_id", job_state=job)
@@ -25,7 +25,7 @@ class TestAPI(unittest.TestCase):
         job.job_status = JobStatus.awaiting_interaction
 
         # Call the API function
-        result = handles_callbacks("workflow_id", job)
+        handles_callbacks("workflow_id", job)
 
         # Assert that the appropriate functions are called
         update_job_status_in_workflow_in_db.assert_called_with(workflow_id="workflow_id", job_state=job)
@@ -36,7 +36,7 @@ class TestAPI(unittest.TestCase):
         job.job_status = JobStatus.submitted
 
         # Call the API function
-        result = handles_callbacks("workflow_id", job)
+        handles_callbacks("workflow_id", job)
 
         # Assert that the appropriate functions are called
         add_job_state_to_workflow_in_db.assert_called_with(workflow_id="workflow_id", job_state=job)
@@ -47,7 +47,7 @@ class TestAPI(unittest.TestCase):
         job.job_status = JobStatus.accepted
 
         # Call the API function
-        result = handles_callbacks("workflow_id", job)
+        handles_callbacks("workflow_id", job)
 
         # Assert that the appropriate functions are called
         update_job_status_in_workflow_in_db.assert_called_with(workflow_id="workflow_id", job_state=job)
@@ -58,7 +58,7 @@ class TestAPI(unittest.TestCase):
         job.job_status = JobStatus.interaction_accepted
 
         # Call the API function
-        result = handles_callbacks("workflow_id", job)
+        handles_callbacks("workflow_id", job)
 
         # Assert that the appropriate functions are called
         update_job_status_in_workflow_in_db.assert_called_with(workflow_id="workflow_id", job_state=job)
@@ -69,7 +69,7 @@ class TestAPI(unittest.TestCase):
         job.job_status = JobStatus.processing
 
         # Call the API function
-        result = handles_callbacks("workflow_id", job)
+        handles_callbacks("workflow_id", job)
 
         # Assert that the appropriate functions are called
         update_job_status_in_workflow_in_db.assert_called_with(workflow_id="workflow_id", job_state=job)
@@ -80,7 +80,7 @@ class TestAPI(unittest.TestCase):
         job.job_status = JobStatus.failed
 
         # Call the API function
-        result = handles_callbacks("workflow_id", job)
+        handles_callbacks("workflow_id", job)
 
         # Assert that no functions are called
         update_job_status_in_workflow_in_db.assert_not_called()

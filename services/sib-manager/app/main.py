@@ -2,11 +2,10 @@ from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 
 # from minio import Minio
-from kubernetes import client, config
+from kubernetes import config
 # ONTOLOGY_VERSION = "0.1.0"
 
 
-import pathlib
 import logging
 import handlers
 
@@ -68,12 +67,12 @@ async def startup_event():
         else:
             # Failure - for some reason the service-api deployment failed
             # Need to log this and raise an error
-            logging.error(f"Failed to build the service-api image")
+            logging.error("Failed to build the service-api image")
     else:
         # Failure - for some reason the service-api deployment failed
         # Need to log this and raise an error
         if handlers.check_if_local_state_exists():
-            logging.error(f"Local state already exists. No need to rebuild the service-api")
+            logging.error("Local state already exists. No need to rebuild the service-api")
         else:
             logging.error(f"Dependant services are not available. Local Registry Health Check: {container_registry_health_check}. Service API Health Check: {service_deployment_health_check}. Ontology Manager Health Check: {ontology_manager_health_check}")
 

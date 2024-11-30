@@ -1,5 +1,5 @@
 from typing import List
-from fastapi import APIRouter, HTTPException, WebSocket, WebSocketDisconnect
+from fastapi import APIRouter, WebSocket, WebSocketDisconnect
 from fastapi import BackgroundTasks, Request, UploadFile, File
 from fastapi.responses import JSONResponse
 import logging
@@ -57,7 +57,7 @@ async def websocket_endpoint(websocket: WebSocket,workflow_id: str):
     await manager.connect(websocket)
     try: 
         while True:
-            data = await websocket.receive_text()
+            await websocket.receive_text()
             workflow_state = get_workflow_from_db_by_id(workflow_id)
             logging.warning(f'WEBSOCKET: {workflow_state.json()}')
             await manager.send_json(workflow_state.json(),websocket)

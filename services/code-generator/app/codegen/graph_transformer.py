@@ -1,7 +1,6 @@
-import json
 from enum import Enum
 import networkx as nx
-from typing import List, Tuple, Any, Dict
+from typing import List, Tuple, Dict
 import logging
 
 class EdgeType(Enum):
@@ -78,7 +77,8 @@ class ComputationalGraphTransformer:
                         
             elif port['port_type'] == 'ControlFlow':
                 # Simple fn that check if the branch condition is empty, if so replaces with 'success' (default control case)
-                f1 = lambda x: x if x != '' else 'success'
+                def f1(x):
+                    return x if x != '' else 'success'
                 # same as abobe with dataflow edges (properaties are the simpler, only edge type and branch condition)
                 edges.append((
                     sib['identifier'], 
@@ -154,7 +154,6 @@ class ComputationalGraphTransformer:
     @classmethod
     def get_comp_graph_datastructure(cls,dg, root, sib_map, branch_depth=0):
         logging.warning(f"Branch Depth: {branch_depth}")
-        SPACER = "    "
         # current node in comp graph
         current_node = dg.nodes[root]
 

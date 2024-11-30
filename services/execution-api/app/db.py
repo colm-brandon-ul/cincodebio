@@ -1,5 +1,4 @@
 import pymongo
-import os 
 
 from config import MONGODB_HOST, MONGODB_PORT, WORKFLOW_DB, WORKFLOW_COLLECTION
 
