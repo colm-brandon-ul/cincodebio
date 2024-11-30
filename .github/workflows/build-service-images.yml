@@ -46,6 +46,7 @@ jobs:
           # Ensure version tracking file exists
           mkdir -p .versions
           touch .versions/image_versions.json
+          [ -s .versions/image_versions.json ] || echo '{}' > .versions/image_versions.json
 
       - name: Build and push changed images
         run: |
@@ -62,30 +63,33 @@ jobs:
             
             # Check if any files in this directory have changed
             if echo "$CHANGED_FILES" | grep -q "$relative_dir"; then
-              image_name=$(basename $dir_of_image)
-              image_name=${image_name//\//-}
-              docker_image_name="${image_name//[^a-zA-Z0-9]/-}"
+              # Clean image name to be Docker tag compatible
+              image_name=$(basename "$dir_of_image" | sed 's/[^a-zA-Z0-9-]/-/g' | tr '[:upper:]' '[:lower:]')
               
               # Skip rpy2-base-image
-              if [[ $docker_image_name != "rpy2-base-image" ]]; then
+              if [[ $image_name != "rpy2-base-image" ]]; then
+                # Ensure the image name is valid for Docker
+                sanitized_name=$(echo "$image_name" | sed 's/[^a-z0-9-]/-/g' | sed 's/^-*//; s/-*$//')
+                
                 # Get current version or start at 0.1.0
-                current_version=$(jq -r --arg img "$docker_image_name" '.[$img] // "0.1.0"' "$versions_file")
+                current_version=$(jq -r --arg img "$sanitized_name" '.[$img] // "0.1.0"' "$versions_file")
                 
                 # Increment version (simple semver increment)
                 IFS='.' read -r major minor patch <<< "$current_version"
                 new_version="${major}.${minor}.$((patch + 1))"
                 
                 echo "Changes detected in $relative_dir"
-                echo "Building $docker_image_name"
+                echo "Building $sanitized_name"
+                echo "New version: $new_version"
                 
                 # Build and push with new version and latest
                 docker buildx build --platform linux/amd64,linux/arm64 \
-                  -t ${{ secrets.DOCKERHUB_USERNAME }}/$docker_image_name:$new_version \
-                  -t ${{ secrets.DOCKERHUB_USERNAME }}/$docker_image_name:latest \
-                  $dir_of_image --push
+                  -t "${{ secrets.DOCKERHUB_USERNAME }}/$sanitized_name:$new_version" \
+                  -t "${{ secrets.DOCKERHUB_USERNAME }}/$sanitized_name:latest" \
+                  "$dir_of_image" --push
                 
                 # Update version tracking
-                jq --arg img "$docker_image_name" --arg ver "$new_version" \
+                jq --arg img "$sanitized_name" --arg ver "$new_version" \
                   '.[$img] = $ver' "$versions_file" > "${versions_file}.tmp" \
                   && mv "${versions_file}.tmp" "$versions_file"
               fi
