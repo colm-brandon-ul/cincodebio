@@ -413,15 +413,9 @@ def get_valid_images_from_namespace(namespace: str) -> Tuple[List[Dict], List[Di
             all_images.extend(future.result())
 
     # Separate latest and other images
-    latest_images = [
-    {k: v for k, v in img.items() if k != 'tag'}
-    for img in all_images if img.get('tag') == 'latest'
-    ]
+    latest_images = [{k: v for k, v in img.items() if k != 'tag'} for img in all_images if img.get('tag') == 'latest']
 
-    rest_of_images = [
-        {k: v for k, v in img.items() if k != 'tag'}
-        for img in all_images if img.get('tag') != 'latest'
-    ]
+    rest_of_images = [{k: v for k, v in img.items() if k != 'tag'} for img in all_images if img.get('tag') != 'latest']
 
     return latest_images, rest_of_images
 
