@@ -1,6 +1,6 @@
 from codegen.graph_transformer import ComputationalGraphTransformer
 from codegen.parser import HippoFlowParser
-from codegen.parserv2 import HippoFlowParserV2
+from codegen.parserv2 import HippoFlowTransformerV2
 
 import os
 from jinja2 import Template
@@ -26,7 +26,7 @@ class HippoFlowCodegenrator:
 
         # Parse the model - returns a dictionary of all the parsed data
         if v2:
-            parser_model = HippoFlowParserV2.transform(json.loads(model))
+            parser_model = HippoFlowTransformerV2.transform(json.loads(model))
         else:
             parsed_model = HippoFlowParser.parse_model_file(model)
 
