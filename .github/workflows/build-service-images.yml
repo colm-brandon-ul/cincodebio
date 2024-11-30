@@ -1,19 +1,19 @@
-name: Build, Test and Push Changed CincoDeBio Core Services to Dockerhub on Trigger
+name: Build, Test and Push Changed CincoDeBio Core Services to Dockerhub with Versioning
 
 on:
   workflow_dispatch:
   push:
     branches:
-      - main    # Triggers on direct pushes to main
+      - main # Triggers on direct pushes to main
     paths:
-    - 'services/**'
+      - 'services/**'
   pull_request:
     types:
-      - closed    # Trigger when PR is closed
+      - closed # Trigger when PR is closed
     branches:
-      - main     # Only for PRs targeting main branch
+      - main # Only for PRs targeting main branch
     paths:
-    - 'services/**'
+      - 'services/**'
 
 jobs:
   build:
@@ -22,33 +22,43 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
-          fetch-depth: 2   # Need at least 2 commits to compare changes
-
-      - name: Get changed files
-        id: changed-files
-        run: |
-          echo "::set-output name=all_changed_files::$(git diff --name-only HEAD^ HEAD | tr '\n' ' ')"
+          fetch-depth: 0 # Fetch full history to manage versions
 
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v1
+        uses: docker/setup-buildx-action@v3
 
       - name: Login to DockerHub
-        uses: docker/login-action@v1
+        uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
+      - name: Get changed files
+        id: changed-files
+        run: |
+          echo "all_changed_files=$(git diff --name-only HEAD^ HEAD | tr '\n' ' ')" >> $GITHUB_OUTPUT
+
+      - name: Prepare version tracking
+        id: version-tracking
+        run: |
+          # Ensure version tracking file exists
+          mkdir -p .versions
+          touch .versions/image_versions.json
+
       - name: Build and push changed images
         run: |
+          # Load existing versions
+          versions_file=".versions/image_versions.json"
+          
           # Get all changed files
           CHANGED_FILES="${{ steps.changed-files.outputs.all_changed_files }}"
           
           # Find all Dockerfiles
           for dockerfile in $(find . -name Dockerfile); do
             dir_of_image=$(dirname $dockerfile)
-            relative_dir=${dir_of_image#./}  # Remove leading ./
+            relative_dir=${dir_of_image#./} # Remove leading ./
             
             # Check if any files in this directory have changed
             if echo "$CHANGED_FILES" | grep -q "$relative_dir"; then
@@ -56,14 +66,38 @@ jobs:
               image_name=${image_name//\//-}
               docker_image_name="${image_name//[^a-zA-Z0-9]/-}"
               
+              # Skip rpy2-base-image
               if [[ $docker_image_name != "rpy2-base-image" ]]; then
+                # Get current version or start at 0.1.0
+                current_version=$(jq -r --arg img "$docker_image_name" '.[$img] // "0.1.0"' "$versions_file")
+                
+                # Increment version (simple semver increment)
+                IFS='.' read -r major minor patch <<< "$current_version"
+                new_version="${major}.${minor}.$((patch + 1))"
+                
                 echo "Changes detected in $relative_dir"
                 echo "Building $docker_image_name"
+                
+                # Build and push with new version and latest
                 docker buildx build --platform linux/amd64,linux/arm64 \
+                  -t ${{ secrets.DOCKERHUB_USERNAME }}/$docker_image_name:$new_version \
                   -t ${{ secrets.DOCKERHUB_USERNAME }}/$docker_image_name:latest \
                   $dir_of_image --push
+                
+                # Update version tracking
+                jq --arg img "$docker_image_name" --arg ver "$new_version" \
+                  '.[$img] = $ver' "$versions_file" > "${versions_file}.tmp" \
+                  && mv "${versions_file}.tmp" "$versions_file"
               fi
             else
               echo "No changes in $relative_dir - skipping build"
             fi
           done
+
+      - name: Commit version tracking
+        run: |
+          git config user.name "${{ github.actor }}"
+          git config user.email "${{ github.actor }}@users.noreply.github.com"
+          git add .versions/image_versions.json
+          git commit -m "Update image versions" || echo "No changes to commit"
+          git push
