@@ -43,6 +43,10 @@ def do_work(ch, method_frame, body):
     logging.warning(payload["workflow_id"])
     logging.warning(payload["model"])
     payload["external_url"]
+    if "v2" in payload:
+        v2 = True
+    else:
+        v2 = False
 
     res = requests.get(f"{SIB_MANAGER_ADDRESS}/get-sib-map")
 
@@ -53,7 +57,8 @@ def do_work(ch, method_frame, body):
         model = payload["model"],
         workflow_id=payload["workflow_id"],
         sib_mapping=sib_map,
-        cdb_external_url=payload["external_url"]
+        cdb_external_url=payload["external_url"],
+        v2=v2
         
     )
 

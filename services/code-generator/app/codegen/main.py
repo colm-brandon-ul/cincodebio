@@ -23,10 +23,11 @@ class HippoFlowCodegenrator:
             cdb_external_url (str): The URL via which cdb can be accessed externally.
             sib_mapping (dict): A dictionary mapping SIBs to its correct concepts and i/o values to the correct json strcuture (i.e.).
         """
+        parsed_model = None
 
         # Parse the model - returns a dictionary of all the parsed data
         if v2:
-            HippoFlowTransformerV2.transform(json.loads(model))
+            parsed_model = HippoFlowTransformerV2.transform(json.loads(model))
         else:
             parsed_model = HippoFlowParser.parse_model_file(model)
 
