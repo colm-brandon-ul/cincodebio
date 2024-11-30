@@ -23,7 +23,8 @@ def get_sib_details() -> Tuple[List, List, List]:
     """
         This function retrieves the latest, installed, and rest SIBs from the SIB Manager service.
     """
-    health = get_health(f'http://{SIB_MANAGER_SERVICE_HOST}/sib-manager-state')
+    health = get_health(f'http://{SIB_MANAGER_SERVICE_HOST}/health')
+    logging.warning(f"Health: {health}")
     if health["status"] == "unhealthy":
         return [], [], []
 

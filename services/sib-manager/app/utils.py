@@ -1,13 +1,15 @@
 # Standrad imports
 from typing import Dict, List, Tuple, Union
+from urllib.parse import urljoin,urlparse
 import jinja2
 import requests
 from requests.auth import HTTPBasicAuth
 import json
 import logging
+import pprint
+import json
 # Relative imports
 from k8s_interface import get_available_architectures
-import concurrent.futures
 
 # System ENV
 ALLOW_EMULATION = False
@@ -17,8 +19,7 @@ from config import (
     DH_AUTH_ENDPOINT,
     DH_API_ENDPOINT,
     DOCKER_HUB_USERNAME as username,
-    DOCKER_HUB_PASSWORD as password,
-    MAX_WORKERS
+    DOCKER_HUB_PASSWORD as password
 )
 
 # Need to get auth env variables for Docker Hub
@@ -77,7 +78,7 @@ def get_repo_from_namespace_dh(namespace: str) -> List[Dict]:
     print(f'NUM REPOS: {len(repositories)}')
 
     if 'next' in response.json().keys():
-        while response.json()['next'] is not None:
+        while response.json()['next'] != None:
             response = requests.get(response.json()['next'])
             response.raise_for_status()
             if response.status_code == 200:
@@ -91,7 +92,7 @@ def get_repo_from_namespace_dh(namespace: str) -> List[Dict]:
     # Filter out the non-image repositories
     for repo in repositories:
         # for some reason the images type is set to none rather than image (need to resolve this in future)
-        if  repo['is_private'] is False:
+        if  repo['is_private'] == False:
             relevant_repos.append({
                 'name': repo['name'],
                 'namespace': namespace,
@@ -126,7 +127,7 @@ def get_tags_from_repo_dh(repository: Dict) -> List:
     print(f'NUM TAGS: {len(tags)}')
 
     if 'next' in response.json().keys():
-            while response.json()['next'] is not None:
+            while response.json()['next'] != None:
                 response = requests.get(response.json()['next'])
                 print(response.status_code)
                 response.raise_for_status()
@@ -179,7 +180,7 @@ def retrieve_valid_cdb_images(
     # ensure the request was successful
     try:
         res.raise_for_status()
-    except requests.exceptions.HTTPError:
+    except requests.exceptions.HTTPError as e:
         logging.error(f"Error retrieving manifest for {namespace}/{repository}:{tag}")
         return None
 
@@ -213,7 +214,7 @@ def retrieve_valid_cdb_images(
         # ensure the request was successful
         try:
             res.raise_for_status()
-        except requests.exceptions.HTTPError:
+        except requests.exceptions.HTTPError as e:
             logging.error(f"Error retrieving manifest for {namespace}/{repository}:{tag}")
             return None
 
@@ -345,76 +346,46 @@ def extract_cdb_labels(blob: Dict[str, str]) -> Dict[str, str]:
     else:
         return None
     
-def process_repo_tags(repo: Dict, supported_architectures: List[str]) -> List[Dict]:
-    """
-    Process tags for a single repository in parallel.
-    """
-    valid_images = []
-    try:
-        # Get tags for the repository
-        repo_tags = get_tags_from_repo_dh(repo)
-        
-        # Get token for the repository
-        token = get_dh_api_token_for_repo(repo['namespace'], repo['name'])
-
-        # Process tags in parallel
-        with concurrent.futures.ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor:
-            # Create futures for each tag
-            tag_futures = {
-                executor.submit(
-                    retrieve_valid_cdb_images, 
-                    token=token,
-                    namespace=repo['namespace'],
-                    repository=repo['name'],
-                    tag=tag,
-                    available_architectures=supported_architectures
-                ): tag 
-                for tag in repo_tags
-            }
-
-            # Collect valid images
-            for future in concurrent.futures.as_completed(tag_futures):
-                img_obj = future.result()
-                if img_obj is not None:
-                    valid_images.append(img_obj)
-
-    except Exception as e:
-        logging.error(f"Error processing repository {repo['name']}: {e}")
-
-    return valid_images
-    
     
     # Rest of the code...
-def get_valid_images_from_namespace(namespace: str) -> Tuple[List[Dict], List[Dict]]:
+def get_valid_images_from_namespace(namespace: str) -> Tuple[List,List]:
     """
-    Retrieves the valid images from a given namespace with parallel processing.
+    Retrieves the valid images from a given namespace.
+
+    Args:
+        namespace (str): The namespace to retrieve the images from.
+
+    Returns:
+        tuple: A tuple containing two lists. The first list contains the latest images, 
+               while the second list contains the rest of the images.
     """
-    # Get supported architectures from k8s cluster
+
+    # Get support archs from k8s cluster
     supported_architectures = get_available_architectures()
-
-    # Get repositories
     repos = get_repo_from_namespace_dh(namespace=namespace)
+    latest_images = []
+    rest_of_images = []
 
-    # Process repositories in parallel
-    with concurrent.futures.ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor:
-        # Create futures for each repository
-        repo_futures = {
-            executor.submit(
-                process_repo_tags, 
-                repo=repo, 
-                supported_architectures=supported_architectures
-            ): repo 
-            for repo in repos
-        }
+    for repo in repos:
+        repo['tags'] = get_tags_from_repo_dh(repo)
+        for tag in repo['tags']:
 
-        # Collect images
-        all_images = []
-        for future in concurrent.futures.as_completed(repo_futures):
-            all_images.extend(future.result())
+           # returns a dict with the image and the labels    
+           img_obj = retrieve_valid_cdb_images(
+                token=get_dh_api_token_for_repo(repo['namespace'], repo['name']),
+                namespace=repo['namespace'],
+                repository=repo['name'],
+                tag=tag,
+                available_architectures=supported_architectures
+            )
+           
+           if img_obj != None:
+               if tag == 'latest':
+                   latest_images.append(img_obj)
+               else:
+                   rest_of_images.append(img_obj)
 
-    # Separate latest and other images
-    latest_images = [img for img in all_images if img.get('tag') == 'latest']
-    rest_of_images = [img for img in all_images if img.get('tag') != 'latest']
+
 
     return latest_images, rest_of_images
 
