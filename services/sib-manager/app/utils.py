@@ -76,7 +76,7 @@ def get_repo_from_namespace_dh(namespace: str) -> List[Dict]:
     print(f'NUM REPOS: {len(repositories)}')
 
     if 'next' in response.json().keys():
-        while response.json()['next'] != None:
+        while response.json()['next'] is not None:
             response = requests.get(response.json()['next'])
             response.raise_for_status()
             if response.status_code == 200:
@@ -90,7 +90,7 @@ def get_repo_from_namespace_dh(namespace: str) -> List[Dict]:
     # Filter out the non-image repositories
     for repo in repositories:
         # for some reason the images type is set to none rather than image (need to resolve this in future)
-        if  repo['is_private'] == False:
+        if  repo['is_private'] is False:
             relevant_repos.append({
                 'name': repo['name'],
                 'namespace': namespace,
@@ -125,7 +125,7 @@ def get_tags_from_repo_dh(repository: Dict) -> List:
     print(f'NUM TAGS: {len(tags)}')
 
     if 'next' in response.json().keys():
-            while response.json()['next'] != None:
+            while response.json()['next'] is not None:
                 response = requests.get(response.json()['next'])
                 print(response.status_code)
                 response.raise_for_status()
@@ -413,8 +413,15 @@ def get_valid_images_from_namespace(namespace: str) -> Tuple[List[Dict], List[Di
             all_images.extend(future.result())
 
     # Separate latest and other images
-    latest_images = [img for img in all_images if img.pop('tag') == 'latest']
-    rest_of_images = [img for img in all_images if img.pop('tag') != 'latest']
+    latest_images = [
+    {k: v for k, v in img.items() if k != 'tag'}
+    for img in all_images if img.get('tag') == 'latest'
+    ]
+
+    rest_of_images = [
+        {k: v for k, v in img.items() if k != 'tag'}
+        for img in all_images if img.get('tag') != 'latest'
+    ]
 
     return latest_images, rest_of_images
 
