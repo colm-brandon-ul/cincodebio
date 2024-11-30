@@ -341,7 +341,7 @@ def resolve_sib_library_changes(current_sib_library: List, new_sib_library: List
 
 def get_new_ime_sib_library(current_sib_library: List, new_sib_library: List) -> Dict:
     return {
-    "id" : get_cinco_entity_id(),
+    "id" : _get_cinco_entity_id(),
     "services": resolve_sib_library_changes(current_sib_library, new_sib_library)
     }
 
