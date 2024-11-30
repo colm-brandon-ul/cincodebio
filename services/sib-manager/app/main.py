@@ -19,9 +19,6 @@ from internal import router as internal_router
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 from kubernetes import config
-
-
-
 import logging
 
 
