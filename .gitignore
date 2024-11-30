@@ -138,3 +138,4 @@ deployment_scripts/
 test.html
 execution-env-v2/
 local_playground/
+.ruff/*

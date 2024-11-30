@@ -387,7 +387,7 @@ def code_gen(template_env: jinja2.Environment, sib_library: Dict) -> Tuple[str, 
     )
 
     # use the v1 template for cinco desktop
-    libs_dot_sibs_v1 = template_env.get_template("template.sib.j2").render(
+    libs_dot_sibs_v1 = template_env.get_template("template.sibs.j2").render(
     siblibrary=sib_library
     )
 
