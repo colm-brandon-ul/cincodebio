@@ -41,7 +41,7 @@ def get_api_data_models() -> List[Dict]:
         if response.status_code == 200:
             return response.json()
     except requests.exceptions.RequestException:
-        pass
+        raise Exception("Failed to retrieve data models from the ontology manager")
 
 
 def update_code_gen_maps(new_sib_maps: dict) -> bool:
@@ -114,7 +114,6 @@ def initial_build_service_api(dh_namespace: str) -> bool:
         service_models=latest,
         data_models= data_models
     )
-
 
     # Need to create the docker context
     # Read the Dockerfile, k8s jobs and requirements.txt from static_code dir
@@ -377,3 +376,5 @@ def update_service_api_and_sibs(to_be_installed_sibs: List) -> bool:
 
 
     
+if __name__ == "__main__":
+    initial_build_service_api(dh_namespace="sccecellmaps")

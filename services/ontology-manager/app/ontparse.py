@@ -400,7 +400,7 @@ class OWLParser(Serializable):
                                 [attri_edges.append((change_ns(k),change_ns(_v),{'edge_type': k_})) for _v in v_]
                             elif type(v_) == dict:
                                 # filter out python types
-                                if type(v_['type']) != type:
+                                if type(v_['type']) is not type:
                                     attri_edges.append((change_ns(k),change_ns(v_['type']),{'edge_type': k_}))
                                     ...
                                 else:
