@@ -1,3 +1,9 @@
+from config import WORKFLOW_LOG_PATH, EXECUTION_INGRESS_PATH, SERVICES_INGRESS_PATH
+from models import Workflow, WorkflowState, WorkflowStatus
+from handlers import get_workflow_from_db_by_id, insert_new_workflow_to_db, create_workflow_log_file, model_submission_handler
+from ws import ConnectionManager
+from db import get_db_client
+
 from typing import List
 from fastapi import APIRouter, WebSocket, WebSocketDisconnect
 from fastapi import BackgroundTasks, Request, UploadFile, File
@@ -5,11 +11,7 @@ from fastapi.responses import JSONResponse
 import logging
 from fastapi import status
 
-from config import WORKFLOW_LOG_PATH, EXECUTION_INGRESS_PATH, SERVICES_INGRESS_PATH
-from models import Workflow, WorkflowState, WorkflowStatus
-from handlers import get_workflow_from_db_by_id, insert_new_workflow_to_db, create_workflow_log_file, model_submission_handler
-from ws import ConnectionManager
-from db import get_db_client
+
 
 router = APIRouter()
 manager = ConnectionManager()

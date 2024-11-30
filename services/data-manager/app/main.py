@@ -1,3 +1,8 @@
+
+from config import BASE_DIR
+from external import router as external_router
+from internal import router as internal_router
+
 from pathlib import Path
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
@@ -5,12 +10,6 @@ from jinja2 import Environment, FileSystemLoader
 
 
 # For creating a zip file
-
-
-from config import BASE_DIR
-
-from external import router as external_router
-from internal import router as internal_router
 
 app = FastAPI()
 env = Environment(loader=FileSystemLoader(Path(BASE_DIR,"templates")))

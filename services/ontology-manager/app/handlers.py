@@ -1,9 +1,9 @@
-from typing import List
 from apigen import ApiDataModelCodeGen
 from formgen import FormGen
 from models import FormSchema, ModelSchema, OntologyState
-# parse new ontology.
 from config import PERSISTENT_STATE_MOUNT_PATH, ONTOLOGY_STATE_FILE
+
+from typing import List
 import pickle
 import logging
 import os

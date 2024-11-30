@@ -1,14 +1,4 @@
-from fastapi import FastAPI
-from fastapi.staticfiles import StaticFiles
-
-# from minio import Minio
-from kubernetes import config
-# ONTOLOGY_VERSION = "0.1.0"
-
-
-import logging
 import handlers
-
 # Set up the Jinja environment
 # This is relative to the working directorty not where the python script is.
 # workdir needs to be set to the root of the project (i.e. app)
@@ -23,9 +13,17 @@ from config import (
     ONTOLOGY_MANAGER_SERVICE_HOST,
     ONTOLOGY_MANAGER_SERVICE_PORT
 )
-
 from external import router as external_router
 from internal import router as internal_router
+
+from fastapi import FastAPI
+from fastapi.staticfiles import StaticFiles
+from kubernetes import config
+
+
+
+import logging
+
 
 app = FastAPI()
 app.include_router(external_router, prefix="/ext")

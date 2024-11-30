@@ -1,3 +1,8 @@
+from codegen.main import HippoFlowCodegenrator
+from config import (EXECUTION_ADDRESS, EXECUTION_API_ADDRESS, SIB_MANAGER_ADDRESS, 
+                    RABBIT_MQ_HOST, RABBIT_MQ_PORT, EXCHANGE_NAME, EXCHANGE_TYPE, 
+                    CODE_GEN_ROUTING_KEY, RABBITMQ_USERNAME, RABBITMQ_PASSWORD)
+
 # Job Management Imports
 import pika
 import threading
@@ -8,10 +13,7 @@ import json
 import logging 
 import time 
 
-from codegen.main import HippoFlowCodegenrator
-from config import (EXECUTION_ADDRESS, EXECUTION_API_ADDRESS, SIB_MANAGER_ADDRESS, 
-                    RABBIT_MQ_HOST, RABBIT_MQ_PORT, EXCHANGE_NAME, EXCHANGE_TYPE, 
-                    CODE_GEN_ROUTING_KEY, RABBITMQ_USERNAME, RABBITMQ_PASSWORD)
+
 
 # K8s Service Discovery (ENV Variables)
 # my-service -> MY_SERVICE_SERVICE_HOST, MY_SERVICE_SERVICE_PORT

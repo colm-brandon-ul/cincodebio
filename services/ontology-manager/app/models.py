@@ -1,7 +1,8 @@
+from utils import Serializable
+
 from enum import Enum
 from typing import List, Dict, Any, Optional
 from pydantic import BaseModel, ConfigDict, Field, RootModel
-from utils import Serializable
 
 class FileDetails(BaseModel):
     model_config = ConfigDict(from_attributes=True)

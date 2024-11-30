@@ -1,8 +1,8 @@
+from config import SIB_MANAGER_SERVICE_HOST, ONTOLOGY_MANAGER_SERVICE_HOST
+
 from typing import Dict, List, Tuple
 import requests
 import logging
-# from config import 
-from config import SIB_MANAGER_SERVICE_HOST, ONTOLOGY_MANAGER_SERVICE_HOST
 
 def get_form_details() -> dict:
     """

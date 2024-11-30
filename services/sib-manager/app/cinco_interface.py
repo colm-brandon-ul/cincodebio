@@ -1,10 +1,11 @@
+from config import (PERSISTENT_STATE_MOUNT_PATH,UTD_SIB_FILE)
+
 import hashlib
 import re
 from typing import Dict, List, Tuple
-
 import jinja2
 import pathlib
-from config import (PERSISTENT_STATE_MOUNT_PATH,UTD_SIB_FILE)
+
 
 OS_REGEX = re.compile(r'\((.*?)\;')
 EXCLUDED_LABELS = ['id','label_id']

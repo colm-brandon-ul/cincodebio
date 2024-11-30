@@ -1,3 +1,8 @@
+from config import (EXECUTION_API_INGRESS_PATH, DATA_MANAGER_API_INGRESS, 
+                    SIB_MANAGER_API_INGRESS, BASE_DIR)
+from ws import ConnectionManager
+from handlers import get_health, get_form_details, get_sib_details
+
 import json
 import logging
 from pathlib import Path
@@ -5,12 +10,6 @@ from fastapi import FastAPI, Request, WebSocket, WebSocketDisconnect
 from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from jinja2 import Environment, FileSystemLoader
-from config import (EXECUTION_API_INGRESS_PATH, DATA_MANAGER_API_INGRESS, 
-                    SIB_MANAGER_API_INGRESS, BASE_DIR)
-from ws import ConnectionManager
-from handlers import get_health, get_form_details, get_sib_details
-
-
 
 map2service = {
     'homepage': None,

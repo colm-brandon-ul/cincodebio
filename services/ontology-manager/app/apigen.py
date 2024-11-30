@@ -1,7 +1,8 @@
+from utils import Serializable
+
 from ontparse import OWLParser
 import rdflib
 import enum
-from utils import Serializable
 
 class DataModelType(str, enum.Enum):
     DataStructure = 'DataStructure'

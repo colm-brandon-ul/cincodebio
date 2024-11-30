@@ -2,10 +2,11 @@ from typing import Dict, List
 from config import (STATIC_CODE_DIR,PERSISTENT_STATE_MOUNT_PATH,LATEST_SIBS,
                   OTHER_SIBS,INSTALLED_SIBS, JINJA_ENV, CURRENT_SIBS_IME_JSON, 
                   SIB_MAP_FILE, UTD_SIB_FILE,UTD_SIB_FILE_V2, SERVICE_API_NAME, ONTOLOGY_MANAGER_SERVICE_HOST)
-import pathlib
 import utils
 import k8s_interface
 import cinco_interface
+
+import pathlib
 import json
 import logging
 import requests

@@ -1,14 +1,3 @@
-# Standrad imports
-from typing import Dict, List, Tuple, Union
-from urllib.parse import urljoin,urlparse
-import jinja2
-import requests
-from requests.auth import HTTPBasicAuth
-import json
-import logging
-import pprint
-import json
-# Relative imports
 from k8s_interface import get_available_architectures
 
 # System ENV
@@ -22,6 +11,14 @@ from config import (
     DOCKER_HUB_PASSWORD as password
 )
 
+# Standrad imports
+from typing import Dict, List, Tuple, Union
+import jinja2
+import requests
+from requests.auth import HTTPBasicAuth
+import json
+import logging
+# Relative imports
 # Need to get auth env variables for Docker Hub
 
 # DOCKER HUB REGISTRY FNS
@@ -180,7 +177,7 @@ def retrieve_valid_cdb_images(
     # ensure the request was successful
     try:
         res.raise_for_status()
-    except requests.exceptions.HTTPError as e:
+    except requests.exceptions.HTTPError:
         logging.error(f"Error retrieving manifest for {namespace}/{repository}:{tag}")
         return None
 
@@ -214,7 +211,7 @@ def retrieve_valid_cdb_images(
         # ensure the request was successful
         try:
             res.raise_for_status()
-        except requests.exceptions.HTTPError as e:
+        except requests.exceptions.HTTPError:
             logging.error(f"Error retrieving manifest for {namespace}/{repository}:{tag}")
             return None
 

@@ -1,14 +1,16 @@
+from config import (RABBIT_MQ_HOST, RABBIT_MQ_PORT, 
+                    RABBITMQ_USERNAME, RABBITMQ_PASSWORD, 
+                    EXCHANGE_NAME, EXCHANGE_TYPE, ROUTING_KEY)
+from models import JobState, UpdateWorkflow, Workflow
+from db import get_db_client
+
 import logging
 import pika
 import os
 from fastapi.encoders import jsonable_encoder
 import json
 
-from config import (RABBIT_MQ_HOST, RABBIT_MQ_PORT, 
-                    RABBITMQ_USERNAME, RABBITMQ_PASSWORD, 
-                    EXCHANGE_NAME, EXCHANGE_TYPE, ROUTING_KEY)
-from models import JobState, UpdateWorkflow, Workflow
-from db import get_db_client
+
 
 # Function to dispatch model to code generator
 def model_submission_handler(workflow_id: str, model: str, external_url: str):

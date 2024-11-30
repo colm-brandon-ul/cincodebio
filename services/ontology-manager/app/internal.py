@@ -1,7 +1,8 @@
-from fastapi import APIRouter
-from typing import List
 from models import FormSchema, ModelSchema
 from handlers import handle_form_schema_gen, handle_api_data_model_gen
+
+from fastapi import APIRouter
+from typing import List
 
 router = APIRouter()
 

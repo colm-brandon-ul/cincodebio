@@ -1,12 +1,11 @@
+from .models import CreateJobState, UpdateJobState, JobState
+from .config import (MONGODB_HOST, MONGODB_PORT, JOBS_DB, JOBS_COLLECTION, EXECUTION_ADDRESS)
+
 # Job Management Imports
 from typing import List
 from fastapi import BackgroundTasks, FastAPI, HTTPException, Request
 from fastapi.responses import JSONResponse
 from fastapi.encoders import jsonable_encoder
-
-
-from .models import CreateJobState, UpdateJobState, JobState
-from .config import (MONGODB_HOST, MONGODB_PORT, JOBS_DB, JOBS_COLLECTION, EXECUTION_ADDRESS)
 
 import requests 
 import json
