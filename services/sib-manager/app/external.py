@@ -52,7 +52,6 @@ def get_utd_sib_file(request: Request):
     
     # check if user is using Windows (then convert newlines to CRLF)
     if check_if_windows(user_agent):
-        
         return UtdSibFileResponse(
                 file=convert_newlines(state_path / UTD_SIB_FILE)
             )
