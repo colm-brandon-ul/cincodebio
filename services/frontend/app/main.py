@@ -101,11 +101,13 @@ async def render_front_end(request: Request, workflow_id: str):
     # Create the appropriate WS address
     ws_address = f"{request.base_url.__str__().replace('http','ws')}/{EXECUTION_API_INGRESS_PATH}/ext/state/ws/{workflow_id}"
     template = env.get_template("execution_template.html.j2")
-    template.render(request=request,
+    html_content = template.render(request=request,
                                    service_name="workflow_manager",
                                    execution_api_address=execution_api_address,
                                    data_manager_address=data_manager_address,
                                    ws_address=ws_address)
+    
+    return HTMLResponse(content=html_content)
     
 
 @app.websocket("/ws/healthcheck")
