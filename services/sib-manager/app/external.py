@@ -1,5 +1,5 @@
 from config import (PERSISTENT_STATE_MOUNT_PATH, UTD_SIB_FILE, 
-                    INSTALLED_SIBS, OTHER_SIBS, UTD_SIB_FILE_V2)
+                    INSTALLED_SIBS, OTHER_SIBS, CINCO_CLOUD_SIBS_PATH, SIB_FILE_EXTENSION)
 from models import (CheckSibFileHashRequest, CheckSibFilesHashesRequest,HashValid, CheckSibFilesHashesResponse,UtdSibFileResponse, UtdSibFilesRequest, UtdSibFilesResponse)
 import handlers
 from cinco_interface import compute_local_hash, convert_newlines, check_if_windows
@@ -61,21 +61,40 @@ def get_utd_sib_file(request: Request):
                 file=f.read()
             )
     
+@router.get("/get-missing-sib-files", response_model=UtdSibFilesResponse)
+def get_missing_sib_files(body: UtdSibFilesRequest,request: Request):
+    files = {}
+    state_path = pathlib.Path(CINCO_CLOUD_SIBS_PATH)
+    sib_files = list(state_path.glob(SIB_FILE_EXTENSION))
+    for fid in sib_files:
+        if fid.name in body.file_ids:
+            ...
+        else: 
+            with open(fid , 'r') as f:
+                files[fid.name]=(f.read())
+       
+    return UtdSibFilesResponse(
+                files=files
+            )
+
 @router.get("/get-utd-sib-files", response_model=UtdSibFilesResponse)
 def get_utd_sib_files(body: UtdSibFilesRequest,request: Request):
-    files = []
-    state_path = pathlib.Path(PERSISTENT_STATE_MOUNT_PATH)
+    files = {}
+    state_path = pathlib.Path(CINCO_CLOUD_SIBS_PATH)
+    sib_files = list(state_path.glob(SIB_FILE_EXTENSION))
     for fid in body.file_ids:
-        # get the file and return it
-        with open(state_path / UTD_SIB_FILE_V2 , 'r') as f:
-            files.append(f.read())
+        if fid.name in sib_files:
+            ...
+        else: 
+            with open(fid , 'r') as f:
+                files[fid.name]=(f.read())
        
     return UtdSibFilesResponse(
                 files=files
             )
 
 # --- ENDPOINTS FOR THE SIB Manager --
-@router.get("sync-sibs-with-registry")
+@router.get("/sync-sibs-with-registry")
 def sync_sibs_with_registry():
     # get the latest sibs from the registry (and overwrite the local state)
 

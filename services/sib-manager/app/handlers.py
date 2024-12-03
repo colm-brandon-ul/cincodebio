@@ -1,7 +1,8 @@
 from typing import Dict, List
 from config import (STATIC_CODE_DIR,PERSISTENT_STATE_MOUNT_PATH,LATEST_SIBS,
                   OTHER_SIBS,INSTALLED_SIBS, JINJA_ENV, CURRENT_SIBS_IME_JSON, 
-                  SIB_MAP_FILE, UTD_SIB_FILE,UTD_SIB_FILE_V2, SERVICE_API_NAME, ONTOLOGY_MANAGER_SERVICE_HOST)
+                  SIB_MAP_FILE, UTD_SIB_FILE,UTD_SIB_FILE_V2, SERVICE_API_NAME, 
+                  ONTOLOGY_MANAGER_SERVICE_HOST, CINCO_CLOUD_SIBS_PATH)
 import utils
 import k8s_interface
 import cinco_interface
@@ -88,6 +89,7 @@ def initial_build_service_api(dh_namespace: str) -> bool:
     """
     static_path = pathlib.Path(STATIC_CODE_DIR)
     state_path = pathlib.Path(PERSISTENT_STATE_MOUNT_PATH)
+    cc_sib_state_path = pathlib.Path(CINCO_CLOUD_SIBS_PATH)
     # Retrieve the set of sibs available from DH
     logging.warning("Retrieving the set of sibs available from DH")
     latest, rest = utils.get_valid_images_from_namespace(dh_namespace)
@@ -170,7 +172,7 @@ def initial_build_service_api(dh_namespace: str) -> bool:
             with open(state_path / UTD_SIB_FILE, "w") as f:
                 f.write(new_lib_dot_sibs)
 
-            with open(state_path / UTD_SIB_FILE_V2, "w") as f:
+            with open(cc_sib_state_path / UTD_SIB_FILE_V2, "w") as f:
                 f.write(new_lib_dot_sibs_v2)
 
             # Write the new sib schema to the current sib schema file
@@ -208,6 +210,7 @@ def check_if_local_state_exists() -> bool:
     """
 
     state_path = pathlib.Path(PERSISTENT_STATE_MOUNT_PATH)
+    cc_sib_state_path = pathlib.Path(CINCO_CLOUD_SIBS_PATH)
     try:
         with open(state_path / LATEST_SIBS, "r") as f:
             json.load(f)
@@ -224,7 +227,7 @@ def check_if_local_state_exists() -> bool:
         with open(state_path / UTD_SIB_FILE, "r") as f:
             f.read()
 
-        with open(state_path / UTD_SIB_FILE_V2, "r") as f:
+        with open(cc_sib_state_path / UTD_SIB_FILE_V2, "r") as f:
             f.read()
 
         return True
@@ -273,6 +276,7 @@ def update_service_api_and_sibs(to_be_installed_sibs: List) -> bool:
     
     static_path = pathlib.Path(STATIC_CODE_DIR)
     state_path = pathlib.Path(PERSISTENT_STATE_MOUNT_PATH)
+    cc_sib_state_path = pathlib.Path(CINCO_CLOUD_SIBS_PATH)
 
     data_models = get_api_data_models()
 
@@ -341,10 +345,10 @@ def update_service_api_and_sibs(to_be_installed_sibs: List) -> bool:
                 new_ime_sib_library_schema)
 
             # Write the new lib.sibs to the static code dir
-            with open(static_path / UTD_SIB_FILE, "w") as f:
+            with open(state_path / UTD_SIB_FILE, "w") as f:
                 f.write(new_lib_dot_sibs_v1)
 
-            with open(static_path / UTD_SIB_FILE_V2, "w") as f:
+            with open(cc_sib_state_path / UTD_SIB_FILE_V2, "w") as f:
                 f.write(new_lib_dot_sibs_v2)
 
 
