@@ -102,7 +102,7 @@ spec:
       secretName: "letsencrypt-secret-{{ .Values.serverTier }}"
       {{- end }}
   rules:
-  - host:
+  - host: {{ .Values.hostname }}
   - http:
       paths:
       # Definitely needs to be available outside the cluster
