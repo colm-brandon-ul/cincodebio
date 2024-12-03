@@ -100,11 +100,9 @@ global:
     jobs_api_ingress_path: 'jobs-api'
     minio_console_ingress_path: 'minio-console'
     minio_presigned_ingress_path: 'minio-presigned'
-
   application_namespace: "default"
   workflow_log_path: "data/workflow-logs"
   dps_name_space: "dataprocessing-service-namespace"
-
 hostname: "cdb.local"
 ingress_class: "public"
 serverTier: "production"
