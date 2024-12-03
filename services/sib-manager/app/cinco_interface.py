@@ -1,4 +1,4 @@
-from config import (PERSISTENT_STATE_MOUNT_PATH,UTD_SIB_FILE, UTD_SIB_FILE_V2)
+from config import (PERSISTENT_STATE_MOUNT_PATH,UTD_SIB_FILE, UTD_SIB_FILE_V2, CINCO_CLOUD_SIBS_PATH)
 
 import hashlib
 import re
@@ -52,8 +52,9 @@ def compute_local_hash(v2: bool = True) -> tuple[str, str]:
     """
     # read the file
     state_path = pathlib.Path(PERSISTENT_STATE_MOUNT_PATH)
+    cinco_cloud_state_path = pathlib.Path(CINCO_CLOUD_SIBS_PATH)
     if v2:
-        with open(state_path / UTD_SIB_FILE_V2, 'r') as f:
+        with open(cinco_cloud_state_path / UTD_SIB_FILE_V2, 'r') as f:
             og_str = f.read()
     else:
         with open(state_path / UTD_SIB_FILE, 'rb') as f:
