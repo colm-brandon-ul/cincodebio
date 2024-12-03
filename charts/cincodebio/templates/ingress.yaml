@@ -4,11 +4,20 @@ metadata:
   name: frontend-ingress
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /$1
-    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    # nginx.ingress.kubernetes.io/ssl-redirect: "false"
     nginx.ingress.kubernetes.io/enable-rewrite-log: "true"
+    cert-manager.io/issuer: "letsencrypt-{{ .Values.serverTier }}"
 spec:
+  tls:
+    - hosts:
+        - {{ .Values.hostname }}
+      {{- if eq .Values.serverTier "local" }}
+      secretName: "cincodebio-local-cert-secret"
+      {{- else }}
+      secretName: "letsencrypt-secret-{{ .Values.serverTier }}"
+      {{- end }}
   rules:
-  - host:
+  - host: {{ .Values.hostname }}
   - http:
       paths:
       - path: /app/(.*)
@@ -35,6 +44,7 @@ metadata:
   name: minio-presigned-ingress
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /$1
+    cert-manager.io/issuer: "letsencrypt-{{ .Values.serverTier }}"
     nginx.ingress.kubernetes.io/ssl-redirect: "false"
     nginx.ingress.kubernetes.io/enable-rewrite-log: "true"
     nginx.ingress.kubernetes.io/proxy-body-size: "0"
@@ -50,8 +60,16 @@ metadata:
       proxy_set_header Connection "";
       chunked_transfer_encoding off;
 spec:
+  tls:
+    - hosts:
+        - {{ .Values.hostname }}
+      {{- if eq .Values.serverTier "local" }}
+      secretName: "cincodebio-local-cert-secret"
+      {{- else }}
+      secretName: "letsencrypt-secret-{{ .Values.serverTier }}"
+      {{- end }}
   rules:
-  - host:
+  - host: {{ .Values.hostname }}
   - http:
       paths:
       # Definitely needs to be available outside the cluster
@@ -71,9 +89,18 @@ metadata:
   name: api-ingress
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /ext/$1
-    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    # nginx.ingress.kubernetes.io/ssl-redirect: "false"
     nginx.ingress.kubernetes.io/enable-rewrite-log: "true"
+    cert-manager.io/issuer: "letsencrypt-{{ .Values.serverTier }}"
 spec:
+  tls:
+    - hosts:
+        - {{ .Values.hostname }}
+      {{- if eq .Values.serverTier "local" }}
+      secretName: "cincodebio-local-cert-secret"
+      {{- else }}
+      secretName: "letsencrypt-secret-{{ .Values.serverTier }}"
+      {{- end }}
   rules:
   - host:
   - http:
