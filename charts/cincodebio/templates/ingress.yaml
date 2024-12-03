@@ -59,6 +59,8 @@ metadata:
       proxy_set_header X-Forwarded-Proto $scheme;
       proxy_set_header Connection "";
       chunked_transfer_encoding off;
+      # Force external HTTPS for presigned URL handling
+      more_set_headers "X-Forwarded-Proto: https";
 spec:
   tls:
     - hosts:
@@ -72,7 +74,6 @@ spec:
   - host: {{ .Values.hostname }}
     http:
       paths:
-      # Definitely needs to be available outside the cluster
       - path: /{{ .Values.global.ingress_paths.minio_presigned_ingress_path }}/(.*)
         pathType: Prefix
         backend:
@@ -80,6 +81,7 @@ spec:
             name: {{ .Values.minio.fullnameOverride }}
             port:
               number: 9000
+
 
 # external access to apis
 ---
