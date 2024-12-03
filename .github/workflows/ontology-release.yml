@@ -3,6 +3,8 @@ name: Publish Ontology Versions
 on:
   workflow_dispatch:
   push:
+    branches:
+      - main
     paths:
       - "ontology/**/*.owl"
 
