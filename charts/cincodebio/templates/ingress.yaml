@@ -3,7 +3,7 @@ kind: Ingress
 metadata:
   name: frontend-ingress
   annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /$2
+    nginx.ingress.kubernetes.io/rewrite-target: /$1
     # nginx.ingress.kubernetes.io/ssl-redirect: "false"
     nginx.ingress.kubernetes.io/enable-rewrite-log: "true"
     cert-manager.io/issuer: "letsencrypt-{{ .Values.serverTier }}"
@@ -18,9 +18,9 @@ spec:
       {{- end }}
   rules:
   - host: {{ .Values.hostname }}
-  - http:
+    http:
       paths:
-      - path: /app(/|$)(.*)
+      - path: /app/(.*)
         pathType: Prefix
         backend:
           service:
@@ -70,7 +70,7 @@ spec:
       {{- end }}
   rules:
   - host: {{ .Values.hostname }}
-  - http:
+    http:
       paths:
       # Definitely needs to be available outside the cluster
       - path: /{{ .Values.global.ingress_paths.minio_presigned_ingress_path }}/(.*)
@@ -103,7 +103,7 @@ spec:
       {{- end }}
   rules:
   - host: {{ .Values.hostname }}
-  - http:
+    http:
       paths:
       # Definitely needs to be available outside the cluster
       - path: /{{ .Values.global.ingress_paths.execution_api_ingress_path }}/ext/(.*)
