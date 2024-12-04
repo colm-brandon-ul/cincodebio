@@ -90,12 +90,12 @@ def get_missing_sib_files(body: UtdSibFilesRequest,request: Request):
 def get_utd_sib_files(body: UtdSibFilesRequest,request: Request):
     files = {}
     state_path = pathlib.Path(CINCO_CLOUD_SIBS_PATH)
-    sib_files = list(state_path.glob(SIB_FILE_EXTENSION))
+    sib_files = [f.name for f in list(state_path.glob(SIB_FILE_EXTENSION))]
     for fid in body.file_ids:
-        if fid.name in sib_files:
+        if fid not in sib_files:
             ...
         else: 
-            with open(fid , 'r') as f:
+            with open(state_path / fid , 'r') as f:
                 files[fid.name]=(f.read())
        
     return UtdSibFilesResponse(
