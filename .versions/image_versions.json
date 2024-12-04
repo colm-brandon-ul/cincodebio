@@ -1,6 +1,6 @@
 {
   "sib-manager": "0.1.9",
-  "execution-api": "0.1.3",
+  "execution-api": "0.1.4",
   "ontology-manager": "0.1.1",
   "jobs-api": "0.1.1",
   "execution-environment": "0.1.1",
