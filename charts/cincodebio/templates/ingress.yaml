@@ -36,7 +36,6 @@ spec:
             name: {{ .Values.minio.fullnameOverride }}
             port:
               number: 9001
-
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -74,9 +73,6 @@ spec:
             name: {{ .Values.minio.fullnameOverride }}
             port:
               number: 9000
-
-
-# external access to apis
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
