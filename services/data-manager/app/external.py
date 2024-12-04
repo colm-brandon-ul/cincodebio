@@ -1,7 +1,7 @@
 from config import (MINIO_FQDN, MINIO_SERVICE_PORT_MINIO_CONSOLE, 
                     MINIO_WORKFLOW_BUCKET, MINIO_EXPERIMENT_BUCKET)
 from utils import (get_minio_client, get_minio_session_token, retrieve_prefix_for_job, 
-                   stream_file, make_external_url)
+                   stream_file)
 
 from fastapi import APIRouter, HTTPException
 from minio.commonconfig import Tags

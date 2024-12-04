@@ -4,7 +4,6 @@ from config import (JMS_ADDRESS, MINIO_FQDN, MINIO_SERVICE_PORT_MINIO_CONSOLE, M
 import requests
 import json
 import httpx
-from urllib.parse import urlparse
 from minio import Minio
 
 
