@@ -59,7 +59,7 @@ def presigned_upload_url(prefix: str, object_name: str , content_type: str, requ
     Returns:
         str: The presigned URL for uploading the object.
     """
-    client = get_minio_client(internal=True)
+    client = get_minio_client(internal=False)
 
     # need to do some validation on the object name (i.e. file extension, etc.)
 
