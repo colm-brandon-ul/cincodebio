@@ -32,7 +32,7 @@ def get_minio_client(internal: bool = True) -> Minio:
             MINIO_EXTERNAL_HOST,
             access_key=MINIO_ACCESS_KEY,
             secret_key=MINIO_SECRET_KEY,
-            secure=False,
+            secure=True,
         )
 
 
