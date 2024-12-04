@@ -1,5 +1,5 @@
 from config import (JMS_ADDRESS, MINIO_FQDN, MINIO_SERVICE_PORT_MINIO_CONSOLE, MINIO_ACCESS_KEY, 
-                    MINIO_SECRET_KEY, MINIO_SERVICE_PORT, MINIO_PRESIGNED_EXTERNAL_PATH, MINIO_EXTERNAL_HOST)
+                    MINIO_SECRET_KEY, MINIO_SERVICE_PORT, MINIO_EXTERNAL_HOST)
 
 import requests
 import json
@@ -35,27 +35,6 @@ def get_minio_client(internal: bool = True) -> Minio:
             secret_key=MINIO_SECRET_KEY,
             secure=False,
         )
-
-def make_external_url(request_base_url: str, presigned_url: str) -> str:
-    """
-    Constructs an presigned URL for accessing minio outside the cluster by replacing the netloc and path of the presigned URL with the base URL.
-
-    Args:
-        request_base_url (str): The base URL to be used as the netloc for the external URL.
-        presigned_url (str): The presigned URL to be modified.
-
-    Returns:
-        str: The modified external URL.
-
-    """
-    # Get the base url
-    base_url = urlparse(request_base_url)
-    # Get the presigned url
-    presigned = urlparse(presigned_url)
-    # Needs to use cluster IP and port for cluster ingress (on host machine)
-    # + it needs to base path i.e. minio-presigned/
-    return presigned._replace(netloc=base_url.netloc, path=f'{MINIO_PRESIGNED_EXTERNAL_PATH}{presigned.path}').geturl()
-
 
 
 def get_minio_session_token() -> requests.cookies.RequestsCookieJar:
