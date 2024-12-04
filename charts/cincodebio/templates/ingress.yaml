@@ -7,6 +7,7 @@ metadata:
     nginx.ingress.kubernetes.io/enable-rewrite-log: "true"
     cert-manager.io/issuer: "letsencrypt-{{ .Values.serverTier }}"
 spec:
+  ingressClassName: {{ .Values.ingress_class }}
   tls:
     - hosts:
         - {{ .Values.hostname }}
@@ -43,7 +44,6 @@ metadata:
   name: minio-presigned-ingress
   annotations:
     cert-manager.io/issuer: "letsencrypt-{{ .Values.serverTier }}"
-    kubernetes.io/ingress.class: nginx
     nginx.ingress.kubernetes.io/proxy-body-size: "0"
     nginx.ingress.kubernetes.io/proxy-buffering: "off"
     nginx.ingress.kubernetes.io/proxy-request-buffering: "off"
@@ -54,6 +54,7 @@ metadata:
     nginx.ingress.kubernetes.io/configuration-snippet: |
       chunked_transfer_encoding off;
 spec:
+  ingressClassName: {{ .Values.ingress_class }}
   tls:
     - hosts:
         - {{ .Values.minioHostname }}
@@ -87,6 +88,7 @@ metadata:
     nginx.ingress.kubernetes.io/enable-rewrite-log: "true"
     cert-manager.io/issuer: "letsencrypt-{{ .Values.serverTier }}"
 spec:
+  ingressClassName: {{ .Values.ingress_class }}
   tls:
     - hosts:
         - {{ .Values.hostname }}
