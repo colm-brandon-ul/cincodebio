@@ -1,4 +1,4 @@
-from config import WORKFLOW_LOG_PATH, EXECUTION_INGRESS_PATH, SERVICES_INGRESS_PATH
+from config import WORKFLOW_LOG_PATH, SERVICES_INGRESS_PATH
 from models import Workflow, WorkflowState, WorkflowStatus
 from handlers import get_workflow_from_db_by_id, insert_new_workflow_to_db, create_workflow_log_file, model_submission_handler
 from ws import ConnectionManager
@@ -38,7 +38,7 @@ async def root(request: Request, background_tasks: BackgroundTasks, model: Uploa
         workflow_id = uuid, 
         model = model_file, 
         # the external is for services front-ends to be accesible
-        external_url = f'{str(request.base_url).replace('http://','https://')}{SERVICES_INGRESS_PATH}',
+        external_url = f'{str(request.base_url).replace("http://","https://")}{SERVICES_INGRESS_PATH}',
         v2=v2)
     
     logging.info(f"Dispatched model to Code Generator for Workflow: {uuid}") 
