@@ -43,6 +43,8 @@ def submit_k8s_job(
 
     MINIO_PRESIGNED_INGRESS_PATH = os.environ.get('MINIO_PRESIGNED_INGRESS_PATH')
 
+    MINIO_EXTERNAL_HOST = os.environ.get('MINIO_EXTERNAL_HOST')
+
     try:
         # Create the Namespace if it doesn't exist
         namespace = client.V1Namespace(metadata=client.V1ObjectMeta(name=NAMESPACE))
@@ -117,6 +119,12 @@ def submit_k8s_job(
         client.V1EnvVar(
             name="MINIO_PRESIGNED_INGRESS_PATH",
             value=MINIO_PRESIGNED_INGRESS_PATH
+        ),
+        # this is the path to the presigned url ingress
+        # so that interactive frontends can access the presigned urls
+        client.V1EnvVar(
+            name="MINIO_EXTERNAL_HOST",
+            value=MINIO_EXTERNAL_HOST
         )
     ]
 

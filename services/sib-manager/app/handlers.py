@@ -90,6 +90,7 @@ def initial_build_service_api(dh_namespace: str) -> bool:
     static_path = pathlib.Path(STATIC_CODE_DIR)
     state_path = pathlib.Path(PERSISTENT_STATE_MOUNT_PATH)
     cc_sib_state_path = pathlib.Path(CINCO_CLOUD_SIBS_PATH)
+    cc_sib_state_path.mkdir(parents=True, exist_ok=True)
     # Retrieve the set of sibs available from DH
     logging.warning("Retrieving the set of sibs available from DH")
     latest, rest = utils.get_valid_images_from_namespace(dh_namespace)
