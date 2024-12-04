@@ -61,7 +61,7 @@ def get_utd_sib_file(request: Request):
                 file=f.read()
             )
     
-@router.get("/get-missing-sib-files", response_model=UtdSibFilesResponse)
+@router.post("/get-missing-sib-files", response_model=UtdSibFilesResponse)
 def get_missing_sib_files(body: UtdSibFilesRequest,request: Request):
     files = {}
     state_path = pathlib.Path(CINCO_CLOUD_SIBS_PATH)
@@ -77,7 +77,7 @@ def get_missing_sib_files(body: UtdSibFilesRequest,request: Request):
                 files=files
             )
 
-@router.get("/get-utd-sib-files", response_model=UtdSibFilesResponse)
+@router.post("/get-utd-sib-files", response_model=UtdSibFilesResponse)
 def get_utd_sib_files(body: UtdSibFilesRequest,request: Request):
     files = {}
     state_path = pathlib.Path(CINCO_CLOUD_SIBS_PATH)
