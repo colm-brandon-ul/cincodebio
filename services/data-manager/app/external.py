@@ -59,7 +59,7 @@ def presigned_upload_url(prefix: str, object_name: str , content_type: str, requ
     Returns:
         str: The presigned URL for uploading the object.
     """
-    client = get_minio_client()
+    client = get_minio_client(internal=True)
 
     # need to do some validation on the object name (i.e. file extension, etc.)
 
@@ -81,7 +81,7 @@ def presigned_upload_url(prefix: str, object_name: str , content_type: str, requ
     MINIO_EXPERIMENT_BUCKET,
     object_name=f'{prefix}/{object_name}',)
 
-    return make_external_url(request.base_url.__str__(),url)
+    return url
 
 
 @router.get("/add-tags")

@@ -1,5 +1,5 @@
 from config import (JMS_ADDRESS, MINIO_FQDN, MINIO_SERVICE_PORT_MINIO_CONSOLE, MINIO_ACCESS_KEY, 
-                    MINIO_SECRET_KEY, MINIO_SERVICE_PORT, MINIO_PRESIGNED_EXTERNAL_PATH)
+                    MINIO_SECRET_KEY, MINIO_SERVICE_PORT, MINIO_PRESIGNED_EXTERNAL_PATH, MINIO_EXTERNAL_HOST)
 
 import requests
 import json
@@ -9,7 +9,7 @@ from minio import Minio
 
 
 
-def get_minio_client():
+def get_minio_client(internal: bool = True) -> Minio:
     """
     Returns a Minio client object.
 
@@ -20,12 +20,21 @@ def get_minio_client():
         Minio: A Minio client object.
 
     """
-    return Minio(
-        f"{MINIO_FQDN}:{MINIO_SERVICE_PORT}",
-        access_key=MINIO_ACCESS_KEY,
-        secret_key=MINIO_SECRET_KEY,
-        secure=False,
-    )
+    if internal:
+        return Minio(
+            f"{MINIO_FQDN}:{MINIO_SERVICE_PORT}",
+            access_key=MINIO_ACCESS_KEY,
+            secret_key=MINIO_SECRET_KEY,
+            secure=False,
+        )
+    else:
+        
+        return Minio(
+            MINIO_EXTERNAL_HOST,
+            access_key=MINIO_ACCESS_KEY,
+            secret_key=MINIO_SECRET_KEY,
+            secure=False,
+        )
 
 def make_external_url(request_base_url: str, presigned_url: str) -> str:
     """
