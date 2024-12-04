@@ -27,7 +27,6 @@ def get_minio_client(internal: bool = True) -> Minio:
             secure=False,
         )
     else:
-        
         return Minio(
             MINIO_EXTERNAL_HOST,
             access_key=MINIO_ACCESS_KEY,
