@@ -99,7 +99,7 @@ async def render_front_end(request: Request, workflow_id: str):
     execution_api_address = f'/{EXECUTION_API_INGRESS_PATH}/ext/'
     data_manager_address = f'/{DATA_MANAGER_API_INGRESS}/ext/'
     # Create the appropriate WS address
-    ws_address = f"{request.base_url.__str__().replace('http','ws')}/{EXECUTION_API_INGRESS_PATH}/ext/state/ws/{workflow_id}"
+    ws_address = f"{request.base_url.__str__().replace('http','wss')}/{EXECUTION_API_INGRESS_PATH}/ext/state/ws/{workflow_id}"
     template = env.get_template("execution_template.html.j2")
     html_content = template.render(request=request,
                                    service_name="workflow_manager",

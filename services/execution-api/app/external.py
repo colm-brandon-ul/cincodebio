@@ -19,9 +19,12 @@ manager = ConnectionManager()
 # Needs to be indepotent (possibly?)
 # Model Submission Endpoint
 @router.post("/model/submit")
-async def root(request: Request, background_tasks: BackgroundTasks, model: UploadFile = File(...)):
+async def root(request: Request, background_tasks: BackgroundTasks, model: UploadFile = File(...),v2:bool =False):
     # Let the full file upload
     model_file = model.file.read().decode("utf-8")
+
+    
+
 
     # Create Workflow Object
     wf_obj = Workflow(status="submitted", state=[])
@@ -35,15 +38,16 @@ async def root(request: Request, background_tasks: BackgroundTasks, model: Uploa
         workflow_id = uuid, 
         model = model_file, 
         # the external is for services front-ends to be accesible
-        external_url = f'{str(request.base_url)}{SERVICES_INGRESS_PATH}')
+        external_url = f'{str(request.base_url).replace('http://','https://')}{SERVICES_INGRESS_PATH}',
+        v2=v2)
     
     logging.info(f"Dispatched model to Code Generator for Workflow: {uuid}") 
-    
 
+    
     # Return Status as Accepted and a link to the front-end URL
     return JSONResponse(
         status_code=status.HTTP_202_ACCEPTED, 
-        content={"url": str(request.base_url) + f"{EXECUTION_INGRESS_PATH}/frontend/{uuid}"})
+        content={"url": str(request.base_url).replace('http://','https://') + f"app/workflows/{uuid}"})
 
 @router.get("/get-workflows", response_model=List[WorkflowState], response_model_by_alias=False)
 async def get_all_workflow_objects():
