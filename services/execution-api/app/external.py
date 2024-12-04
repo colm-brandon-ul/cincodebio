@@ -22,10 +22,9 @@ manager = ConnectionManager()
 async def root(request: Request, background_tasks: BackgroundTasks, model: UploadFile = File(...),v2:bool =False):
     # Let the full file upload
     model_file = model.file.read().decode("utf-8")
+    logging.warning("v2: " + f'{str(v2)} + {type(v2)}')
 
     
-
-
     # Create Workflow Object
     wf_obj = Workflow(status="submitted", state=[])
     uuid = insert_new_workflow_to_db(wf_obj)
