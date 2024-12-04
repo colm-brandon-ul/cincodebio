@@ -11,10 +11,10 @@ class CheckSibFileHashRequest(BaseModel):
     fileHash: str
 
 class CheckSibFilesHashesRequest(BaseModel):
-    fileHashes : List[str]
+    fileHashes : Dict[str,str]
 
 class CheckSibFilesHashesResponse(BaseModel):
-    hashesValid: List[HashValid]
+    hashesValid: Dict[str,HashValid]
     
 class UtdSibFileResponse(BaseModel):
     file: str

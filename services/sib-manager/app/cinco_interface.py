@@ -42,7 +42,7 @@ def check_if_windows(user_agent: str) -> bool:
             return True
     return False
 
-def compute_local_hash(v2: bool = True) -> tuple[str, str]:
+def compute_local_hash(file=None,v2: bool = True) -> tuple[str, str]:
     """
     Compute the SHA-256 hash of a the locally stored sib fiel and return the hash values.
     Computes two hash values, one with and one without a newline character at the end of the file (as the local IDE may add it).
@@ -54,7 +54,9 @@ def compute_local_hash(v2: bool = True) -> tuple[str, str]:
     state_path = pathlib.Path(PERSISTENT_STATE_MOUNT_PATH)
     cinco_cloud_state_path = pathlib.Path(CINCO_CLOUD_SIBS_PATH)
     if v2:
-        with open(cinco_cloud_state_path / UTD_SIB_FILE_V2, 'r') as f:
+        if file is None:
+            file = UTD_SIB_FILE_V2
+        with open(cinco_cloud_state_path / file, 'r') as f:
             og_str = f.read()
     else:
         with open(state_path / UTD_SIB_FILE, 'rb') as f:
