@@ -104,6 +104,7 @@ global:
   workflow_log_path: "data/workflow-logs"
   dps_name_space: "dataprocessing-service-namespace"
 hostname: cdb.local
+minioHostname: minio.cdb.local
 ingress_class: public
 serverTier: production
 certManager:

@@ -4,7 +4,6 @@ metadata:
   name: frontend-ingress
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /$1
-    # nginx.ingress.kubernetes.io/ssl-redirect: "false"
     nginx.ingress.kubernetes.io/enable-rewrite-log: "true"
     cert-manager.io/issuer: "letsencrypt-{{ .Values.serverTier }}"
 spec:
@@ -42,46 +41,36 @@ kind: Ingress
 metadata:
   name: minio-presigned-ingress
   annotations:
-    cert-manager.io/issuer: "letsencrypt-{{ .Values.serverTier }}"
-    nginx.ingress.kubernetes.io/ssl-redirect: "false"
-    nginx.ingress.kubernetes.io/enable-rewrite-log: "true"
-    nginx.ingress.kubernetes.io/rewrite-target: /$1  # Adjusts for the "minio-presigned" prefix in the URL
+    kubernetes.io/ingress.class: nginx
     nginx.ingress.kubernetes.io/proxy-body-size: "0"
-    nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
-    nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
     nginx.ingress.kubernetes.io/proxy-buffering: "off"
     nginx.ingress.kubernetes.io/proxy-request-buffering: "off"
+    nginx.ingress.kubernetes.io/proxy-connect-timeout: "300"
+    nginx.ingress.kubernetes.io/proxy-http-version: "1.1"
+    nginx.ingress.kubernetes.io/proxy-set-headers: |
+      Connection ""
     nginx.ingress.kubernetes.io/configuration-snippet: |
-      proxy_set_header Host {{ .Values.minio.fullnameOverride }}.{{ .Release.Namespace }}.svc.cluster.local:9000;
-      proxy_set_header X-Real-IP $remote_addr;
-      proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-      proxy_set_header X-Forwarded-Proto $scheme;
-      proxy_connect_timeout 300;
-      proxy_http_version 1.1;
-      proxy_set_header Connection "";
       chunked_transfer_encoding off;
-    nginx.ingress.kubernetes.io/upstream-vhost: {{ .Values.minio.fullnameOverride }}.{{ .Release.Namespace }}.svc.cluster.local:9000
 spec:
   tls:
     - hosts:
-        - {{ .Values.hostname }}
+        - {{ .Values.minioHostname }}
       {{- if eq .Values.serverTier "local" }}
       secretName: "cincodebio-local-cert-secret"
       {{- else }}
       secretName: "letsencrypt-secret-{{ .Values.serverTier }}"
       {{- end }}
   rules:
-  - host: {{ .Values.hostname }}
+  - host: {{ .Values.minioHostname }}
     http:
       paths:
-      - path: /minio-presigned/(.*)  # Match paths with the "minio-presigned" prefix
+      - path: /  # Match paths with the "minio-presigned" prefix
         pathType: Prefix
         backend:
           service:
             name: {{ .Values.minio.fullnameOverride }}
             port:
               number: 9000
-
 
 
 # external access to apis
