@@ -10,6 +10,9 @@ from fastapi import FastAPI, Request, WebSocket, WebSocketDisconnect
 from fastapi.responses import HTMLResponse, JSONResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from jinja2 import Environment, FileSystemLoader
+import re
+
+DONT_REDIRECT_REGEX = re.compile(r'^/(app/)?(auth-redirect|static)(/.*)?$')
 
 map2service = {
     'homepage': None,
@@ -28,8 +31,10 @@ async def redirect_to_auth(request: Request, call_next):
     logging.warning(f"URL: {request.url}")
     logging.warning(f"PATH: {request.url.path}")
     logging.warning(f"HEADERS: {request.headers}") 
-    if request.url.path in ["/auth-redirect", "/static", "/app/static", "/app/auth-redirect"]:
+
+    if re.match(DONT_REDIRECT_REGEX, request.url.path):
         return await call_next(request)
+
     # Check if the user is authenticated
     # If the user is authenticated, continue with the request, if auth token in header
     if "Authorization" in request.headers:
