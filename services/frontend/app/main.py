@@ -46,7 +46,7 @@ async def redirect_to_auth(request: Request, call_next):
 @app.get("/auth-redirect")
 async def auth_redirect():
     # Serve the HTML page with JavaScript logic
-    return """
+    return HTMLResponse(content="""
     <!DOCTYPE html>
     <html>
     <head><title>Authenticating...</title></head>
@@ -54,7 +54,7 @@ async def auth_redirect():
       <script src="/app/static/cdb-cc.js"></script>
     </body>
     </html>
-    """
+    """)
 
 # Endpoint for the main page
 @app.get("", response_class=HTMLResponse)
