@@ -1,6 +1,8 @@
 name: Release Cinco De Bio Chart
 on:
   push:
+    branches:
+      - main
     paths:
       - 'charts/**'
 

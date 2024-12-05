@@ -42,9 +42,7 @@ def do_work(ch, method_frame, body):
     logging.warning(f" Number of Threads: {threading.active_count()}, Thread id: {thread_id}")
     
     # Code generator and dispatch 
-    logging.warning(payload["workflow_id"])
-    logging.warning(payload["model"])
-    payload["external_url"]
+    logging.warning(payload)
     if "v2" in payload:
         v2 = True
     else:

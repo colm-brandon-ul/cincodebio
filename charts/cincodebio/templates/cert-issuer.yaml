@@ -1,0 +1,82 @@
+{{- if ne .Values.serverTier "local" }}
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: letsencrypt-{{ .Values.serverTier }}
+spec:
+  acme:
+    # The ACME server URL
+    {{ if eq .Values.serverTier "staging" }}
+    server: https://acme-staging-v02.api.letsencrypt.org/directory
+    {{ end }}
+    {{ if eq .Values.serverTier "production" }}
+    server: https://acme-v02.api.letsencrypt.org/directory
+    {{ end }}
+    # Email address used for ACME registration
+    email: {{ .Values.certManager.email }}
+    # Name of a secret used to store the ACME account private key
+    privateKeySecretRef:
+      name: letsencrypt-{{ .Values.serverTier }}
+    # Enable the HTTP-01 challenge provider
+    solvers:
+      - http01:
+          ingress:
+            class: {{ .Values.ingress_class | default "nginx" }}
+{{- else -}}
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: selfsigned-issuer
+spec:
+  selfSigned: {}
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: cincodebio-local-ca-cert
+spec:
+  isCA: true
+  commonName: {{ .Values.hostname }}-local-rootCA
+  dnsNames:
+    - {{ .Values.hostname }}
+  subject:
+    organizations:
+      - Cinco Cloud Local Development Org.
+  secretName: cincodebio-local-ca-cert-secret
+  privateKey:
+    algorithm: ECDSA
+    size: 256
+  issuerRef:
+    name: selfsigned-issuer
+    kind: Issuer
+    group: cert-manager.io
+---
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: cincodebio-local-ca-issuer
+spec:
+  ca:
+    secretName: cincodebio-local-ca-cert-secret
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: cincodebio-local-development-cert
+spec:
+  isCA: false
+  commonName: {{ .Values.hostname }}-local-development-cert
+  dnsNames:
+    - {{ .Values.hostname }}
+  subject:
+    organizations:
+      - Cinco Cloud Local Development Org.
+  secretName: cincodebio-local-cert-secret
+  privateKey:
+    algorithm: ECDSA
+    size: 256
+  issuerRef:
+    name: cincodebio-local-ca-issuer
+    kind: Issuer
+    group: cert-manager.io
+{{ end }}

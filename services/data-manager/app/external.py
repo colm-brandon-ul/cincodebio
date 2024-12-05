@@ -1,7 +1,7 @@
 from config import (MINIO_FQDN, MINIO_SERVICE_PORT_MINIO_CONSOLE, 
                     MINIO_WORKFLOW_BUCKET, MINIO_EXPERIMENT_BUCKET)
 from utils import (get_minio_client, get_minio_session_token, retrieve_prefix_for_job, 
-                   stream_file, make_external_url)
+                   stream_file)
 
 from fastapi import APIRouter, HTTPException
 from minio.commonconfig import Tags
@@ -59,7 +59,7 @@ def presigned_upload_url(prefix: str, object_name: str , content_type: str, requ
     Returns:
         str: The presigned URL for uploading the object.
     """
-    client = get_minio_client()
+    client = get_minio_client(internal=False)
 
     # need to do some validation on the object name (i.e. file extension, etc.)
 
@@ -81,7 +81,7 @@ def presigned_upload_url(prefix: str, object_name: str , content_type: str, requ
     MINIO_EXPERIMENT_BUCKET,
     object_name=f'{prefix}/{object_name}',)
 
-    return make_external_url(request.base_url.__str__(),url)
+    return url
 
 
 @router.get("/add-tags")

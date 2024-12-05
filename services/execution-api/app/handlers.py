@@ -10,10 +10,8 @@ import os
 from fastapi.encoders import jsonable_encoder
 import json
 
-
-
 # Function to dispatch model to code generator
-def model_submission_handler(workflow_id: str, model: str, external_url: str):
+def model_submission_handler(workflow_id: str, model: str, external_url: str, v2: bool = False):
     logging.warning(workflow_id)
     # Add model to queue
     credentials = pika.PlainCredentials(RABBITMQ_USERNAME, RABBITMQ_PASSWORD)
@@ -21,11 +19,14 @@ def model_submission_handler(workflow_id: str, model: str, external_url: str):
     connection = pika.BlockingConnection(connection_params)
     channel = connection.channel()
     channel.exchange_declare(exchange=EXCHANGE_NAME, exchange_type=EXCHANGE_TYPE)
-    
+    payload = {"model": model, "workflow_id" : workflow_id, "external_url": external_url}
+    if v2:
+        payload["v2"] = True
+
     channel.basic_publish(
         exchange=EXCHANGE_NAME,
         routing_key=ROUTING_KEY,
-        body=json.dumps(jsonable_encoder({"model": model, "workflow_id" : workflow_id, "external_url": external_url}))
+        body=json.dumps(jsonable_encoder(payload))
         )
     
     connection.close()
