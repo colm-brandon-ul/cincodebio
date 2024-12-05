@@ -28,7 +28,7 @@ async def redirect_to_auth(request: Request, call_next):
     logging.warning(f"URL: {request.url}")
     logging.warning(f"PATH: {request.url.path}")
     logging.warning(f"HEADERS: {request.headers}") 
-    if request.url.path in ["/auth-redirect", "/static"]:
+    if request.url.path in ["/auth-redirect", "/static", "/app/static", "/app/auth-redirect"]:
         return await call_next(request)
     # Check if the user is authenticated
     # If the user is authenticated, continue with the request, if auth token in header
@@ -40,7 +40,7 @@ async def redirect_to_auth(request: Request, call_next):
 
 
     # Redirect all other requests to /auth-redirect with the original URL as a query parameter
-    target_url = f"/app/auth-redirect?next=/app/{request.url.path}"
+    target_url = f"/app/auth-redirect?next=/app{request.url.path}"
     return RedirectResponse(url=target_url)
 
 @app.get("/auth-redirect")
