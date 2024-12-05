@@ -34,6 +34,7 @@ def get_dh_api_token_for_repo(namespace: str, repository: str):
     Returns:
         str: The Docker Hub API token.
 
+        
     Raises:
         requests.HTTPError: If the request to retrieve the token fails.
     """
