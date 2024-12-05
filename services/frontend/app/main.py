@@ -28,7 +28,6 @@ async def redirect_to_auth(request: Request, call_next):
     logging.warning(f"PATH: {request.url.path}")
     if request.url.path in ["/app/auth-redirect", "/app/static"]:
         return await call_next(request)
-    
     # Check if the user is authenticated
     # If the user is authenticated, continue with the request, if auth token in header
     if "Authorization" in request.headers:
