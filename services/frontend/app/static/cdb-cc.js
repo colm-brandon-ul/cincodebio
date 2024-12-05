@@ -35,6 +35,8 @@ document.addEventListener("DOMContentLoaded", function () {
         document.open();
         document.write(html);
         document.close();
+        // Push the original URL to the browser's history
+        history.pushState(null, "", originalUrl);
     })
     .catch(error => {
         console.error("Error:", error);
