@@ -85,7 +85,7 @@ const createLoadingModal = (service) => {
         hideModal();
         return;
       }
-
+      
       websocket = new WebSocket(websocketUrl);
       console.log('Attempting to connect to WebSocket server...');
   

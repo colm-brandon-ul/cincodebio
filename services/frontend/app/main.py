@@ -7,7 +7,7 @@ import json
 import logging
 from pathlib import Path
 from fastapi import FastAPI, Request, WebSocket, WebSocketDisconnect
-from fastapi.responses import HTMLResponse, JSONResponse
+from fastapi.responses import HTMLResponse, JSONResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from jinja2 import Environment, FileSystemLoader
 
@@ -21,6 +21,39 @@ app = FastAPI()
 env = Environment(loader=FileSystemLoader(Path(BASE_DIR,"templates")))
 app.mount("/static", StaticFiles(directory=Path(BASE_DIR,"static")), name="static")
 manager = ConnectionManager()
+
+@app.middleware("http")
+async def redirect_to_auth(request: Request, call_next):
+    # Skip redirection for specific paths like '/auth-redirect' or static files
+    if request.url.path in ["/auth-redirect", "/login"]:
+        return await call_next(request)
+    
+    # Check if the user is authenticated
+    # If the user is authenticated, continue with the request, if auth token in header
+    if "Authorization" in request.headers:
+        
+        return await call_next(request)
+    
+    # If the user is not authenticated, redirect to the authentication page
+
+
+
+    # Redirect all other requests to /auth-redirect with the original URL as a query parameter
+    target_url = f"/app/auth-redirect?next={request.url.path}"
+    return RedirectResponse(url=target_url)
+
+@app.get("/auth-redirect")
+async def auth_redirect():
+    # Serve the HTML page with JavaScript logic
+    return """
+    <!DOCTYPE html>
+    <html>
+    <head><title>Authenticating...</title></head>
+    <body>
+      <script src="/app/static/cdb-cc.js"></script>
+    </body>
+    </html>
+    """
 
 # Endpoint for the main page
 @app.get("", response_class=HTMLResponse)
