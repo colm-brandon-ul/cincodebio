@@ -16,14 +16,16 @@ from fastapi import status
 router = APIRouter()
 manager = ConnectionManager()
 
-# Needs to be indepotent (possibly?)
+@router.get("/kill-worflow/{workflow_id}")
+async def kill_workflow(workflow_id: str):
+    ...
+    
+
 # Model Submission Endpoint
 @router.post("/model/submit")
 async def root(request: Request, background_tasks: BackgroundTasks, model: UploadFile = File(...),v2:bool =False):
     # Let the full file upload
     model_file = model.file.read().decode("utf-8")
-    logging.warning("v2: " + f'{str(v2)} + {type(v2)}')
-
     
     # Create Workflow Object
     wf_obj = Workflow(status="submitted", state=[])
@@ -39,10 +41,7 @@ async def root(request: Request, background_tasks: BackgroundTasks, model: Uploa
         # the external is for services front-ends to be accesible
         external_url = f'{str(request.base_url).replace("http://","https://")}{SERVICES_INGRESS_PATH}',
         v2=v2)
-    
     logging.info(f"Dispatched model to Code Generator for Workflow: {uuid}") 
-
-    
     # Return Status as Accepted and a link to the front-end URL
     return JSONResponse(
         status_code=status.HTTP_202_ACCEPTED, 
