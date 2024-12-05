@@ -125,6 +125,10 @@ def submit_k8s_job(
         client.V1EnvVar(
             name="MINIO_EXTERNAL_HOST",
             value=MINIO_EXTERNAL_HOST
+        ),
+        client.V1EnvVar(
+            name="MINIO_EXTERNAL_SECURE",
+            value="True"
         )
     ]
     # If it's an interactive service, add the base_url to the env variables
