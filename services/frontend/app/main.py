@@ -25,13 +25,14 @@ manager = ConnectionManager()
 @app.middleware("http")
 async def redirect_to_auth(request: Request, call_next):
     # Skip redirection for specific paths like '/auth-redirect' or static files
+    logging.warning(f"URL: {request.url}")
     logging.warning(f"PATH: {request.url.path}")
-    if request.url.path in ["/app/auth-redirect", "/app/static"]:
+    logging.warning(f"HEADERS: {request.headers}") 
+    if request.url.path in ["/auth-redirect", "/static"]:
         return await call_next(request)
     # Check if the user is authenticated
     # If the user is authenticated, continue with the request, if auth token in header
     if "Authorization" in request.headers:
-        
         return await call_next(request)
     
     # If the user is not authenticated, redirect to the authentication page
@@ -39,7 +40,7 @@ async def redirect_to_auth(request: Request, call_next):
 
 
     # Redirect all other requests to /auth-redirect with the original URL as a query parameter
-    target_url = f"/app/auth-redirect?next={request.url.path}"
+    target_url = f"/app/auth-redirect?next=/app/{request.url.path}"
     return RedirectResponse(url=target_url)
 
 @app.get("/auth-redirect")
