@@ -19,8 +19,8 @@ def health_check_with_timeout(url, timeout):
     while time.time() - start_time < timeout:
         try:
             response = requests.get(url)
+            
             if response.status_code == 200:
-
                 try:
                     resJson = response.json()
                 except requests.exceptions.JSONDecodeError:
