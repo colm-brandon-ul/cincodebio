@@ -82,14 +82,13 @@ global:
   ontology:
     default_url: "https://colm-brandon-ul.github.io/cellmaps/ontology/v0.0.1/cellmaps.owl"
   containers:
-    dps_registry: "http://"
     docker_hub_namespace: "sccecellmaps"
     # not default values (therefore they need to be set via the command line)
     docker_hub_password:
     docker_hub_username:
     cluster_image_registry:
       name: "registry"
-      namespace: "container-registry"
+      namespace: "container-registry" # This is microk8s default namespace for the registry.. 
       port: 5000
       domain_on_host: "localhost:32000" # This is the domain name that the registry is exposed on the host (i.e. inside the VM) - this is the default value for microk8s registry
   ingress_paths:

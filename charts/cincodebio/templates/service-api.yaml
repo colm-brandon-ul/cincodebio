@@ -37,7 +37,7 @@ spec:
             - containerPort: 80
           env:
             - name: DPS_NAMESPACE
-              value: {{ .Values.global.dps_name_space }}
+              value: value: {{ .Release.Namespace }}-dps
             - name: MINIO_ACCESS_KEY
               value: {{ .Values.minio.auth.rootUser }}
             - name: MINIO_SECRET_KEY 
@@ -62,5 +62,5 @@ spec:
             - name: CINCO_DE_BIO_NAMESPACE
               valueFrom:
                 fieldRef:
-                  fieldPath: metadata.namespace
+                  fieldPath: metadata.namespace 
         
