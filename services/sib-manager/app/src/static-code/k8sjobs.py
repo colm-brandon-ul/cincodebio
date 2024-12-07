@@ -120,17 +120,18 @@ def submit_k8s_job(
             name="MINIO_PRESIGNED_INGRESS_PATH",
             value=MINIO_PRESIGNED_INGRESS_PATH
         ),
-        # this is the path to the presigned url ingress
-        # so that interactive frontends can access the presigned urls
+        client.V1EnvVar(
+            name="MINIO_EXTERNAL_SECURE",
+            value="True"
+        ),
         client.V1EnvVar(
             name="MINIO_EXTERNAL_HOST",
             value=MINIO_EXTERNAL_HOST
         ),
-        client.V1EnvVar(
-            name="MINIO_EXTERNAL_SECURE",
-            value="True"
-        )
     ]
+
+    logging.warning(f"env_vars: {env_vars}")
+
     # If it's an interactive service, add the base_url to the env variables
     if base_url is not None:
         env_vars.append(
