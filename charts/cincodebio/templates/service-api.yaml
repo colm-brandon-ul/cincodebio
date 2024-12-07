@@ -37,7 +37,7 @@ spec:
             - containerPort: 80
           env:
             - name: DPS_NAMESPACE
-              value: value: {{ .Release.Namespace }}-dps
+              value: {{ .Release.Namespace }}-dps
             - name: MINIO_ACCESS_KEY
               value: {{ .Values.minio.auth.rootUser }}
             - name: MINIO_SECRET_KEY 
