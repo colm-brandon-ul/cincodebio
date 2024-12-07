@@ -1,8 +1,12 @@
+import json
+import pathlib
 import handlers
 # Set up the Jinja environment
 # This is relative to the working directorty not where the python script is.
 # workdir needs to be set to the root of the project (i.e. app)
 from config import (
+    INSTALLED_SIBS,
+    PERSISTENT_STATE_MOUNT_PATH,
     STATIC_DIR,
     SERVICE_API_SERVICE_HOST,
     SERVICE_API_SERVICE_PORT,
@@ -35,11 +39,11 @@ async def startup_event():
     config.load_incluster_config()
     # Check if the service-api is available (i.e. deplyoment successful.)
 
-    ontology_manager_health_check = handlers.health_check_with_timeout(
+    ontology_manager_health_check, ontology_manager_res = handlers.health_check_with_timeout(
         url=f"http://{ONTOLOGY_MANAGER_SERVICE_HOST}:{ONTOLOGY_MANAGER_SERVICE_PORT}/health",
         timeout=300)
 
-    service_deployment_health_check = handlers.health_check_with_timeout(
+    service_deployment_health_check, service_deployment_res = handlers.health_check_with_timeout(
         url =f"http://{SERVICE_API_SERVICE_HOST}:{SERVICE_API_SERVICE_PORT}/health",
         timeout=300)
     
@@ -66,8 +70,15 @@ async def startup_event():
     else:
         # Failure - for some reason the service-api deployment failed
         # Need to log this and raise an error
-        if handlers.check_if_local_state_exists():
-            logging.error("Local state already exists. No need to rebuild the service-api")
+        if local_state_exists:
+            if service_deployment_health_check and service_deployment_res['status'] == 'unhealthy':
+
+                logging.info("Local state already exists. But the service-api is unhealthy. Rebuilding the service-api")
+                state_path = pathlib.Path(PERSISTENT_STATE_MOUNT_PATH)
+                with open(state_path / INSTALLED_SIBS, "r") as f:
+                    handlers.update_service_api_and_sibs(json.load(f))
+            else:
+                logging.info("Local state already exists. No need to rebuild the service-api")
         else:
             logging.error(f"Dependant services are not available. Local Registry Health Check: {container_registry_health_check}. Service API Health Check: {service_deployment_health_check}. Ontology Manager Health Check: {ontology_manager_health_check}")
 

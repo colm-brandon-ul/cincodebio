@@ -20,11 +20,17 @@ def health_check_with_timeout(url, timeout):
         try:
             response = requests.get(url)
             if response.status_code == 200:
-                return True
-        except requests.exceptions.RequestException:
-            pass
 
-    return False
+                try:
+                    resJson = response.json()
+                except requests.exceptions.JSONDecodeError:
+                    resJson = None
+
+                return True, resJson
+        except requests.exceptions.RequestException:
+            logging.info(f"Failed to connect to {url}")
+
+    return False, None
 
 def get_api_data_models() -> List[Dict]:
     """
