@@ -67,7 +67,7 @@ def do_work(ch, method_frame, body):
 
     # This will be replaced with some code generatioon functionality
     
-    res = requests.post(f"{EXECUTION_ENV_LB}.{CINCO_DE_BIO_NAMESPACE}.svc.cluster.local/", 
+    res = requests.post(f"http://{EXECUTION_ENV_LB}.{CINCO_DE_BIO_NAMESPACE}.svc.cluster.local/", 
                         json={"code": executable, 
                               "workflow_id": payload["workflow_id"]})
     
