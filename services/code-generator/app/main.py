@@ -68,12 +68,7 @@ def do_work(ch, method_frame, body):
     # This will be replaced with some code generatioon functionality
     
     res = requests.post(f"http://{EXECUTION_ENV_LB}.{CINCO_DE_BIO_NAMESPACE}.svc.cluster.local/", 
-                        json={"code": executable, 
-                              "workflow_id": payload["workflow_id"]})
-    
-    logging.warning(res.status_code)
-    logging.warning(res.content)
-    
+                        json={"code": executable, "workflow_id": payload["workflow_id"]})
 
     if res.status_code == 202:
         res = requests.post(f"{EXECUTION_API_ADDRESS}/control/update-workflow/{payload['workflow_id']}", json={"status": "accepted"})

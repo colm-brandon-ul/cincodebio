@@ -14,7 +14,7 @@ TIMEOUT = 60
 
 # Global Environment variables - same across all workflow programs
 SERVICE_API = os.environ.get('SERVICE_API_SERVICE_HOST')
-WORKFLOW_LOG_PATH = os.environ.get('WORKFLOW_LOGS_PATH')
+WORKFLOW_LOG_PATH = os.environ.get('WORKFLOW_LOG_PATH')
 EXECUTION_API = os.environ.get('EXECUTION_API_SERVICE_HOST')
 HOSTNAME = os.environ.get('HOSTNAME')
 
@@ -44,7 +44,7 @@ def monitor_logs_{{ workflow_id }}(
     WORKFLOW_ID = '{{ workflow_id }}'
     continue_wf = True
     # Get logs
-    WORKFLOW_LOG_PATH = os.environ.get('WORKFLOW_LOGS_PATH')
+    WORKFLOW_LOG_PATH = os.environ.get('WORKFLOW_LOG_PATH')
     while True:
         # Get logs file
         
