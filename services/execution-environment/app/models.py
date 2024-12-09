@@ -16,3 +16,8 @@ class ProcessStatus(BaseModel):
 class Code(BaseModel):
     code: str
     workflow_id: str
+
+
+class ProcessResponse(BaseModel):
+    process_id: str
+    host: Optional[str]

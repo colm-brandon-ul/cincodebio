@@ -71,6 +71,9 @@ def do_work(ch, method_frame, body):
                         json={"code": executable, 
                               "workflow_id": payload["workflow_id"]})
     
+    logging.warning(res.status_code)
+    logging.warning(res.content)
+    
 
     if res.status_code == 202:
         res = requests.post(f"{EXECUTION_API_ADDRESS}/control/update-workflow/{payload['workflow_id']}", json={"status": "accepted"})

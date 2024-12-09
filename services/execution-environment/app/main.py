@@ -1,5 +1,5 @@
 from fastapi.responses import JSONResponse
-from models import Code
+from models import Code, ProcessResponse
 
 from fastapi import FastAPI
 from fastapi.exceptions import HTTPException
@@ -19,14 +19,38 @@ def health_check():
     # perhaps we should do some checks here
     return {"status": "healthy"}
 
-@app.post("/")
-async def create_process(code: Code):
-    logging.info(f"Received code: {code.workflow_id}")
+
+
+@app.post("/", response_model=ProcessResponse, status_code=202)
+async def create_process(code: Code) -> ProcessResponse:
+    """
+    Create a new process from provided code.
+    
+    Args:
+        code: Code object containing workflow_id and code to execute
+    
+    Returns:
+        ProcessResponse with process_id and host information
+    
+    Raises:
+        HTTPException: If process creation fails
+    """
+    logging.info(f"Received code for workflow: {code.workflow_id}")
     try:
+        # Validate code before execution
+        if not code.code.strip():
+            raise ValueError("Empty code provided")
+            
         process_id = await manager.start_process_from_code(code.code)
-        return JSONResponse(status_code=202, content={"process_id": process_id,'host': os.getenv('HOSTNAME')})
+        return ProcessResponse(
+            process_id=process_id,
+            host=os.getenv('HOSTNAME')
+        )
+    except ValueError as ve:
+        raise HTTPException(status_code=400, detail=str(ve))
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        logging.exception("Process creation failed")
+        raise HTTPException(status_code=500, detail=f"Process creation failed: {str(e)}")
 
 @app.get("/process/{process_id}")
 async def get_process(process_id: str):
