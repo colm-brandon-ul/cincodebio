@@ -1,5 +1,4 @@
-from config import (WORKFLOW_LOG_PATH, BASE_DIR)
-from handlers import (create_logs_directory_handler)
+from config import (BASE_DIR)
 from internal import router as internal_router
 from external import router as external_router
 
@@ -36,4 +35,4 @@ app.include_router(external_router,prefix="/ext")
 @app.on_event("startup")
 async def startup_event():
     # If this fails the application should not start
-    create_logs_directory_handler(WORKFLOW_LOG_PATH=WORKFLOW_LOG_PATH)
+    ...

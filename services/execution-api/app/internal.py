@@ -1,6 +1,7 @@
 from fastapi import APIRouter
 from models import JobState, JobStatus, UpdateWorkflow, Workflow, WorkflowStatus
-from handlers import (add_job_state_to_workflow_in_db, get_workflow_from_db_by_id, inform_execution_env, update_job_status_in_workflow_in_db, 
+from handlers import (add_job_state_to_workflow_in_db, get_workflow_from_db_by_id, 
+                      inform_execution_env, update_job_status_in_workflow_in_db, 
                       update_workflow_in_db)
 import logging
 

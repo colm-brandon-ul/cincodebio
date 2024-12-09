@@ -1,6 +1,6 @@
-from config import WORKFLOW_LOG_PATH, SERVICES_INGRESS_PATH
+from config import SERVICES_INGRESS_PATH
 from models import UpdateWorkflow, Workflow, WorkflowState, WorkflowStatus
-from handlers import get_workflow_from_db_by_id, inform_execution_env, insert_new_workflow_to_db, create_workflow_log_file, model_submission_handler, update_workflow_in_db
+from handlers import get_workflow_from_db_by_id, inform_execution_env, insert_new_workflow_to_db, model_submission_handler, update_workflow_in_db
 from ws import ConnectionManager
 from db import get_db_client
 
@@ -10,8 +10,6 @@ from fastapi import BackgroundTasks, Request, UploadFile, File
 from fastapi.responses import JSONResponse
 import logging
 from fastapi import status
-
-
 
 router = APIRouter()
 manager = ConnectionManager()
@@ -36,7 +34,6 @@ async def root(request: Request, background_tasks: BackgroundTasks, model: Uploa
     uuid = insert_new_workflow_to_db(wf_obj)
     # Before a model is submitted to be built / ran there should be check to see if any data has been uploaded
     # Create Workflow Log File
-    create_workflow_log_file(WORKFLOW_LOG_PATH,uuid)
     # Dispatch the model to the code generator
     background_tasks.add_task(
         model_submission_handler, 

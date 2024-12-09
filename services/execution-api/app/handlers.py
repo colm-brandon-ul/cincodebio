@@ -68,31 +68,6 @@ def get_workflow_internal_from_db_by_id(workflow_id) -> WorkflowInternal:
     except TypeError:
         return None
 
-# Creates the logs directory
-def create_logs_directory_handler(WORKFLOW_LOG_PATH: str):
-# If the workflow logs directory doesn't exist, create it
-    if not os.path.exists(WORKFLOW_LOG_PATH):
-        # Create a new directory because it does not exist
-        os.makedirs(WORKFLOW_LOG_PATH)
-        logging.info("Created Workflow Log Path")
-
-# Creates the Workflow Log file and writes it to the logs directory
-def create_workflow_log_file(WORKFLOW_LOG_PATH: str, uuid: str):
-    try:
-        f = open(f"{WORKFLOW_LOG_PATH}/{uuid}.txt", "x")
-        f.write("Log File Created")
-        f.close()
-        logging.info(f"Created Log File for Workflow: {uuid}")      
-    except FileExistsError:
-        # Shouldn't be possible?
-        pass
-    except Exception as e:
-        logging.warning(str(e))
-
-def update_workflow_log_file(WORKFLOW_LOG_PATH: str, workflow_id: str, job: JobState):
-    f = open(f"{WORKFLOW_LOG_PATH}/{workflow_id}.txt", "a")
-    f.write(job.id.__str__())
-
 
 def inform_execution_env(workflow_id: str, job: JobState):
 
