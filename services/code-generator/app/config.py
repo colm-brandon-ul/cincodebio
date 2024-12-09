@@ -4,6 +4,7 @@ from pika.exchange_type import ExchangeType
 EXECUTION_ADDRESS = f'http://{os.environ.get("EXECUTION_ENVIRONMENT_SERVICE_HOST")}:{os.environ.get("EXECUTION_ENVIRONMENT_SERVICE_PORT")}'
 EXECUTION_API_ADDRESS = f'http://{os.environ.get("EXECUTION_API_SERVICE_HOST")}:{os.environ.get("EXECUTION_API_SERVICE_PORT")}'
 SIB_MANAGER_ADDRESS = f'http://{os.environ.get("SIB_MANAGER_SERVICE_HOST")}:{os.environ.get("SIB_MANAGER_SERVICE_PORT")}'
+EXECUTION_ENV_LB = os.environ.get('EXECUTION_ENV_LB')
 
 # RabbitMQ ENV Variables
 RABBIT_MQ_HOST = os.environ.get('RABBITMQ_SERVICE_HOST')
@@ -14,3 +15,4 @@ RABBITMQ_PASSWORD = os.getenv('RABBITMQ_PASSWORD')
 EXCHANGE_NAME = os.environ.get('CODE_GENERATOR_EXCHANGE_NAME')
 EXCHANGE_TYPE = ExchangeType.direct
 CODE_GEN_ROUTING_KEY = os.environ.get('CODE_GENERATOR_ROUTING_KEY')
+CINCO_DE_BIO_NAMESPACE = os.environ.get('CINCO_DE_BIO_NAMESPACE')
