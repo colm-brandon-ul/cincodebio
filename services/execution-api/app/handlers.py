@@ -1,7 +1,7 @@
-from config import (RABBIT_MQ_HOST, RABBIT_MQ_PORT, 
+from config import (CINCO_DE_BIO_NAMESPACE, RABBIT_MQ_HOST, RABBIT_MQ_PORT, 
                     RABBITMQ_USERNAME, RABBITMQ_PASSWORD, 
-                    EXCHANGE_NAME, EXCHANGE_TYPE, ROUTING_KEY)
-from models import JobState, UpdateWorkflow, Workflow
+                    EXCHANGE_NAME, EXCHANGE_TYPE, ROUTING_KEY, EXECUTION_ENV_HL)
+from models import JobState, UpdateWorkflow, Workflow, WorkflowInternal
 from db import get_db_client
 
 import logging
@@ -9,6 +9,7 @@ import pika
 import os
 from fastapi.encoders import jsonable_encoder
 import json
+import requests
 
 # Function to dispatch model to code generator
 def model_submission_handler(workflow_id: str, model: str, external_url: str, v2: bool = False):
@@ -60,6 +61,12 @@ def get_workflow_from_db_by_id(workflow_id) -> Workflow:
         return Workflow.parse_obj(get_db_client().find_one({"_id": workflow_id}))
     except TypeError:
         return None
+    
+def get_workflow_internal_from_db_by_id(workflow_id) -> WorkflowInternal:
+    try:
+        return WorkflowInternal.parse_obj(get_db_client().find_one({"_id": workflow_id}))
+    except TypeError:
+        return None
 
 # Creates the logs directory
 def create_logs_directory_handler(WORKFLOW_LOG_PATH: str):
@@ -85,3 +92,15 @@ def create_workflow_log_file(WORKFLOW_LOG_PATH: str, uuid: str):
 def update_workflow_log_file(WORKFLOW_LOG_PATH: str, workflow_id: str, job: JobState):
     f = open(f"{WORKFLOW_LOG_PATH}/{workflow_id}.txt", "a")
     f.write(job.id.__str__())
+
+
+def inform_execution_env(workflow_id: str, job: JobState):
+
+    wf = get_workflow_internal_from_db_by_id(workflow_id)
+    job_id = job.id.__str__()
+    # Inform the Execution Environment
+    res = requests.post(
+        url=f"{wf.hostname}.{EXECUTION_ENV_HL}.{CINCO_DE_BIO_NAMESPACE}.svc.cluster.local/callback/{wf.process_id}/{job_id}",
+    )
+
+    res.raise_for_status()

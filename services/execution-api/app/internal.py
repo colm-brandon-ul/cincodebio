@@ -1,9 +1,7 @@
 from fastapi import APIRouter
-from models import JobState, JobStatus, UpdateWorkflow, Workflow
-from handlers import (add_job_state_to_workflow_in_db, get_workflow_from_db_by_id, update_job_status_in_workflow_in_db, 
-                      update_workflow_in_db, update_workflow_log_file)
-
-from config import WORKFLOW_LOG_PATH
+from models import JobState, JobStatus, UpdateWorkflow, Workflow, WorkflowStatus
+from handlers import (add_job_state_to_workflow_in_db, get_workflow_from_db_by_id, inform_execution_env, update_job_status_in_workflow_in_db, 
+                      update_workflow_in_db)
 import logging
 
 router = APIRouter()
@@ -25,7 +23,11 @@ async def handles_callbacks(workflow_id: str, job: JobState):
         # Update the Database with the new State
         update_job_status_in_workflow_in_db(workflow_id=workflow_id, job_state=job)
         # Update log with Job ID maybe?
-        update_workflow_log_file(WORKFLOW_LOG_PATH, workflow_id, job)
+        inform_execution_env(
+            workflow_id=workflow_id,
+            job=job
+        )
+
         
     elif job.job_status == JobStatus.awaiting_interaction:
         pass
@@ -58,10 +60,22 @@ async def handles_callbacks(workflow_id: str, job: JobState):
     
     # Callbacks from the JMS - if job failed, need to figure this one out
     elif job.job_status == JobStatus.failed:
-        # TO BE IMPLEMENTED
-        # Should add a kill statement to log file for execution environment
-        pass
-
+        logging.warning(f'Job {job.id}, has failed')
+        # Update the Database with the new Job State
+        update_job_status_in_workflow_in_db(
+            workflow_id=workflow_id, 
+            job_state=job)
+        # Update the Workflow State to Failed
+        workflow_update = UpdateWorkflow(status=WorkflowStatus.failed)
+        update_workflow_in_db(
+        workflow_id=workflow_id,
+        workflow=workflow_update)
+        # Inform the Execution Environment to kill the workflow
+        inform_execution_env(
+            workflow_id=workflow_id,
+            job='KWORKFLOW'
+        )
+        
 @router.post("/control/update-workflow/{workflow_id}")
 async def update_workflow_state(workflow_id: str, workflow_update: UpdateWorkflow):
     update_workflow_in_db(
