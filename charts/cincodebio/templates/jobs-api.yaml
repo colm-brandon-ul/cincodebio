@@ -44,10 +44,3 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.namespace
-          volumeMounts:
-            - name: shared-volume
-              mountPath: /data
-      volumes:
-      - name: shared-volume
-        persistentVolumeClaim:
-          claimName: {{ .Release.Name }}-workflow-logs-pvc
