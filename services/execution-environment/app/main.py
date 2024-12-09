@@ -35,13 +35,14 @@ async def create_process(code: Code) -> ProcessResponse:
     Raises:
         HTTPException: If process creation fails
     """
-    logging.info(f"Received code for workflow: {code.workflow_id}")
+    logging.warning(f"Received code for workflow: {code.workflow_id}")
     try:
         # Validate code before execution
         if not code.code.strip():
             raise ValueError("Empty code provided")
             
         process_id = await manager.start_process_from_code(code.code)
+
         return ProcessResponse(
             process_id=process_id,
             host=os.getenv('HOSTNAME')
