@@ -56,7 +56,7 @@ spec:
           - containerPort: 80
             name: http
         env:
-          - name: WORKFLOW_LOGS_PATH
+          - name: WORKFLOW_LOG_PATH
             value: {{ .Values.global.workflow_log_path }}
           - name: CODE_GENERATOR_EXCHANGE_NAME
             value: {{ .Values.codeGenerator.exchange_name }}
