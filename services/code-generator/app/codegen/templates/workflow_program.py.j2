@@ -28,7 +28,7 @@ HEADERS = {
 
 # --- Shared API handling functions ---
 def monitor_logs_{{ workflow_id }}(
-        job_id: str) -> bool:
+        job_id: str, process_id: str) -> bool:
     
     """
     Monitors the logs for a workflow, to see if flag for current submitted job is completed.
@@ -48,7 +48,7 @@ def monitor_logs_{{ workflow_id }}(
     while True:
         # Get logs file
         
-        with open(f"{WORKFLOW_LOG_PATH}/{WORKFLOW_ID}.txt", "r") as f:
+        with open(f"{WORKFLOW_LOG_PATH}/{process_id}.txt", "r") as f:
             lines = f.readlines()
 
         if job_id in lines[-1]:
@@ -190,7 +190,7 @@ if __name__ == "__main__":
         headers = HEADERS,
         data = {{- formatdata(_DATA) }}) # this is what needs to be populated
     # Monitor logs
-    continue_wf = monitor_logs_{{ workflow_id|replace("-", "_") }}(job_id=job_id_{{ _SIBID|replace("-", "_")  }})
+    continue_wf = monitor_logs_{{ workflow_id|replace("-", "_") }}(job_id=job_id_{{ _SIBID|replace("-", "_")  }},process_id=process_id)
     if not continue_wf: 
         exit()  # Kill the workflow
     # Get results
