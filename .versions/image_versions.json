@@ -3,7 +3,7 @@
   "execution-api": "0.1.7",
   "ontology-manager": "0.1.1",
   "jobs-api": "0.1.1",
-  "execution-environment": "0.1.2",
+  "execution-environment": "0.1.3",
   "frontend": "0.1.10",
   "code-generator": "0.1.3",
   "data-manager": "0.1.6",
