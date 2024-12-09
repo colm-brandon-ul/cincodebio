@@ -75,7 +75,7 @@ def inform_execution_env(workflow_id: str, job: JobState):
     job_id = job.id.__str__()
     # Inform the Execution Environment
     res = requests.post(
-        url=f"{wf.hostname}.{EXECUTION_ENV_HL}.{CINCO_DE_BIO_NAMESPACE}.svc.cluster.local/callback/{wf.process_id}/{job_id}",
+        url=f"http://{wf.hostname}.{EXECUTION_ENV_HL}.{CINCO_DE_BIO_NAMESPACE}.svc.cluster.local/callback/{wf.process_id}/{job_id}",
     )
 
     res.raise_for_status()
