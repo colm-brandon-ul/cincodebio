@@ -3,6 +3,23 @@ entries:
   cinco-de-bio:
   - apiVersion: v2
     appVersion: 1.16.2
+    created: "2024-12-09T22:58:11.605471889Z"
+    dependencies:
+    - name: minio
+      repository: https://charts.bitnami.com/bitnami
+      version: 12.8.15
+    - name: rabbitmq
+      repository: https://charts.bitnami.com/bitnami
+      version: 12.15.0
+    description: A Helm chart for Kubernetes
+    digest: 588c84d9f79193cce855ca154be284323a9f56be223698eea4164ededfe85b58
+    name: cinco-de-bio
+    type: application
+    urls:
+    - https://github.com/colm-brandon-ul/cincodebio/releases/download/cinco-de-bio-0.1.37/cinco-de-bio-0.1.37.tgz
+    version: 0.1.37
+  - apiVersion: v2
+    appVersion: 1.16.2
     created: "2024-12-09T20:33:08.677545358Z"
     dependencies:
     - name: minio
@@ -375,4 +392,4 @@ entries:
     urls:
     - https://github.com/colm-brandon-ul/cincodebio/releases/download/cinco-de-bio-0.1.14/cinco-de-bio-0.1.14.tgz
     version: 0.1.14
-generated: "2024-12-09T20:33:08.677708212Z"
+generated: "2024-12-09T22:58:11.605625276Z"
