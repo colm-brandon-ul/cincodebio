@@ -1,7 +1,7 @@
 from codegen.main import HippoFlowCodegenrator
-from config import (EXECUTION_ADDRESS, EXECUTION_API_ADDRESS, SIB_MANAGER_ADDRESS, 
+from config import (EXECUTION_API_ADDRESS, EXECUTION_ENV_LB, SIB_MANAGER_ADDRESS, 
                     RABBIT_MQ_HOST, RABBIT_MQ_PORT, EXCHANGE_NAME, EXCHANGE_TYPE, 
-                    CODE_GEN_ROUTING_KEY, RABBITMQ_USERNAME, RABBITMQ_PASSWORD)
+                    CODE_GEN_ROUTING_KEY, RABBITMQ_USERNAME, RABBITMQ_PASSWORD,CINCO_DE_BIO_NAMESPACE)
 
 # Job Management Imports
 import pika
@@ -66,7 +66,8 @@ def do_work(ch, method_frame, body):
     
 
     # This will be replaced with some code generatioon functionality
-    res = requests.post(f"{EXECUTION_ADDRESS}/", 
+    
+    res = requests.post(f"{EXECUTION_ENV_LB}.{CINCO_DE_BIO_NAMESPACE}.svc.cluster.local/", 
                         json={"code": executable, 
                               "workflow_id": payload["workflow_id"]})
     

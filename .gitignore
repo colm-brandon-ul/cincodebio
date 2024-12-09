@@ -139,3 +139,4 @@ test.html
 execution-env-v2/
 local_playground/
 .ruff/*
+exec-v2/*

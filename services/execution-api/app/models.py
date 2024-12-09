@@ -62,6 +62,18 @@ class WorkflowState(BaseModel):
         arbitrary_types_allowed = True
         json_encoders = {ObjectId: str}
 
+class WorkflowInternal(BaseModel):
+    id: PyObjectId = Field(default_factory=PyObjectId, alias="_id")
+    owner: str = "public"
+    status: WorkflowStatus
+    hostname: typing.Optional[str]
+    process_id: typing.Optional[str]
+
+    class Config:
+        allow_population_by_field_name = True
+        arbitrary_types_allowed = True
+        json_encoders = {ObjectId: str}
+
 class Workflow(BaseModel):
     id: PyObjectId = Field(default_factory=PyObjectId, alias="_id")
     owner: str = "public"
@@ -75,6 +87,8 @@ class Workflow(BaseModel):
         
 class UpdateWorkflow(BaseModel):
     owner: typing.Optional[str]
+    hostname: typing.Optional[str]
+    process_id: typing.Optional[str]
     status: typing.Optional[WorkflowStatus]
     state: typing.Optional[typing.List[JobState]]
     

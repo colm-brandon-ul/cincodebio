@@ -1,6 +1,6 @@
 from config import WORKFLOW_LOG_PATH, SERVICES_INGRESS_PATH
-from models import Workflow, WorkflowState, WorkflowStatus
-from handlers import get_workflow_from_db_by_id, insert_new_workflow_to_db, create_workflow_log_file, model_submission_handler
+from models import UpdateWorkflow, Workflow, WorkflowState, WorkflowStatus
+from handlers import get_workflow_from_db_by_id, inform_execution_env, insert_new_workflow_to_db, create_workflow_log_file, model_submission_handler, update_workflow_in_db
 from ws import ConnectionManager
 from db import get_db_client
 
@@ -18,8 +18,12 @@ manager = ConnectionManager()
 
 @router.get("/kill-worflow/{workflow_id}")
 async def kill_workflow(workflow_id: str):
-    ...
-    
+    # Kill a workflow
+    inform_execution_env(workflow_id, 'KWORKFLOW')
+    # update the workflow status to failed
+    update_workflow_in_db(workflow_id, UpdateWorkflow(status=WorkflowStatus.failed))
+
+    return JSONResponse(status_code=status.HTTP_200_OK, content={"message": f"Workflow - {workflow_id} - Killed"})
 
 # Model Submission Endpoint
 @router.post("/model/submit")
