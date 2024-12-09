@@ -1,7 +1,7 @@
 import asyncio
 import uuid
 import atexit
-import psutil
+# import psutil
 import tempfile
 import os
 from fastapi.exceptions import HTTPException
@@ -99,28 +99,28 @@ class ProcessManager:
             'returncode': process.returncode,
         }
 
-    async def get_process_memory(self, process_id: str):
-        process = self.processes.get(process_id)
-        if not process:
-            raise HTTPException(status_code=404, detail="Process not found")
+    # async def get_process_memory(self, process_id: str):
+    #     process = self.processes.get(process_id)
+    #     if not process:
+    #         raise HTTPException(status_code=404, detail="Process not found")
 
-        try:
-            ps_process = psutil.Process(process.pid)
-            memory = ps_process.memory_info()
-            return {
-                'rss': {
-                    'bytes': memory.rss,
-                    'mb': memory.rss / 1024 / 1024,
-                    'description': 'Actual physical memory being used'
-                },
-                'vms': {
-                    'bytes': memory.vms,
-                    'mb': memory.vms / 1024 / 1024,
-                    'description': 'Total virtual memory allocated'
-                }
-            }
-        except psutil.NoSuchProcess:
-            return None
+    #     try:
+    #         ps_process = psutil.Process(process.pid)
+    #         memory = ps_process.memory_info()
+    #         return {
+    #             'rss': {
+    #                 'bytes': memory.rss,
+    #                 'mb': memory.rss / 1024 / 1024,
+    #                 'description': 'Actual physical memory being used'
+    #             },
+    #             'vms': {
+    #                 'bytes': memory.vms,
+    #                 'mb': memory.vms / 1024 / 1024,
+    #                 'description': 'Total virtual memory allocated'
+    #             }
+    #         }
+    #     except psutil.NoSuchProcess:
+    #         return None
     
     async def job_callback(self, process_id: str, job_id: str) -> None:
         handlers.update_workflow_log_file(WORKFLOW_LOG_PATH,process_id, job_id=job_id)

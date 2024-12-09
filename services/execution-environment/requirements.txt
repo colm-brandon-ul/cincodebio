@@ -3,4 +3,3 @@ pydantic==1.10.12
 uvicorn
 requests
 asyncio
-psutil
