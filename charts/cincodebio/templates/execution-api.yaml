@@ -2,21 +2,6 @@ apiVersion: v1
 kind: Service
 metadata:
   labels:
-    app: {{ .Values.executionEnvironment.name}}
-  name: {{ .Values.executionEnvironment.name}}
-spec:
-  ports:
-    - port: 80
-      protocol: TCP
-      targetPort: 8080
-  selector:
-    app: {{ .Values.executionApi.name}}
-  type: ClusterIP
----
-apiVersion: v1
-kind: Service
-metadata:
-  labels:
     app: {{ .Values.executionApi.name }}
   name: {{ .Values.executionApi.name }}
 spec:
@@ -44,10 +29,6 @@ spec:
       labels:
         app: {{ .Values.executionApi.name }}
     spec:
-      volumes:
-        - name: shared-volume
-          persistentVolumeClaim:
-            claimName: {{ .Release.Name }}-workflow-logs-pvc
       containers:
         - name: {{ .Values.executionApi.name }}
           image: {{ .Values.executionApi.image }}
@@ -55,8 +36,6 @@ spec:
           ports:
             - containerPort: 80
           env:
-            - name: WORKFLOW_LOGS_PATH
-              value: {{ .Values.global.workflow_log_path }}
             - name: WORKFLOW_DB
               value: {{ .Values.mongodb.workflowdb.name }}
             - name: WORKFLOW_COLLECTION
@@ -77,30 +56,10 @@ spec:
               value: {{ .Values.rabbitmq.auth.username }}
             - name: RABBITMQ_PASSWORD
               value: {{ .Values.rabbitmq.auth.password }}
+            - name: EXECUTION_ENV_HL
+              value: {{ .Values.executionEnvironment.name }}-hl
             - name: CINCO_DE_BIO_NAMESPACE
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.namespace
-          volumeMounts:
-            - name: shared-volume
-              mountPath: /app/data
-        - name: {{ .Values.executionEnvironment.name}}
-          image: {{ .Values.executionEnvironment.image }}
-          imagePullPolicy: Always
-          ports:
-            - containerPort: 8080
-          env:
-            - name: WORKFLOW_LOGS_PATH
-              value: {{ .Values.global.workflow_log_path }}
-            - name: CODE_GENERATOR_EXCHANGE_NAME
-              value: {{ .Values.codeGenerator.exchange_name }}
-            - name: CODE_GENERATOR_ROUTING_KEY
-              value: {{ .Values.codeGenerator.routing_key }}
-            - name: CINCO_DE_BIO_NAMESPACE
-              valueFrom:
-                fieldRef:
-                  fieldPath: metadata.namespace
-          volumeMounts:
-            - name: shared-volume
-              mountPath: /app/data
       

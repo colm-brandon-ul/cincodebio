@@ -53,6 +53,8 @@ spec:
             value: {{ .Values.rabbitmq.auth.username }}
           - name: RABBITMQ_PASSWORD
             value: {{ .Values.rabbitmq.auth.password }}
+          - name: EXECUTION_ENV_LB
+            value: {{ .Values.executionEnvironment.name }}-lb
           - name: CODE_GENERATOR_EXCHANGE_NAME
             value: {{ .Values.codeGenerator.exchange_name }}
           - name: CODE_GENERATOR_ROUTING_KEY
