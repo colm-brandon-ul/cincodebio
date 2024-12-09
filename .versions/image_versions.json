@@ -5,7 +5,7 @@
   "jobs-api": "0.1.1",
   "execution-environment": "0.1.5",
   "frontend": "0.1.10",
-  "code-generator": "0.1.4",
+  "code-generator": "0.1.5",
   "data-manager": "0.1.6",
   "service-api": "0.1.1"
 }
