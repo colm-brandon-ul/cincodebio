@@ -6,7 +6,6 @@ import tempfile
 import os
 from fastapi.exceptions import HTTPException
 import handlers
-import os
 from config import WORKFLOW_LOG_PATH
 
 
@@ -21,8 +20,7 @@ class ProcessManager:
             atexit.register(cls._instance.cleanup)
         return cls._instance
 
-    async def start_process(self, command: list) -> str:
-        process_id = str(uuid.uuid4())
+    async def start_process(self, process_id, command: list) -> str:
         command.append(f'-p={process_id}')
         handlers.create_workflow_log_file(os.getcwd(),process_id)
         try:
@@ -40,6 +38,7 @@ class ProcessManager:
         """Create temporary file, write code, execute, then delete file."""
         try:
             # Create temporary Python file
+            process_id = str(uuid.uuid4())
             handlers.create_logs_directory(WORKFLOW_LOG_PATH)
             handlers.create_workflow_log_file(WORKFLOW_LOG_PATH,process_id)
 
@@ -48,7 +47,7 @@ class ProcessManager:
                 tmp_path = tmp.name
 
             # Start process using temp file
-            process_id = await self.start_process(['python', tmp_path])
+            process_id = await self.start_process(process_id=process_id,command=['python', tmp_path])
 
             # Wait briefly for the process to initialize
             await asyncio.sleep(0.1)

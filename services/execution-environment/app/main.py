@@ -1,7 +1,7 @@
 from fastapi.responses import JSONResponse
 from models import Code
 
-from fastapi import FastAPI, BackgroundTasks
+from fastapi import FastAPI
 from fastapi.exceptions import HTTPException
 import logging 
 from process import ProcessManager
