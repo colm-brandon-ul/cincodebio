@@ -37,7 +37,7 @@ async def redirect_to_auth(request: Request, call_next):
     logging.warning(f"PATH: {request.url.path}")
     logging.warning(f"HEADERS: {request.headers}") 
 
-    if re.match(DONT_REDIRECT_REGEX, request.url.path):
+    if re.match(DONT_REDIRECT_REGEX, request.url.path) or request.url.path.endswith("openapi.json"):
         return await call_next(request)
 
     # Check if the user is authenticated
@@ -66,7 +66,8 @@ async def auth_redirect():
 
 # Endpoint for the main page
 @app.get("", response_class=HTMLResponse)
-async def main_page(request: Request):
+async def main_page(request: Request,
+                    token_data: dict = Depends(validate_token)):
     template = env.get_template("index.html.j2")
     html_content = template.render(
         request=request,
@@ -97,7 +98,8 @@ async def data_manager(request: Request,
     return HTMLResponse(content=html_content)
 
 @app.get("/data-manager/get-form-details", response_class=JSONResponse)
-async def form_details_endpoint(request: Request):
+async def form_details_endpoint(request: Request,
+                                token_data: dict = Depends(validate_token)):
     # get the form details from the ontology manager
     form_details = get_form_details()
     return form_details
@@ -106,7 +108,7 @@ async def form_details_endpoint(request: Request):
 
 # This is the front end for the SIB Manager
 @app.get("/sib-manager")
-async def sib_manager(request: Request):
+async def sib_manager(request: Request,token_data: dict = Depends(validate_token)):
     # get latest, installed and rest sibs from sib-manager
 
     latest,installed,rest = get_sib_details()  
@@ -122,7 +124,7 @@ async def sib_manager(request: Request):
 
 # Endpoint for displaying all workflows
 @app.get("/workflows", response_class=HTMLResponse)
-async def workflow_frontend(request: Request):
+async def workflow_frontend(request: Request,token_data: dict = Depends(validate_token)):
 
     execution_api_address = f'/{EXECUTION_API_INGRESS_PATH}/ext/'
 
@@ -138,7 +140,7 @@ async def workflow_frontend(request: Request):
 # FRONT END RENDERING
 # Endpoint for displaying the progress of a single workflow
 @app.get("/workflows/{workflow_id}", response_class=HTMLResponse)
-async def render_front_end(request: Request, workflow_id: str):
+async def render_front_end(request: Request, workflow_id: str,token_data: dict = Depends(validate_token)):
     logging.warning(f"FRONT END REQUEST: {request.base_url}")
 
     execution_api_address = f'/{EXECUTION_API_INGRESS_PATH}/ext/'

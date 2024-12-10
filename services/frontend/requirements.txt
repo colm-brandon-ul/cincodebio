@@ -8,3 +8,4 @@ watchgod
 aiofiles
 pathlib
 pyjwt
+cryptography
