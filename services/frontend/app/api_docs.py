@@ -46,7 +46,7 @@ def get_utd_service_doc(service_name) -> Dict:
             Dict: A dictionary containing the openapi.json of the service
 
     """
-    ptrn = re.compile(rf'{service_name.replace('-','_'.upper())}(?:_[a-zA-Z0-9]+)*_SERVICE_HOST$')
+    ptrn = re.compile(rf"{service_name.replace('-','_'.upper())}(?:_[a-zA-Z0-9]+)*_SERVICE_HOST$")
     service = {k:v for k,v in os.environ.items() if re.match(ptrn, k)}
     
     try:
