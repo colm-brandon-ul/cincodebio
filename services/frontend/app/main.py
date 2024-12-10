@@ -2,6 +2,7 @@ from config import (EXECUTION_API_INGRESS_PATH, DATA_MANAGER_API_INGRESS,
                     SIB_MANAGER_API_INGRESS, BASE_DIR)
 from ws import ConnectionManager
 from handlers import get_health, get_form_details, get_sib_details
+from auth import validate_token
 
 import json
 import logging
@@ -9,8 +10,11 @@ from pathlib import Path
 from fastapi import FastAPI, Request, WebSocket, WebSocketDisconnect
 from fastapi.responses import HTMLResponse, JSONResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
+from fastapi import Depends
 from jinja2 import Environment, FileSystemLoader
 import re
+
+from api_docs import router
 
 DONT_REDIRECT_REGEX = re.compile(r'^/(app/)?(auth-redirect|static)(/.*)?$')
 
@@ -21,6 +25,7 @@ map2service = {
     "sib_manager": SIB_MANAGER_API_INGRESS
 }
 app = FastAPI()
+app.include_router(router)
 env = Environment(loader=FileSystemLoader(Path(BASE_DIR,"templates")))
 app.mount("/static", StaticFiles(directory=Path(BASE_DIR,"static")), name="static")
 manager = ConnectionManager()
@@ -75,7 +80,10 @@ async def main_page(request: Request):
 
 # Data Upload Portal
 @app.get("/data-manager", response_class=HTMLResponse)
-async def data_manager(request: Request):
+async def data_manager(request: Request,
+                       token_data: dict = Depends(validate_token)):
+    
+    logging.warning(f"TOKEN DATA: {token_data}")
     # This will need to be generated based on the ontology version installed
     data_manager_address = f'/{DATA_MANAGER_API_INGRESS}/ext/'
     

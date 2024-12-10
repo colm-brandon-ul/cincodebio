@@ -7,3 +7,4 @@ requests
 watchgod
 aiofiles
 pathlib
+pyjwt
