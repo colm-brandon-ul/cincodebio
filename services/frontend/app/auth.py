@@ -28,7 +28,6 @@ def decode_token(token: str):
         payload = jwt.decode(token, PUBLIC_KEY, algorithms=['RS256'])
         return payload
     except jwt.PyJWTError as e:
-        import
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail=f"Could not validate credentials: {e}"
