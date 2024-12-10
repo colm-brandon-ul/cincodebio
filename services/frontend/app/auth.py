@@ -62,7 +62,6 @@ async def validate_token(credentials: HTTPAuthorizationCredentials = Security(se
 
         import logging
         logging.warning(credentials)
-
         token = credentials.credentials
         logging.warning(token)  
         payload = decode_token(token)
