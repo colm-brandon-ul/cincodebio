@@ -22,8 +22,6 @@ async def get_current_user(token: str = Depends(oauth2_scheme)):
     return payload
     
 
-
-
 def decode_token(token: str):
     from config import AUTH_PUBLIC_KEY as PUBLIC_KEY
     try:
