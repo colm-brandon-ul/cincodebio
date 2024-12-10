@@ -67,6 +67,9 @@ async def websocket_endpoint(websocket: WebSocket,workflow_id: str):
             logging.warning(f'WEBSOCKET: {workflow_state.json()}')
             await manager.send_json(workflow_state.json(),websocket)
             if workflow_state.status == WorkflowStatus.completed:
+                # If the workflow is completed, send the final state and disconnect
+                workflow_state = get_workflow_from_db_by_id(workflow_id)
+                await manager.send_json(workflow_state.json(),websocket)
                 manager.disconnect(websocket)
                 break
     except WebSocketDisconnect:

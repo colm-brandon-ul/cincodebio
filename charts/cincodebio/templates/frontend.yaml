@@ -36,6 +36,27 @@ spec:
           ports:
             - containerPort: 80
           env:
+            # for verifying the JWT token
+            - name: AUTH_PUBLIC_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: cinco-cloud-main-secrets
+                  key: authPublicKey
+            - name: AUTH_PRIVATE_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: cinco-cloud-main-secrets
+                  key: authPrivateKey
+            - name: {{ .Values.frontend.name | upper }}_EXT_INGRESS_PATH
+              value: {{ .Values.global.ingress_paths.frontend_ingress_path }}
+            - name: {{ .Values.sibManager.name | upper }}_EXT_INGRESS_PATH
+              value: {{ .Values.global.ingress_paths.sib_manager_ingress_path }}
+            - name: {{ .Values.serviceApi.name | upper }}_EXT_INGRESS_PATH
+              value: {{ .Values.global.ingress_paths.services_api_ingress_path }}
+            - name: {{ .Values.executionApi.name | upper }}_EXT_INGRESS_PATH
+              value: {{ .Values.global.ingress_paths.execution_api_ingress_path }}
+            - name: {{ .Values.dataManager.name | upper }}_EXT_INGRESS_PATH
+              value: {{ .Values.global.ingress_paths.data_manager_ingress_path }}
             - name: SIB_MANAGER_API_INGRESS_PATH
               value: {{ .Values.global.ingress_paths.sib_manager_ingress_path }}
             - name: DATA_MANAGER_API_INGRESS

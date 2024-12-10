@@ -62,10 +62,6 @@ async def delete_process(process_id: str):
     success = await manager.stop_process(process_id)
     return {"success": success}
 
-# @app.get("/process/{process_id}/memory")
-# async def get_process_memory(process_id: str):
-#     return await manager.get_process_memory(process_id)
-
 @app.post("/callback/{process_id}/{job_id}")
 async def callback(process_id: str, job_id: str):
     await manager.job_callback(process_id, job_id)
