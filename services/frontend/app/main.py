@@ -16,7 +16,7 @@ import re
 
 from api_docs import router
 
-DONT_REDIRECT_REGEX = re.compile(r'^/(app/)?(auth-redirect|static)(/.*)?$')
+DONT_REDIRECT_REGEX = re.compile(r'^/(app/)?(auth-redirect|static|docs|openapi\.json)(/.*)?$')
 
 map2service = {
     'homepage': None,
