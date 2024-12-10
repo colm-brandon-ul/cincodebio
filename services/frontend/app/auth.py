@@ -59,8 +59,14 @@ async def validate_token(credentials: HTTPAuthorizationCredentials = Security(se
     Validate JWT token from Authorization header
     """
     try:
+
+        import logging
+        logging.warning(credentials)
+
         token = credentials.credentials
+        logging.warning(token)  
         payload = decode_token(token)
+        logging.warning(payload)
         return payload
     except Exception:
         raise HTTPException(
