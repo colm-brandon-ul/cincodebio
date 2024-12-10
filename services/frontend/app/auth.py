@@ -22,17 +22,15 @@ async def get_current_user(token: str = Depends(oauth2_scheme)):
     return payload
     
 
-def get_public_key():
-    from config import PUBLIC_KEY
-    return PUBLIC_KEY
 
 
 def decode_token(token: str):
-    PUBLIC_KEY = get_public_key()
+    from config import AUTH_PUBLIC_KEY as PUBLIC_KEY
     try:
         payload = jwt.decode(token, PUBLIC_KEY, algorithms=['RS256'])
         return payload
     except jwt.PyJWTError as e:
+        import
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail=f"Could not validate credentials: {e}"
