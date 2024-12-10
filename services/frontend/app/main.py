@@ -47,8 +47,6 @@ async def redirect_to_auth(request: Request, call_next):
     
     # If the user is not authenticated, redirect to the authentication page
 
-
-
     # Redirect all other requests to /auth-redirect with the original URL as a query parameter
     target_url = f"/app/auth-redirect?next=/app{request.url.path}"
     return RedirectResponse(url=target_url)
