@@ -4,7 +4,7 @@
   "ontology-manager": "0.1.1",
   "jobs-api": "0.1.1",
   "execution-environment": "0.1.6",
-  "frontend": "0.1.16",
+  "frontend": "0.1.17",
   "code-generator": "0.1.5",
   "data-manager": "0.1.6",
   "service-api": "0.1.1"
