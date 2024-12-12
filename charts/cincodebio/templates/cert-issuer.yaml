@@ -22,7 +22,21 @@ spec:
       - http01:
           ingress:
             class: {{ .Values.ingress_class | default "nginx" }}
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: letsencrypt-{{ .Values.serverTier }}-certificate
+spec:
+  secretName: letsencrypt-secret-{{ .Values.serverTier }}
+  issuerRef:
+    name: letsencrypt-{{ .Values.serverTier }}
+    kind: Issuer
+  dnsNames:
+    - {{ .Values.hostname }}
+    - {{ .Values.minioHostname }}
 {{- else -}}
+# Local environment configuration (unchanged)
 apiVersion: cert-manager.io/v1
 kind: Issuer
 metadata:
@@ -68,6 +82,7 @@ spec:
   commonName: {{ .Values.hostname }}-local-development-cert
   dnsNames:
     - {{ .Values.hostname }}
+    - {{ .Values.minioHostname }}
   subject:
     organizations:
       - Cinco Cloud Local Development Org.
