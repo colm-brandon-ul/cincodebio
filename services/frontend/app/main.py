@@ -100,7 +100,7 @@ async def data_manager(request: Request,
 @app.get("/data-manager/get-form-details", response_class=JSONResponse)
 async def form_details_endpoint(request: Request,
                                 token_data: JWTPayload = Depends(validate_token)):
-    # get the form details from the ontology manager
+    
     form_details = get_form_details()
     return form_details
 

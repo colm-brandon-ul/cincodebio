@@ -4,7 +4,7 @@ from typing import Dict, List, Tuple
 import requests
 import logging
 
-def get_form_details(user_id: str) -> dict:
+def get_form_details() -> dict:
     """
         This function retrieves the form details from the ontology manager service.
     """
