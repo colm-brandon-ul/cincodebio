@@ -28,15 +28,21 @@ It also manages the websocket connection for the execution front-end client whic
 
 ### Execution Environment
 
-The execution environment is rather unsophisticated currently. It simply receives the python program for orchestrating the workflow and runs it in a new process. The workflow program(s) executed with the execution environment interface with the services API to submit data processing jobs & read the results, before passing them to the next workflow step and so on.
+The Execution Environment is an application designed to receive and execute code for workflows. It receives code generated for workflows, executes it in a controlled environment, and manages the lifecycle of these processes. It provides endpoints for creating, monitoring, and terminating processes, as well as handling job callbacks. 
 
-*Interface with: Jobs API*
+Key features:
+- Creates and manages processes from provided code
+- Monitors process status
+- Handles process termination
+- Processes job callbacks
 
-*Tightly Coupled with: Execution Environment*
+Interfaces with: Services API
 
 ### Frontend
 
-...
+This service acts as a central frontend and integration layer for managing workflows, data, and system components. It handles user authentication, renders dynamic web pages using Jinja2 templates, and routes requests to backend microservices. It also supports real-time health checks and workflow updates via WebSocket connections. Interfaces with: Execution API, Data Manager, SIB Manager
+
+*Interfaces with: Execution API, Data Manager, SIB Manager, Ontology Manager*
 
 ### Jobs API
 
