@@ -42,11 +42,6 @@ spec:
                 secretKeyRef:
                   name: cinco-cloud-main-secrets
                   key: authPublicKey
-            - name: AUTH_PRIVATE_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: cinco-cloud-main-secrets
-                  key: authPrivateKey
             - name: {{ .Values.frontend.name | upper }}_EXT_INGRESS_PATH
               value: {{ .Values.global.ingress_paths.frontend_ingress_path }}
             - name: {{ .Values.sibManager.name | upper }}_EXT_INGRESS_PATH

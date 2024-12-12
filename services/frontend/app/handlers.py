@@ -4,11 +4,11 @@ from typing import Dict, List, Tuple
 import requests
 import logging
 
-def get_form_details() -> dict:
+def get_form_details(user_id: str) -> dict:
     """
         This function retrieves the form details from the ontology manager service.
     """
-
+    
     response = requests.get(f'http://{ONTOLOGY_MANAGER_SERVICE_HOST}/form-models')
     logging.warning(f"Response: {response.content}")
 

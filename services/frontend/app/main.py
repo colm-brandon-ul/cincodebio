@@ -3,6 +3,7 @@ from config import (EXECUTION_API_INGRESS_PATH, DATA_MANAGER_API_INGRESS,
 from ws import ConnectionManager
 from handlers import get_health, get_form_details, get_sib_details
 from auth import validate_token
+from models import JWTPayload
 
 import json
 import logging
@@ -67,7 +68,7 @@ async def auth_redirect():
 # Endpoint for the main page
 @app.get("", response_class=HTMLResponse)
 async def main_page(request: Request,
-                    token_data: dict = Depends(validate_token)):
+                    token_data: JWTPayload = Depends(validate_token)):
     template = env.get_template("index.html.j2")
     html_content = template.render(
         request=request,
@@ -80,9 +81,8 @@ async def main_page(request: Request,
 # Data Upload Portal
 @app.get("/data-manager", response_class=HTMLResponse)
 async def data_manager(request: Request,
-                       token_data: dict = Depends(validate_token)):
+                       token_data: JWTPayload = Depends(validate_token)):
     
-    logging.warning(f"TOKEN DATA: {token_data}")
     # This will need to be generated based on the ontology version installed
     data_manager_address = f'/{DATA_MANAGER_API_INGRESS}/ext/'
     
@@ -99,7 +99,7 @@ async def data_manager(request: Request,
 
 @app.get("/data-manager/get-form-details", response_class=JSONResponse)
 async def form_details_endpoint(request: Request,
-                                token_data: dict = Depends(validate_token)):
+                                token_data: JWTPayload = Depends(validate_token)):
     # get the form details from the ontology manager
     form_details = get_form_details()
     return form_details
@@ -108,8 +108,10 @@ async def form_details_endpoint(request: Request,
 
 # This is the front end for the SIB Manager
 @app.get("/sib-manager")
-async def sib_manager(request: Request,token_data: dict = Depends(validate_token)):
+async def sib_manager(request: Request,token_data: JWTPayload = Depends(validate_token)):
     # get latest, installed and rest sibs from sib-manager
+
+    # Probably only admin should be able to access this page
 
     latest,installed,rest = get_sib_details()  
     submit_url = f'/{SIB_MANAGER_API_INGRESS}/ext/update-installed-sibs'
@@ -124,10 +126,9 @@ async def sib_manager(request: Request,token_data: dict = Depends(validate_token
 
 # Endpoint for displaying all workflows
 @app.get("/workflows", response_class=HTMLResponse)
-async def workflow_frontend(request: Request,token_data: dict = Depends(validate_token)):
+async def workflow_frontend(request: Request,token_data: JWTPayload = Depends(validate_token)):
 
     execution_api_address = f'/{EXECUTION_API_INGRESS_PATH}/ext/'
-
     # Create the appropriate WS address
     template = env.get_template("all_workflows.html.j2")
     html_content = template.render(
@@ -140,7 +141,7 @@ async def workflow_frontend(request: Request,token_data: dict = Depends(validate
 # FRONT END RENDERING
 # Endpoint for displaying the progress of a single workflow
 @app.get("/workflows/{workflow_id}", response_class=HTMLResponse)
-async def render_front_end(request: Request, workflow_id: str,token_data: dict = Depends(validate_token)):
+async def render_front_end(request: Request, workflow_id: str,token_data: JWTPayload = Depends(validate_token)):
     logging.warning(f"FRONT END REQUEST: {request.base_url}")
 
     execution_api_address = f'/{EXECUTION_API_INGRESS_PATH}/ext/'

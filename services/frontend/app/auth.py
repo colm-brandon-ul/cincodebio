@@ -8,6 +8,7 @@ from fastapi.security import OAuth2PasswordBearer
 from fastapi import status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 import jwt
+from models import JWTPayload, TokenValidationRequest, TokenValidationResponse
 
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
@@ -55,18 +56,14 @@ def decode_token(token: str):
         )
     
 
-async def validate_token(credentials: HTTPAuthorizationCredentials = Security(security)) -> Optional[dict]:
+async def validate_token(credentials: HTTPAuthorizationCredentials = Security(security)) -> Optional[JWTPayload]:
     """
     Validate JWT token from Authorization header
     """
     try:
-        import logging
-        logging.warning(credentials)
         token = credentials.credentials
-        logging.warning(token)  
         payload = decode_token(token)
-        logging.warning(payload)
-        return payload
+        return JWTPayload(**payload)
     except Exception:
         raise HTTPException(
             status_code=401,
