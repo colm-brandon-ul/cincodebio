@@ -137,7 +137,7 @@ def get_tags_from_repo_dh(repository: Dict) -> List:
     relevant_tags = []
     for tag in tags:
         # Should I filter out the v1 tags and inactive tags?
-        if tag['tag_status'] == 'active' and tag['v2']:
+        if tag['v2']:
             relevant_tags.append(tag['name'])
         
         else: print(f"Tag {tag['name']}, {tag['tag_status']} {tag['v2']} is not active or not a v2 tag")
@@ -449,3 +449,8 @@ def code_gen(template_env: jinja2.Environment, service_models: List, data_models
 
 
     
+if __name__ == "__main___":
+
+    print(get_repo_from_namespace_dh(
+        'sccecellmaps'
+    ))

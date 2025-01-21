@@ -22,7 +22,6 @@ class ProcessManager:
 
     async def start_process(self, process_id, command: list) -> str:
         command.append(f'-p={process_id}')
-        handlers.create_workflow_log_file(os.getcwd(),process_id)
         try:
             process = await asyncio.create_subprocess_exec(
                 *command,
@@ -50,7 +49,7 @@ class ProcessManager:
             process_id = await self.start_process(process_id=process_id,command=['python', tmp_path])
 
             # Wait briefly for the process to initialize
-            await asyncio.sleep(0.1)
+            # await asyncio.sleep(0.1)
 
             return process_id
         except Exception as e:
@@ -98,29 +97,6 @@ class ProcessManager:
             'running': process.returncode is None,
             'returncode': process.returncode,
         }
-
-    # async def get_process_memory(self, process_id: str):
-    #     process = self.processes.get(process_id)
-    #     if not process:
-    #         raise HTTPException(status_code=404, detail="Process not found")
-
-    #     try:
-    #         ps_process = psutil.Process(process.pid)
-    #         memory = ps_process.memory_info()
-    #         return {
-    #             'rss': {
-    #                 'bytes': memory.rss,
-    #                 'mb': memory.rss / 1024 / 1024,
-    #                 'description': 'Actual physical memory being used'
-    #             },
-    #             'vms': {
-    #                 'bytes': memory.vms,
-    #                 'mb': memory.vms / 1024 / 1024,
-    #                 'description': 'Total virtual memory allocated'
-    #             }
-    #         }
-    #     except psutil.NoSuchProcess:
-    #         return None
     
     async def job_callback(self, process_id: str, job_id: str) -> None:
         handlers.update_workflow_log_file(WORKFLOW_LOG_PATH,process_id, job_id=job_id)
