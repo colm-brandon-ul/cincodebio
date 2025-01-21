@@ -132,8 +132,6 @@ def get_tags_from_repo_dh(repository: Dict) -> List:
                 response.raise_for_status()
                 if response.status_code == 200:
                     tags += response.json()["results"]
-                print(f'NUM TAGS: {len(tags)}')
-
     relevant_tags = []
     for tag in tags:
         # Should I filter out the v1 tags and inactive tags?
