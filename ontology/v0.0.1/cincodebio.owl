@@ -48,6 +48,7 @@ THE ONTOLOGY IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 <!--  -->
 <!-- http://www.cincodebio.org/cdbontology#hasKey -->
 
+
 <rdf:Description rdf:about="http://www.cincodebio.org/cdbontology#hasKey">
 	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
 	<rdfs:domain rdf:resource="http://www.cincodebio.org/cdbontology#HashMap"/>
