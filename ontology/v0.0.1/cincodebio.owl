@@ -699,6 +699,29 @@ THE ONTOLOGY IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 	<rdfs:comment>This represents a 3D model file.</rdfs:comment>
 	<rdfs:label>3DModel</rdfs:label>
 </rdf:Description>
+
+<rdf:Description rdf:about="http://www.cincodebio.org/cdbontology#MLFormat">
+	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+	<rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#File"/>
+	<rdfs:comment>This represents an ML framework independent file.</rdfs:comment>
+	<rdfs:label>MLFormat</rdfs:label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.cincodebio.org/cdbontology#TorchScript">
+	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+	<rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#MLFormat"/>
+	<rdfs:comment>This represents a torchscript file.</rdfs:comment>
+	<rdfs:label>TorchScript</rdfs:label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.cincodebio.org/cdbontology#ONNX">
+	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+	<rdfs:subClassOf rdf:resource="http://www.cincodebio.org/cdbontology#MLFormat"/>
+	<rdfs:comment>This represents an onnx file.</rdfs:comment>
+	<rdfs:label>ONNX</rdfs:label>
+</rdf:Description>
+
+
 <!--  -->
 <!--  -->
 <!--  -->
@@ -709,6 +732,19 @@ THE ONTOLOGY IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 <!-- ################################################################# -->
 <!--  -->
 <!--  -->
+
+<rdf:Description rdf:about="http://www.cincodebio.org/cdbontology#TorchScript">
+	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+	<hasFileExtension>.pt</hasFileExtension>
+</rdf:Description>
+<!--  -->
+<!-- http://www.cincodebio.org/cdbontology#AVI -->
+
+<rdf:Description rdf:about="http://www.cincodebio.org/cdbontology#ONNX">
+	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+	<hasFileExtension>.onnx</hasFileExtension>
+</rdf:Description>
+
 <!-- http://www.cincodebio.org/cdbontology#AAC -->
 
 <rdf:Description rdf:about="http://www.cincodebio.org/cdbontology#AAC">
