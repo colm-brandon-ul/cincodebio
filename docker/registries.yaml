@@ -1,0 +1,19 @@
+# k3s containerd registry mirror configuration
+#
+# The sib-manager's kaniko build pushes images to the in-cluster registry at
+# registry.kube-system.svc.cluster.local:80.  However k3s's containerd runs
+# on the *node* network namespace and cannot resolve cluster DNS.
+#
+# This file tells containerd to pull from localhost:5000 (the registry pod's
+# hostPort) whenever it sees the cluster-internal registry hostname.
+mirrors:
+  "registry.kube-system.svc.cluster.local":
+    endpoint:
+      - "http://127.0.0.1:5000"
+  "localhost:5000":
+    endpoint:
+      - "http://127.0.0.1:5000"
+  "docker.io":
+    endpoint:
+      - "https://mirror.gcr.io"
+      - "https://registry-1.docker.io"

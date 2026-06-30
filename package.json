@@ -1,0 +1,27 @@
+{
+  "scripts": {
+    "test:editor-semantics": "node --test tests/test_editor_semantics.mjs tests/test_cinco_de_bio_language_source.mjs tests/test_cinco_de_bio_runtime_contracts.mjs",
+    "test:language-source": "node --test tests/test_cinco_de_bio_language_source.mjs",
+    "test:runtime-contracts": "node --test tests/test_cinco_de_bio_runtime_contracts.mjs",
+    "test:editor-smoke": "playwright test tests/editor_smoke.spec.mjs",
+    "test:editor-model": "playwright test tests/editor_model.spec.mjs",
+    "test:editor-refresh-sib-library": "playwright test tests/editor_refresh_sib_library.spec.mjs",
+    "test:editor-semantic-coverage": "playwright test tests/editor_semantic_coverage.spec.mjs",
+    "test:editor-refresh-sib-semantic": "playwright test tests/editor_refresh_sib_from_semantic_coverage.spec.mjs",
+    "test:editor-recording": "playwright test tests/editor_tma_workflow_recording.spec.mjs",
+    "test:final-install-video": "playwright test tests/final_k3s_install_to_editor_recording.spec.mjs",
+    "test:final-sophisticated-video": "playwright test tests/final_sophisticated_example_recording.spec.mjs",
+    "test:final-workflow-generation": "playwright test tests/final_workflow_generation_recording.spec.mjs",
+    "test:final-full-demo": "playwright test tests/final_cinco_de_bio_full_demo.spec.mjs",
+    "test:final-gui-journey": "playwright test tests/final_gui_workflow_journey.spec.mjs",
+    "test:final-minikube-video": "playwright test tests/final_minikube_install_to_workflow_recording.spec.mjs",
+    "test:final-k3s-workflow-completed": "playwright test tests/final_k3s_workflow_completed_recording.spec.mjs",
+    "test:final-execution-in-editor": "playwright test tests/final_workflow_execution_in_editor.spec.mjs",
+    "test:final-result-in-simple-browser": "playwright test tests/final_result_in_simple_browser.spec.mjs"
+  },
+  "dependencies": {
+    "@playwright/browser-chromium": "^1.60.0",
+    "@playwright/test": "^1.60.0",
+    "playwright": "^1.60.0"
+  }
+}

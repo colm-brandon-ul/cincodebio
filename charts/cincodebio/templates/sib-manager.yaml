@@ -51,10 +51,11 @@ spec:
       labels:
         app: {{ .Values.sibManager.name }}
     spec:
+      serviceAccountName: cincodebio-sa
       containers:
         - name: {{ .Values.sibManager.name }}
           image: {{ .Values.sibManager.image }}
-          imagePullPolicy: Always
+          imagePullPolicy: {{ .Values.sibManager.imagePullPolicy | default "Always" }}
           ports:
             - containerPort: 80
           volumeMounts:
@@ -90,9 +91,15 @@ spec:
           - name: DATA_MANAGER_API_INGRESS
             value: {{ .Values.global.ingress_paths.data_manager_ingress_path }}
           - name: DOCKER_HUB_PASSWORD
-            value: {{ required "A value for .Values.global.containers.docker_hub_password is required!" .Values.global.containers.docker_hub_password }}
+            valueFrom:
+              secretKeyRef:
+                name: dockerhub-credentials
+                key: docker_hub_password
           - name: DOCKER_HUB_USERNAME
-            value: {{ required "A value for .Values.global.containers.docker_hub_username is required!" .Values.global.containers.docker_hub_username }}
+            valueFrom:
+              secretKeyRef:
+                name: dockerhub-credentials
+                key: docker_hub_username
           - name: CINCO_DE_BIO_NAMESPACE
             valueFrom:
               fieldRef:

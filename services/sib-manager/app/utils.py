@@ -40,8 +40,8 @@ def get_dh_api_token_for_repo(namespace: str, repository: str):
     """
 
     # get's the token for the repo (with the users credentials)
-    auth_response = requests.get(f"https://{DH_AUTH_ENDPOINT}/token?service=registry.docker.io&scope=repository:{namespace}/{repository}:pull", 
-                                 auth=HTTPBasicAuth(username, password))
+    auth = HTTPBasicAuth(username, password) if username and password else None
+    auth_response = requests.get(f"https://{DH_AUTH_ENDPOINT}/token?service=registry.docker.io&scope=repository:{namespace}/{repository}:pull", auth=auth)
     
     auth_response.raise_for_status()  # Raise exception if the request failed
     token = auth_response.json()['token']

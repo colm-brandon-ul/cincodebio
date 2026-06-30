@@ -85,9 +85,12 @@
         {%- for input in service.inputs %}
         {{ addInput(input)|indent(4) }},
         {% endfor %}
-        {{ addLabel(service.name,service.label,service.label_id,service.label_x,service.label_y,service.label_w,service.label_h, "icons/task.png")|indent(4) }}{{ "," if service.outputs | length > 0 }}
+        {{ addLabel(service.name,service.label,service.label_id,service.label_x,service.label_y,service.label_w,service.label_h, "icons/task.png")|indent(4) }}{{ "," if service.outputs | length > 0 or service.branches | length > 0 }}
         {%- for output in service.outputs %}
-        {{ addOutput(output)|indent(4) }}{{ "," if not loop.last }}
+        {{ addOutput(output)|indent(4) }}{{ "," if not loop.last or service.branches | length > 0 }}
+        {% endfor %}
+        {%- for branch in service.branches %}
+        {{ addBranch(branch)|indent(4) }}{{ "," if not loop.last }}
         {% endfor %}
     ],
     "_size": {
@@ -113,9 +116,12 @@
         {%- for input in service.inputs %}
         {{ addInput(input)|indent(4) }},
         {% endfor %}
-        {{ addLabel(service.name,service.label,service.label_id,service.label_x,service.label_y,service.label_w,service.label_h, "icons/service.png")|indent(4) }}{{ "," if service.outputs | length > 0 }}
+        {{ addLabel(service.name,service.label,service.label_id,service.label_x,service.label_y,service.label_w,service.label_h, "icons/service.png")|indent(4) }}{{ "," if service.outputs | length > 0 or service.branches | length > 0 }}
         {%- for output in service.outputs %}
-        {{ addOutput(output)|indent(4) }}{{ "," if not loop.last }}
+        {{ addOutput(output)|indent(4) }}{{ "," if not loop.last or service.branches | length > 0 }}
+        {% endfor %}
+        {%- for branch in service.branches %}
+        {{ addBranch(branch)|indent(4) }}{{ "," if not loop.last }}
         {% endfor %}
     ],
     "_size": {

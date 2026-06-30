@@ -1,0 +1,150 @@
+appearance default {
+	lineWidth 2
+	background (229,229,229)
+	
+	// register additional required images here
+	imagePath("cinco-de-bio/icons/task.png")
+}
+
+appearance labelFont {
+    foreground (0, 0, 0)
+	font ("Sans",16)
+}
+
+appearance labelFontItalics {
+    foreground (0, 0, 0)
+	font ("Sans",ITALIC,10)
+}
+
+appearance labelFontWhite {
+    foreground (255,255,255)
+	font ("Sans",16)
+}
+
+nodeStyle service {
+	// appearanceProvider("info.scce.cinco.product.hippoflow.appear.lib.ServiceAppearance")
+	roundedRectangle {
+		appearance extends default {
+			background (230,230,230)
+		}
+		size (240,65)
+		corner (6,6)
+	}
+}
+
+nodeStyle task {
+	// appearanceProvider("info.scce.cinco.product.hippoflow.appear.lib.TaskAppearance")
+	roundedRectangle  {
+		appearance extends default {
+			background (230,230,230)
+		}
+		size (240,65)
+		corner (6,6)
+	}
+}
+
+nodeStyle label(3) {
+	// appearanceProvider("info.scce.cinco.product.hippoflow.appear.lib.LabelAppearance")
+	rectangle  {
+		appearance extends default {
+			transparency 1.0
+		}
+		size (236,50)
+		image {
+			position (LEFT 8, MIDDLE)
+		 	size (fix 24, fix 24)
+		 	path ("%1$s")
+		}
+		text {
+			appearance labelFontItalics
+			position (LEFT 40, TOP 7)
+		 	value "%2$s"
+		}
+		text {
+			appearance labelFont
+			position (LEFT 40, TOP 24)
+		 	value "%3$s"
+		}
+	}
+}
+
+nodeStyle input(2) {
+	// appearanceProvider("info.scce.cinco.product.hippoflow.appear.lib.InputAppearance")
+	rectangle  {
+		appearance extends default {
+			lineWidth 0
+			foreground (245,245,245)
+			background (245,245,245)
+		}
+		size (236,30)
+		image {
+			position (LEFT, MIDDLE)
+		 	size (fix 15, fix 30)
+		 	path ( "cinco-de-bio/icons/arrow-input-filled-transparent-300.png" )
+		}
+		text {
+			appearance labelFontItalics
+			position (LEFT 25, MIDDLE)
+		 	value "%s : %s"
+		}
+	}
+}
+
+nodeStyle output(2) {
+	// appearanceProvider("info.scce.cinco.product.hippoflow.appear.lib.OutputAppearance")
+	rectangle {
+		appearance extends default {
+			lineWidth 0
+			foreground (245,245,245)
+			background (245,245,245)
+		}
+		size (236,30)
+		image {
+			position (RIGHT, MIDDLE)
+		 	size (fix 15, fix 30)
+		 	path ( "cinco-de-bio/icons/arrow-output-filled-300.png" )
+		}
+		text {
+			appearance labelFontItalics
+			position (LEFT 25, MIDDLE)
+		 	value "%s : %s"
+		}
+	}
+}
+
+nodeStyle branch(1) {
+	rectangle  {
+		appearance extends default {
+			lineWidth 0
+			foreground (245,245,245)
+			background (245,245,245)
+		}
+		size (236,30)
+		image {
+			position (LEFT, MIDDLE)
+		 	size (fix 15, fix 30)
+		 	path ( "cinco-de-bio/icons/arrow-branch-transparent-300.png" )
+		}
+		text {
+			appearance labelFontItalics
+			position (LEFT 25, MIDDLE)
+		 	value "%s"
+		}
+	}
+}
+
+// dummy node style to define required icons
+nodeStyle dummy {
+	rectangle {
+		image {
+			position (0,0)
+		 	size (0,0)
+		 	path ("cinco-de-bio/icons/service.png")
+		}
+		image {
+			position (0,0)
+		 	size (0,0)
+		 	path ("cinco-de-bio/icons/task.png")
+		}
+	}
+}

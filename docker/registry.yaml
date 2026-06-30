@@ -1,0 +1,52 @@
+# In-cluster container registry for k3s
+# Replaces the minikube registry addon.
+#
+# - ClusterIP service on port 80: used by kaniko (push) and inter-pod pulls
+# - hostPort 5000: used by k3s containerd (node-level image pulls)
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: registry
+  namespace: kube-system
+  labels:
+    app: registry
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: registry
+  template:
+    metadata:
+      labels:
+        app: registry
+    spec:
+      containers:
+      - name: registry
+        image: registry:2
+        ports:
+        - containerPort: 5000
+          hostPort: 5000
+          protocol: TCP
+        env:
+        - name: REGISTRY_HTTP_ADDR
+          value: ":5000"
+        volumeMounts:
+        - name: registry-data
+          mountPath: /var/lib/registry
+      volumes:
+      - name: registry-data
+        emptyDir: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: registry
+  namespace: kube-system
+spec:
+  selector:
+    app: registry
+  ports:
+  - port: 80
+    targetPort: 5000
+    protocol: TCP
+  type: ClusterIP

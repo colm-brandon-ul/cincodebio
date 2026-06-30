@@ -1,0 +1,30 @@
+# values-local.yaml — Overrides for local minikube deployment
+serverTier: local
+ingress_class: nginx
+hostname: localhost
+minioHostname: minio.localhost
+# Local serves minio.localhost over http via the ingress (self-signed CA isn't trusted by
+# minio-py in the SIB pods), so presigned URLs must be generated for http, not https.
+minioExternalSecure: "False"
+
+minio:
+  image:
+    registry: docker.io
+    repository: bitnami/minio
+    tag: 2024.3.26-debian-12-r2
+
+editor:
+  enabled: true
+  image: localhost:5000/cinco-de-bio-editor:latest
+  imagePullPolicy: Always
+
+global:
+  containers:
+    docker_hub_namespace: "sccecellmaps"
+    docker_hub_username: ""   # set via --set or env var; do NOT commit credentials
+    docker_hub_password: ""   # set via --set or env var; do NOT commit credentials
+    cluster_image_registry:
+      name: "registry"
+      namespace: "kube-system"
+      port: 80
+      domain_on_host: "localhost:5000"

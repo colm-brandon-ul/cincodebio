@@ -2,8 +2,6 @@ from config import (EXECUTION_API_INGRESS_PATH, DATA_MANAGER_API_INGRESS,
                     SIB_MANAGER_API_INGRESS, BASE_DIR)
 from ws import ConnectionManager
 from handlers import get_health, get_form_details, get_sib_details
-from auth import validate_token
-from models import JWTPayload
 
 import json
 import logging
@@ -11,13 +9,9 @@ from pathlib import Path
 from fastapi import FastAPI, Request, WebSocket, WebSocketDisconnect
 from fastapi.responses import HTMLResponse, JSONResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
-from fastapi import Depends
 from jinja2 import Environment, FileSystemLoader
-import re
 
 from api_docs import router
-
-DONT_REDIRECT_REGEX = re.compile(r'^/(app/)?(auth-redirect|static|docs|openapi\.json)(/.*)?$')
 
 map2service = {
     'homepage': None,
@@ -31,44 +25,10 @@ env = Environment(loader=FileSystemLoader(Path(BASE_DIR,"templates")))
 app.mount("/static", StaticFiles(directory=Path(BASE_DIR,"static")), name="static")
 manager = ConnectionManager()
 
-@app.middleware("http")
-async def redirect_to_auth(request: Request, call_next):
-    # Skip redirection for specific paths like '/auth-redirect' or static files
-    logging.warning(f"URL: {request.url}")
-    logging.warning(f"PATH: {request.url.path}")
-    logging.warning(f"HEADERS: {request.headers}") 
-
-    if re.match(DONT_REDIRECT_REGEX, request.url.path) or request.url.path.endswith("openapi.json"):
-        return await call_next(request)
-
-    # Check if the user is authenticated
-    # If the user is authenticated, continue with the request, if auth token in header
-    if "Authorization" in request.headers:
-        return await call_next(request)
-    
-    # If the user is not authenticated, redirect to the authentication page
-
-    # Redirect all other requests to /auth-redirect with the original URL as a query parameter
-    target_url = f"/app/auth-redirect?next=/app{request.url.path}"
-    return RedirectResponse(url=target_url)
-
-@app.get("/auth-redirect")
-async def auth_redirect():
-    # Serve the HTML page with JavaScript logic
-    return HTMLResponse(content="""
-    <!DOCTYPE html>
-    <html>
-    <head><title>Authenticating...</title></head>
-    <body>
-      <script src="/app/static/cdb-cc.js"></script>
-    </body>
-    </html>
-    """)
-
 # Endpoint for the main page
+@app.get("/", response_class=HTMLResponse)
 @app.get("", response_class=HTMLResponse)
-async def main_page(request: Request,
-                    token_data: JWTPayload = Depends(validate_token)):
+async def main_page(request: Request):
     template = env.get_template("index.html.j2")
     html_content = template.render(
         request=request,
@@ -80,8 +40,7 @@ async def main_page(request: Request,
 
 # Data Upload Portal
 @app.get("/data-manager", response_class=HTMLResponse)
-async def data_manager(request: Request,
-                       token_data: JWTPayload = Depends(validate_token)):
+async def data_manager(request: Request):
     
     # This will need to be generated based on the ontology version installed
     data_manager_address = f'/{DATA_MANAGER_API_INGRESS}/ext/'
@@ -98,8 +57,7 @@ async def data_manager(request: Request,
     return HTMLResponse(content=html_content)
 
 @app.get("/data-manager/get-form-details", response_class=JSONResponse)
-async def form_details_endpoint(request: Request,
-                                token_data: JWTPayload = Depends(validate_token)):
+async def form_details_endpoint(request: Request):
     
     form_details = get_form_details()
     return form_details
@@ -108,7 +66,7 @@ async def form_details_endpoint(request: Request,
 
 # This is the front end for the SIB Manager
 @app.get("/sib-manager")
-async def sib_manager(request: Request,token_data: JWTPayload = Depends(validate_token)):
+async def sib_manager(request: Request):
     # get latest, installed and rest sibs from sib-manager
 
     # Probably only admin should be able to access this page
@@ -126,7 +84,7 @@ async def sib_manager(request: Request,token_data: JWTPayload = Depends(validate
 
 # Endpoint for displaying all workflows
 @app.get("/workflows", response_class=HTMLResponse)
-async def workflow_frontend(request: Request,token_data: JWTPayload = Depends(validate_token)):
+async def workflow_frontend(request: Request):
 
     execution_api_address = f'/{EXECUTION_API_INGRESS_PATH}/ext/'
     # Create the appropriate WS address
@@ -141,13 +99,15 @@ async def workflow_frontend(request: Request,token_data: JWTPayload = Depends(va
 # FRONT END RENDERING
 # Endpoint for displaying the progress of a single workflow
 @app.get("/workflows/{workflow_id}", response_class=HTMLResponse)
-async def render_front_end(request: Request, workflow_id: str,token_data: JWTPayload = Depends(validate_token)):
+async def render_front_end(request: Request, workflow_id: str):
     logging.warning(f"FRONT END REQUEST: {request.base_url}")
 
     execution_api_address = f'/{EXECUTION_API_INGRESS_PATH}/ext/'
     data_manager_address = f'/{DATA_MANAGER_API_INGRESS}/ext/'
-    # Create the appropriate WS address
-    ws_address = f"{request.base_url.__str__().replace('http','wss')}/{EXECUTION_API_INGRESS_PATH}/ext/state/ws/{workflow_id}"
+    forwarded_proto = request.headers.get("x-forwarded-proto", request.url.scheme)
+    forwarded_host = request.headers.get("x-forwarded-host", request.headers.get("host", request.base_url.netloc))
+    ws_scheme = "wss" if forwarded_proto == "https" else "ws"
+    ws_address = f"{ws_scheme}://{forwarded_host}/{EXECUTION_API_INGRESS_PATH}/ext/state/ws/{workflow_id}"
     template = env.get_template("execution_template.html.j2")
     html_content = template.render(request=request,
                                    service_name="workflow_manager",

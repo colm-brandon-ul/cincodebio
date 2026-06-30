@@ -1,0 +1,74 @@
+# values-docker.yaml — Overrides for all-in-one Docker (k3s) deployment
+# Applied ON TOP of values-local.yaml:
+#   helm install ... -f values-local.yaml -f values-docker.yaml
+serverTier: local
+ingress_class: nginx
+hostname: localhost
+minioHostname: minio.localhost
+# Local serves minio.localhost over http via the ingress (self-signed CA isn't trusted by
+# minio-py in the SIB pods), so presigned URLs must be generated for http, not https.
+minioExternalSecure: "False"
+
+minio:
+  serverImage: quay.io/minio/minio:latest
+  mcImage: quay.io/minio/mc:latest
+  imagePullPolicy: IfNotPresent
+  mcImagePullPolicy: IfNotPresent
+
+rabbitmq:
+  imagePullPolicy: IfNotPresent
+
+mongodb:
+  imagePullPolicy: IfNotPresent
+
+jobsApi:
+  imagePullPolicy: IfNotPresent
+
+dataManager:
+  imagePullPolicy: IfNotPresent
+
+executionApi:
+  imagePullPolicy: IfNotPresent
+
+serviceApi:
+  imagePullPolicy: IfNotPresent
+
+codeGenerator:
+  imagePullPolicy: IfNotPresent
+  initImagePullPolicy: IfNotPresent
+
+ontologyManager:
+  imagePullPolicy: IfNotPresent
+
+sibManager:
+  imagePullPolicy: IfNotPresent
+
+executionEnvironment:
+  imagePullPolicy: IfNotPresent
+
+frontend:
+  imagePullPolicy: IfNotPresent
+
+editor:
+  enabled: true
+  image: registry.gitlab.com/scce/cinco-projects/cinco-editor/cinco-editor@sha256:3a7ab800ebe4734401be8d204c341b79c72a73746fb45da69b829ea80b1eeafc
+  imagePullPolicy: IfNotPresent
+  installProcpsOnStartup: true
+  languageArchiveConfigMap:
+    enabled: true
+    name: cinco-de-bio-editor-language
+    key: languages.tgz
+  hostPorts:
+    enabled: true
+    glsp: 5007
+
+global:
+  containers:
+    docker_hub_namespace: "sccecellmaps"
+    docker_hub_username: ""
+    docker_hub_password: ""
+    cluster_image_registry:
+      name: "registry"
+      namespace: "kube-system"
+      port: 80
+      domain_on_host: "localhost:5000"

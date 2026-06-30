@@ -104,6 +104,10 @@ def initial_build_service_api(dh_namespace: str) -> bool:
     data_models = get_api_data_models()
 
     logging.warning("Latest SIBs: {}".format(latest))
+    if not latest:
+        logging.error("No latest CincoDeBio SIB images were discovered; refusing to persist empty SIB state")
+        return False
+
     # WRITE THEM TO LOCAL STATE - LATEST, INSTALLED, OTHER
         # Initially, we will assume that all latest sibs are installed
     with open(state_path / LATEST_SIBS, "w") as f:
@@ -221,26 +225,41 @@ def check_if_local_state_exists() -> bool:
     cc_sib_state_path = pathlib.Path(CINCO_CLOUD_SIBS_PATH)
     try:
         with open(state_path / LATEST_SIBS, "r") as f:
-            json.load(f)
+            latest_sibs = json.load(f)
 
         with open(state_path / OTHER_SIBS, "r") as f:
             json.load(f)
 
         with open(state_path / INSTALLED_SIBS, "r") as f:
-            json.load(f)
+            installed_sibs = json.load(f)
 
         with open(state_path / CURRENT_SIBS_IME_JSON, "r") as f:
-            json.load(f)
+            current_sibs = json.load(f)
         
         with open(state_path / UTD_SIB_FILE, "r") as f:
-            f.read()
+            utd_sib_file = f.read()
 
         with open(cc_sib_state_path / UTD_SIB_FILE_V2, "r") as f:
-            f.read()
+            utd_sib_file_v2 = f.read()
+
+        with open(state_path / SIB_MAP_FILE, "r") as f:
+            sib_map = json.load(f)
+
+        if not latest_sibs or not installed_sibs or not current_sibs:
+            logging.warning("Local SIB state exists but contains no installed SIBs; rebuilding")
+            return False
+
+        if not utd_sib_file.strip() or not utd_sib_file_v2.strip():
+            logging.warning("Local SIB files exist but are empty; rebuilding")
+            return False
+
+        if not sib_map.get("concepts"):
+            logging.warning("Local SIB map exists but contains no concepts; rebuilding")
+            return False
 
         return True
 
-    except FileNotFoundError:
+    except (FileNotFoundError, json.JSONDecodeError):
         return False
 
 

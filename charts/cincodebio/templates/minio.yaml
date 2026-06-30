@@ -1,0 +1,100 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: minio
+  labels:
+    app: minio
+spec:
+  ports:
+    - port: 9000
+      targetPort: 9000
+      protocol: TCP
+      name: minio-api
+    - port: 9001
+      targetPort: 9001
+      protocol: TCP
+      name: minio-console
+  selector:
+    app: minio
+  type: ClusterIP
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: minio-data-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: minio
+  labels:
+    app: minio
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: minio
+  template:
+    metadata:
+      labels:
+        app: minio
+    spec:
+      containers:
+        - name: minio
+          image: {{ .Values.minio.serverImage | default "minio/minio:latest" }}
+          imagePullPolicy: {{ .Values.minio.imagePullPolicy | default "IfNotPresent" }}
+          args:
+            - server
+            - /data
+            - --console-address
+            - ":9001"
+          ports:
+            - containerPort: 9000
+              name: api
+            - containerPort: 9001
+              name: console
+          env:
+            - name: MINIO_ROOT_USER
+              value: {{ .Values.minio.auth.rootUser }}
+            - name: MINIO_ROOT_PASSWORD
+              value: {{ .Values.minio.auth.rootPassword }}
+          volumeMounts:
+            - name: minio-data
+              mountPath: /data
+      volumes:
+        - name: minio-data
+          persistentVolumeClaim:
+            claimName: minio-data-pvc
+---
+# Job to create default buckets
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: minio-bucket-init
+  annotations:
+    "helm.sh/hook": post-install,post-upgrade
+    "helm.sh/hook-delete-policy": before-hook-creation
+spec:
+  template:
+    spec:
+      restartPolicy: OnFailure
+      containers:
+        - name: mc
+          image: {{ .Values.minio.mcImage | default "minio/mc:latest" }}
+          imagePullPolicy: {{ .Values.minio.mcImagePullPolicy | default "IfNotPresent" }}
+          command:
+            - /bin/sh
+            - -c
+            - |
+              sleep 10
+              mc alias set myminio http://minio:9000 {{ .Values.minio.auth.rootUser }} {{ .Values.minio.auth.rootPassword }}
+              mc mb --ignore-existing myminio/{{ .Values.minio.buckets.experimentBucket }}
+              mc mb --ignore-existing myminio/{{ .Values.minio.buckets.workflowBucket }}
+              mc mb --ignore-existing myminio/{{ .Values.minio.buckets.resultsBucket }}
+              echo "Buckets created successfully"

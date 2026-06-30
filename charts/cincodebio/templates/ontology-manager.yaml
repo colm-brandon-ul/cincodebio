@@ -43,7 +43,7 @@ spec:
       containers:
         - name: {{ .Values.ontologyManager.name }}
           image: {{ .Values.ontologyManager.image }}
-          imagePullPolicy: Always
+          imagePullPolicy: {{ .Values.ontologyManager.imagePullPolicy | default "Always" }}
           ports:
             - containerPort: 80
           volumeMounts:

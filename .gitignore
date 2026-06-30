@@ -50,6 +50,9 @@ coverage.xml
 *.py,cover
 .hypothesis/
 .pytest_cache/
+node_modules/
+test-results/
+artifacts/playwright/
 
 # Translations
 *.mo
@@ -140,3 +143,6 @@ execution-env-v2/
 local_playground/
 .ruff/*
 exec-v2/*
+
+# macOS metadata
+**/.DS_Store

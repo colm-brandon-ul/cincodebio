@@ -23,10 +23,11 @@ version: 0.1.41
 # It is recommended to use it with quotes.
 appVersion: "1.16.2"
 
-dependencies:
-- name: minio
-  version: 12.8.15
-  repository: https://charts.bitnami.com/bitnami
-- name: rabbitmq
-  version: 12.15.0
-  repository: https://charts.bitnami.com/bitnami
+# Bitnami minio/rabbitmq dependencies removed — using direct deployments with official images
+# dependencies:
+# - name: minio
+#   version: 12.8.15
+#   repository: https://charts.bitnami.com/bitnami
+# - name: rabbitmq
+#   version: 12.15.0
+#   repository: https://charts.bitnami.com/bitnami

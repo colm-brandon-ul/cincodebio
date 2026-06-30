@@ -1,7 +1,7 @@
 from config import (MINIO_FQDN, MINIO_SERVICE_PORT_MINIO_CONSOLE, 
                     MINIO_WORKFLOW_BUCKET, MINIO_EXPERIMENT_BUCKET)
-from utils import (get_minio_client, get_minio_session_token, retrieve_prefix_for_job, 
-                   stream_file)
+from utils import (get_minio_client, get_minio_session_token, retrieve_prefix_for_job,
+                   stream_file, build_prefix_zip, stream_zip_and_cleanup)
 
 from fastapi import APIRouter, HTTPException
 from minio.commonconfig import Tags
@@ -115,66 +115,43 @@ def add_tags(prefix: str, object_name: str, experimental_tag: str, file_tag: str
 # HANDLING DATA DOWNLOAD (I.E. RESULTS)
 # Using query parameter instead of path parameter
 @router.get("/get-job-data-as-zip/{job_id}", response_class=StreamingResponse)
-def get_job_as_zip(job_id: str, 
+def get_job_as_zip(job_id: str,
                       request: Request,
                       background_tasks: BackgroundTasks):
-    
-    # Get the session token (for Minio Console API)
-    cookies = get_minio_session_token()
 
-
-
-    # To get all the files with a prefix, (i.e. workflow id, is straightforward)
-    # For intermediate results, it's slightly more complicated
-    # As the prefix is WORKFLOW_ID/YYYY-MM-DD-HH-MM-SS-ROUTING_KEY
-    
+    # The job's results live under WORKFLOW_ID/YYYY-MM-DD-HH-MM-SS-ROUTING_KEY/ in the workflow bucket.
     prefix = retrieve_prefix_for_job(job_id)
-
 
     # If the prefix is None, the job does not exist (or there was an error in the request to the jobs API)
     if prefix is None:
-        return HTTPException(status_code=404, detail=f"Job {job_id} not found")
+        raise HTTPException(status_code=404, detail=f"Job {job_id} not found")
 
-    # Convert the string to bytes, then encode it in base64
-    encoded = base64.b64encode(prefix.encode())
+    # Zip every object under the prefix directly via the S3 API (the Console API rejected folder
+    # prefixes with "specified key does not exist").
+    zip_path = build_prefix_zip(MINIO_WORKFLOW_BUCKET, prefix)
+    if zip_path is None:
+        raise HTTPException(status_code=404, detail=f"No data found for job {job_id}")
 
-    # The result is a bytes object, so if you want it as a string, you can decode it
-    encoded_str = encoded.decode()
-
-    # Rather than using the Minio API, we will use the Minio Console API to download the files (as it automatically zips the files, for a prefix)
-    # This operation is not supported by the S3 API.
     return StreamingResponse(
-        stream_file(
-            f'http://{MINIO_FQDN}:{MINIO_SERVICE_PORT_MINIO_CONSOLE}/api/v1/buckets/{MINIO_WORKFLOW_BUCKET}/objects/download?prefix={encoded_str}', 
-            cookies), 
-        media_type="application/zip")
+        stream_zip_and_cleanup(zip_path),
+        media_type="application/zip",
+        headers={"Content-Disposition": f'attachment; filename="{job_id}.zip"'})
 
 
 
 @router.get("/get-workflow-data-as-zip/{workflow_id}", response_class=StreamingResponse)
-def get_wf_as_zip(workflow_id: str, 
+def get_wf_as_zip(workflow_id: str,
                       request: Request,
                       background_tasks: BackgroundTasks):
-    
 
-    # Get the session token (for Minio Console API)
-    cookies = get_minio_session_token()
-
-    # append backslash to workflow_id to create the prefix
     prefix = f'{workflow_id}/'
 
+    # Zip every object under the workflow prefix directly via the S3 API.
+    zip_path = build_prefix_zip(MINIO_WORKFLOW_BUCKET, prefix)
+    if zip_path is None:
+        raise HTTPException(status_code=404, detail=f"No data found for workflow {workflow_id}")
 
-    # Convert the string to bytes, then encode it in base64
-    encoded = base64.b64encode(prefix.encode())
-
-    # The result is a bytes object, so if you want it as a string, you can decode it
-    encoded_str = encoded.decode()
-
-
-    # Rather than using the Minio API, we will use the Minio Console API to download the files (as it automatically zips the files, for a prefix)
-    # This operation is not supported by the S3 API.
     return StreamingResponse(
-        stream_file(
-            f'http://{MINIO_FQDN}:{MINIO_SERVICE_PORT_MINIO_CONSOLE}/api/v1/buckets/{MINIO_WORKFLOW_BUCKET}/objects/download?prefix={encoded_str}', 
-            cookies), 
-        media_type="application/zip")
+        stream_zip_and_cleanup(zip_path),
+        media_type="application/zip",
+        headers={"Content-Disposition": f'attachment; filename="{workflow_id}.zip"'})

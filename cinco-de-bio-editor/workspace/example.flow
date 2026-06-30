@@ -1,0 +1,46 @@
+{
+  "id": "example",
+  "type": "cincodebio:cincodebiographmodel",
+  "_attributes": {},
+  "_containments": [
+    {
+      "id": "example_start",
+      "type": "cincodebio:interactivesib",
+      "_attributes": {
+        "name": "CollectSlideMetadata",
+        "label": "Collect Slide Metadata",
+        "documentation": "Interactive starting task that collects slide-level metadata before automated image processing.",
+        "validBranches": ["success"]
+      },
+      "_primeReference": { "instanceId": "example-task-collect-metadata", "instanceType": "siblibrary:task", "modelId": "sib_library_example", "modelType": "siblibrary:siblibrary", "filePath": "sib-library-example.sibs" },
+      "_position": { "x": 100, "y": 120 },
+      "_size": { "width": 280, "height": 170 },
+      "_containments": [
+        { "id": "example_start_label", "type": "cincodebio:siblabel", "_attributes": { "label": "Collect Slide Metadata", "icon": "icons/task.png" }, "_position": { "x": 0, "y": 20 }, "_size": { "width": 280, "height": 50 } },
+        { "id": "example_start_output", "type": "cincodebio:outputport", "_attributes": { "name": "slide_metadata", "typeName": "SlideMetadata", "list": "false" }, "_position": { "x": 0, "y": 75 }, "_size": { "width": 280, "height": 20 } }
+      ]
+    },
+    {
+      "id": "example_segment",
+      "type": "cincodebio:automatedsib",
+      "_attributes": {
+        "name": "SegmentCells",
+        "label": "Segment Cells",
+        "documentation": "Automated service that segments cells after metadata review.",
+        "validBranches": ["success"]
+      },
+      "_primeReference": { "instanceId": "example-service-segment-cells", "instanceType": "siblibrary:service", "modelId": "sib_library_example", "modelType": "siblibrary:siblibrary", "filePath": "sib-library-example.sibs" },
+      "_position": { "x": 500, "y": 120 },
+      "_size": { "width": 280, "height": 205 },
+      "_containments": [
+        { "id": "example_segment_input", "type": "cincodebio:inputport", "_attributes": { "name": "slide_metadata", "typeName": "SlideMetadata", "list": "false" }, "_position": { "x": 0, "y": 20 }, "_size": { "width": 280, "height": 20 } },
+        { "id": "example_segment_label", "type": "cincodebio:siblabel", "_attributes": { "label": "Segment Cells", "icon": "icons/service.png" }, "_position": { "x": 0, "y": 45 }, "_size": { "width": 280, "height": 50 } },
+        { "id": "example_segment_output", "type": "cincodebio:outputport", "_attributes": { "name": "cell_masks", "typeName": "CellMask", "list": "true" }, "_position": { "x": 0, "y": 100 }, "_size": { "width": 280, "height": 20 } }
+      ]
+    }
+  ],
+  "_edges": [
+    { "id": "example_control", "type": "cincodebio:controlflow", "sourceID": "example_start", "targetID": "example_segment", "_attributes": { "label": "success" }, "_routingPoints": [] },
+    { "id": "example_data", "type": "cincodebio:dataflow", "sourceID": "example_start_output", "targetID": "example_segment_input", "_attributes": {}, "_routingPoints": [] }
+  ]
+}

@@ -32,7 +32,7 @@ spec:
       containers:
         - name: {{ .Values.dataManager.name }}
           image: {{ .Values.dataManager.image }}
-          imagePullPolicy: Always
+          imagePullPolicy: {{ .Values.dataManager.imagePullPolicy | default "Always" }}
           ports:
             - containerPort: 80
           env:
@@ -56,6 +56,9 @@ spec:
               value: {{ .Values.global.ontology.default_url }}
             - name: MINIO_EXTERNAL_HOST
               value: {{ .Values.minioHostname }}
+            # Local deployments serve minio.localhost over http via the ingress -> "False".
+            - name: MINIO_EXTERNAL_SECURE
+              value: {{ .Values.minioExternalSecure | default "True" | quote }}
             - name: CINCO_DE_BIO_NAMESPACE
               valueFrom:
                 fieldRef:

@@ -29,10 +29,11 @@ spec:
       labels:
         app: {{ .Values.serviceApi.name }}
     spec:
+      serviceAccountName: cincodebio-sa
       containers:
         - name: {{ .Values.serviceApi.name }}
           image: {{ .Values.serviceApi.image }}
-          imagePullPolicy: Always
+          imagePullPolicy: {{ .Values.serviceApi.imagePullPolicy | default "Always" }}
           ports:
             - containerPort: 80
           env:
@@ -58,6 +59,10 @@ spec:
               value: {{ .Values.global.ingress_paths.minio_presigned_ingress_path }}
             - name: MINIO_EXTERNAL_HOST
               value: {{ .Values.minioHostname }}
+            # Propagated onto the SIB job pods (static-code/k8sjobs.py). Local deployments
+            # serve minio.localhost over http via the ingress, so this is "False" there.
+            - name: MINIO_EXTERNAL_SECURE
+              value: {{ .Values.minioExternalSecure | default "True" | quote }}
 
             - name: CINCO_DE_BIO_NAMESPACE
               valueFrom:

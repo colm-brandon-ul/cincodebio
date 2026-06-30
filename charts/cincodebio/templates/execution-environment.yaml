@@ -51,7 +51,7 @@ spec:
       containers:
       - name: {{ .Values.executionEnvironment.name }}
         image: {{ .Values.executionEnvironment.image }}
-        imagePullPolicy: Always
+        imagePullPolicy: {{ .Values.executionEnvironment.imagePullPolicy | default "Always" }}
         ports:
           - containerPort: 80
             name: http

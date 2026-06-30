@@ -15,6 +15,9 @@ MINIO_SERVICE_PORT = os.environ.get('MINIO_SERVICE_PORT')
 MINIO_SERVICE_PORT_MINIO_CONSOLE = os.environ.get('MINIO_SERVICE_PORT_MINIO_CONSOLE')
 
 MINIO_EXTERNAL_HOST = os.environ.get('MINIO_EXTERNAL_HOST')
+# Local deployments serve minio.localhost over http via the ingress (self-signed CA not
+# trusted), so MINIO_EXTERNAL_SECURE is "False" there; production uses real TLS ("True").
+MINIO_EXTERNAL_SECURE = os.environ.get('MINIO_EXTERNAL_SECURE', 'True') == 'True'
 
 # Get Ingress Paths
 SIB_MANAGER_API_INGRESS = os.environ.get('SIB_MANAGER_API_INGRESS_PATH')

@@ -32,7 +32,7 @@ spec:
       containers:
         - name: {{ .Values.jobsApi.name }}
           image: {{ .Values.jobsApi.image }}
-          imagePullPolicy: Always
+          imagePullPolicy: {{ .Values.jobsApi.imagePullPolicy | default "Always" }}
           ports:
             - containerPort: 80
           env:

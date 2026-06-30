@@ -1,0 +1,98 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: rabbitmq
+  labels:
+    app: rabbitmq
+spec:
+  ports:
+    - port: 5672
+      targetPort: 5672
+      protocol: TCP
+      name: amqp
+    - port: 15672
+      targetPort: 15672
+      protocol: TCP
+      name: management
+    - port: 4369
+      targetPort: 4369
+      protocol: TCP
+      name: epmd
+    - port: 25672
+      targetPort: 25672
+      protocol: TCP
+      name: clustering
+  selector:
+    app: rabbitmq
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: rabbitmq-headless
+  labels:
+    app: rabbitmq
+spec:
+  clusterIP: None
+  ports:
+    - port: 5672
+      targetPort: 5672
+      name: amqp
+    - port: 4369
+      targetPort: 4369
+      name: epmd
+    - port: 25672
+      targetPort: 25672
+      name: clustering
+    - port: 15672
+      targetPort: 15672
+      name: management
+  selector:
+    app: rabbitmq
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: rabbitmq
+  labels:
+    app: rabbitmq
+spec:
+  serviceName: rabbitmq-headless
+  replicas: 1
+  selector:
+    matchLabels:
+      app: rabbitmq
+  template:
+    metadata:
+      labels:
+        app: rabbitmq
+    spec:
+      containers:
+        - name: rabbitmq
+          image: {{ .Values.rabbitmq.image | default "rabbitmq:3-management" }}
+          imagePullPolicy: {{ .Values.rabbitmq.imagePullPolicy | default "IfNotPresent" }}
+          ports:
+            - containerPort: 5672
+              name: amqp
+            - containerPort: 15672
+              name: management
+            - containerPort: 4369
+              name: epmd
+            - containerPort: 25672
+              name: clustering
+          env:
+            - name: RABBITMQ_DEFAULT_USER
+              value: {{ .Values.rabbitmq.auth.username }}
+            - name: RABBITMQ_DEFAULT_PASS
+              value: {{ .Values.rabbitmq.auth.password }}
+          volumeMounts:
+            - name: rabbitmq-data
+              mountPath: /var/lib/rabbitmq
+  volumeClaimTemplates:
+    - metadata:
+        name: rabbitmq-data
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 1Gi

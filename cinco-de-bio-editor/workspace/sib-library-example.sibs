@@ -1,0 +1,90 @@
+{
+  "id": "sib_library_example",
+  "type": "siblibrary:siblibrary",
+  "_attributes": {},
+  "_containments": [
+    {
+      "id": "coverage-task-review-input-images",
+      "type": "siblibrary:task",
+      "_attributes": {
+        "name": "ReviewInputImages",
+        "label": "Review Input Images",
+        "documentation": "Human review task that approves or rejects image inputs."
+      },
+      "_position": { "x": 80, "y": 100 },
+      "_size": { "width": 300, "height": 180 },
+      "_containments": [
+        { "id": "coverage_task_label", "type": "siblibrary:label", "_attributes": { "name": "ReviewInputImages", "label": "Review Input Images", "icon": "icons/task.png" }, "_position": { "x": 0, "y": 20 }, "_size": { "width": 300, "height": 50 } },
+        { "id": "coverage_task_output", "type": "siblibrary:output", "_attributes": { "name": "accepted_images", "typeName": "Image", "list": "true" }, "_position": { "x": 0, "y": 75 }, "_size": { "width": 300, "height": 20 } },
+        { "id": "coverage_task_approved", "type": "siblibrary:branch", "_attributes": { "name": "approved" }, "_position": { "x": 0, "y": 100 }, "_size": { "width": 300, "height": 20 } },
+        { "id": "coverage_task_rejected", "type": "siblibrary:branch", "_attributes": { "name": "rejected" }, "_position": { "x": 0, "y": 125 }, "_size": { "width": 300, "height": 20 } }
+      ]
+    },
+    {
+      "id": "coverage-service-run-segmentation",
+      "type": "siblibrary:service",
+      "_attributes": {
+        "name": "RunSegmentation",
+        "label": "Run Segmentation",
+        "documentation": "Automated segmentation service with list-valued image inputs and mask outputs."
+      },
+      "_position": { "x": 480, "y": 100 },
+      "_size": { "width": 300, "height": 180 },
+      "_containments": [
+        { "id": "coverage_service_input", "type": "siblibrary:input", "_attributes": { "name": "accepted_images", "typeName": "Image", "list": "true" }, "_position": { "x": 0, "y": 20 }, "_size": { "width": 300, "height": 20 } },
+        { "id": "coverage_service_label", "type": "siblibrary:label", "_attributes": { "name": "RunSegmentation", "label": "Run Segmentation", "icon": "icons/service.png" }, "_position": { "x": 0, "y": 45 }, "_size": { "width": 300, "height": 50 } },
+        { "id": "coverage_service_output", "type": "siblibrary:output", "_attributes": { "name": "cell_masks", "typeName": "CellMask", "list": "true" }, "_position": { "x": 0, "y": 100 }, "_size": { "width": 300, "height": 20 } },
+        { "id": "coverage_service_success", "type": "siblibrary:branch", "_attributes": { "name": "success" }, "_position": { "x": 0, "y": 125 }, "_size": { "width": 300, "height": 20 } }
+      ]
+    },
+    {
+      "id": "coverage-service-export-results",
+      "type": "siblibrary:service",
+      "_attributes": {
+        "name": "ExportResults",
+        "label": "Export Results",
+        "documentation": "Automated export service for segmentation outputs."
+      },
+      "_position": { "x": 880, "y": 100 },
+      "_size": { "width": 300, "height": 150 },
+      "_containments": [
+        { "id": "coverage_export_input", "type": "siblibrary:input", "_attributes": { "name": "cell_masks", "typeName": "CellMask", "list": "true" }, "_position": { "x": 0, "y": 20 }, "_size": { "width": 300, "height": 20 } },
+        { "id": "coverage_export_label", "type": "siblibrary:label", "_attributes": { "name": "ExportResults", "label": "Export Results", "icon": "icons/service.png" }, "_position": { "x": 0, "y": 45 }, "_size": { "width": 300, "height": 50 } },
+        { "id": "coverage_export_success", "type": "siblibrary:branch", "_attributes": { "name": "success" }, "_position": { "x": 0, "y": 100 }, "_size": { "width": 300, "height": 20 } }
+      ]
+    },
+    {
+      "id": "example-task-collect-metadata",
+      "type": "siblibrary:task",
+      "_attributes": {
+        "name": "CollectSlideMetadata",
+        "label": "Collect Slide Metadata",
+        "documentation": "Interactive starting task that collects slide-level metadata before automated image processing."
+      },
+      "_position": { "x": 80, "y": 500 },
+      "_size": { "width": 300, "height": 170 },
+      "_containments": [
+        { "id": "example_task_label", "type": "siblibrary:label", "_attributes": { "name": "CollectSlideMetadata", "label": "Collect Slide Metadata", "icon": "icons/task.png" }, "_position": { "x": 0, "y": 20 }, "_size": { "width": 300, "height": 50 } },
+        { "id": "example_task_output", "type": "siblibrary:output", "_attributes": { "name": "slide_metadata", "typeName": "SlideMetadata", "list": "false" }, "_position": { "x": 0, "y": 75 }, "_size": { "width": 300, "height": 20 } },
+        { "id": "example_task_success", "type": "siblibrary:branch", "_attributes": { "name": "success" }, "_position": { "x": 0, "y": 100 }, "_size": { "width": 300, "height": 20 } }
+      ]
+    },
+    {
+      "id": "example-service-segment-cells",
+      "type": "siblibrary:service",
+      "_attributes": {
+        "name": "SegmentCells",
+        "label": "Segment Cells",
+        "documentation": "Automated service that segments cells after metadata review."
+      },
+      "_position": { "x": 480, "y": 500 },
+      "_size": { "width": 300, "height": 170 },
+      "_containments": [
+        { "id": "example_service_input", "type": "siblibrary:input", "_attributes": { "name": "slide_metadata", "typeName": "SlideMetadata", "list": "false" }, "_position": { "x": 0, "y": 20 }, "_size": { "width": 300, "height": 20 } },
+        { "id": "example_service_label", "type": "siblibrary:label", "_attributes": { "name": "SegmentCells", "label": "Segment Cells", "icon": "icons/service.png" }, "_position": { "x": 0, "y": 45 }, "_size": { "width": 300, "height": 50 } },
+        { "id": "example_service_output", "type": "siblibrary:output", "_attributes": { "name": "cell_masks", "typeName": "CellMask", "list": "true" }, "_position": { "x": 0, "y": 100 }, "_size": { "width": 300, "height": 20 } },
+        { "id": "example_service_success", "type": "siblibrary:branch", "_attributes": { "name": "success" }, "_position": { "x": 0, "y": 125 }, "_size": { "width": 300, "height": 20 } }
+      ]
+    }
+  ]
+}

@@ -32,7 +32,7 @@ spec:
       containers:
         - name: {{ .Values.frontend.name }}
           image: {{ .Values.frontend.image }}
-          imagePullPolicy: Always
+          imagePullPolicy: {{ .Values.frontend.imagePullPolicy | default "Always" }}
           ports:
             - containerPort: 80
           env:

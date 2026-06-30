@@ -1,0 +1,65 @@
+{
+  "id": "semantic_coverage",
+  "type": "cincodebio:cincodebiographmodel",
+  "_attributes": {},
+  "_containments": [
+    {
+      "id": "coverage_ingest",
+      "type": "cincodebio:interactivesib",
+      "_attributes": {
+        "name": "ReviewInputImages",
+        "label": "Review Input Images",
+        "documentation": "Interactive SIB used by tests for double-click documentation, task icons, branch labels, and input/output validation.",
+        "validBranches": ["approved", "rejected"]
+      },
+      "_primeReference": { "instanceId": "coverage-task-review-input-images", "instanceType": "siblibrary:task", "modelId": "sib_library_example", "modelType": "siblibrary:siblibrary", "filePath": "sib-library-example.sibs" },
+      "_position": { "x": 80, "y": 120 },
+      "_size": { "width": 300, "height": 220 },
+      "_containments": [
+        { "id": "coverage_ingest_label", "type": "cincodebio:siblabel", "_attributes": { "label": "Review Input Images", "icon": "icons/task.png" }, "_position": { "x": 0, "y": 20 }, "_size": { "width": 300, "height": 50 } },
+        { "id": "coverage_ingest_output", "type": "cincodebio:outputport", "_attributes": { "name": "accepted_images", "typeName": "Image", "list": "true" }, "_position": { "x": 0, "y": 75 }, "_size": { "width": 300, "height": 20 } }
+      ]
+    },
+    {
+      "id": "coverage_segment",
+      "type": "cincodebio:automatedsib",
+      "_attributes": {
+        "name": "RunSegmentation",
+        "label": "Run Segmentation",
+        "documentation": "Automated SIB used by tests for service icons, UpdateSIB synchronization, data-flow validation, and generator coverage.",
+        "validBranches": ["success"]
+      },
+      "_primeReference": { "instanceId": "coverage-service-run-segmentation", "instanceType": "siblibrary:service", "modelId": "sib_library_example", "modelType": "siblibrary:siblibrary", "filePath": "sib-library-example.sibs" },
+      "_position": { "x": 520, "y": 120 },
+      "_size": { "width": 300, "height": 220 },
+      "_containments": [
+        { "id": "coverage_segment_input", "type": "cincodebio:inputport", "_attributes": { "name": "accepted_images", "typeName": "Image", "list": "true" }, "_position": { "x": 0, "y": 20 }, "_size": { "width": 300, "height": 20 } },
+        { "id": "coverage_segment_label", "type": "cincodebio:siblabel", "_attributes": { "label": "Run Segmentation", "icon": "icons/service.png" }, "_position": { "x": 0, "y": 45 }, "_size": { "width": 300, "height": 50 } },
+        { "id": "coverage_segment_output", "type": "cincodebio:outputport", "_attributes": { "name": "cell_masks", "typeName": "CellMask", "list": "true" }, "_position": { "x": 0, "y": 100 }, "_size": { "width": 300, "height": 20 } }
+      ]
+    },
+    {
+      "id": "coverage_export",
+      "type": "cincodebio:automatedsib",
+      "_attributes": {
+        "name": "ExportResults",
+        "label": "Export Results",
+        "documentation": "Automated SIB used by tests for downstream control-flow and data-flow semantics.",
+        "validBranches": ["success"]
+      },
+      "_primeReference": { "instanceId": "coverage-service-export-results", "instanceType": "siblibrary:service", "modelId": "sib_library_example", "modelType": "siblibrary:siblibrary", "filePath": "sib-library-example.sibs" },
+      "_position": { "x": 960, "y": 120 },
+      "_size": { "width": 300, "height": 190 },
+      "_containments": [
+        { "id": "coverage_export_input", "type": "cincodebio:inputport", "_attributes": { "name": "cell_masks", "typeName": "CellMask", "list": "true" }, "_position": { "x": 0, "y": 20 }, "_size": { "width": 300, "height": 20 } },
+        { "id": "coverage_export_label", "type": "cincodebio:siblabel", "_attributes": { "label": "Export Results", "icon": "icons/service.png" }, "_position": { "x": 0, "y": 45 }, "_size": { "width": 300, "height": 50 } }
+      ]
+    }
+  ],
+  "_edges": [
+    { "id": "coverage_cf_ingest_segment", "type": "cincodebio:controlflow", "sourceID": "coverage_ingest", "targetID": "coverage_segment", "_attributes": { "label": "approved" }, "_routingPoints": [] },
+    { "id": "coverage_cf_segment_export", "type": "cincodebio:controlflow", "sourceID": "coverage_segment", "targetID": "coverage_export", "_attributes": { "label": "success" }, "_routingPoints": [] },
+    { "id": "coverage_df_ingest_segment", "type": "cincodebio:dataflow", "sourceID": "coverage_ingest_output", "targetID": "coverage_segment_input", "_attributes": {}, "_routingPoints": [] },
+    { "id": "coverage_df_segment_export", "type": "cincodebio:dataflow", "sourceID": "coverage_segment_output", "targetID": "coverage_export_input", "_attributes": {}, "_routingPoints": [] }
+  ]
+}

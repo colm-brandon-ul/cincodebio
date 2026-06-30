@@ -1,0 +1,156 @@
+appearance default {
+	lineWidth 2
+	background (229,229,229)
+	
+	// register additional required images here
+	imagePath("icons/task.png")
+}
+
+appearance labelFont {
+    foreground (0, 0, 0)
+	font ("Sans",16)
+}
+
+appearance labelFontItalics {
+    foreground (0, 0, 0)
+	font ("Sans",ITALIC,10)
+}
+
+appearance labelFontWhite {
+    foreground (255,255,255)
+	font ("Sans",16)
+}
+
+appearance controlFlowAppearanceLine {
+	lineWidth 4
+    lineStyle SOLID
+	foreground (0,0,0)
+    
+}
+
+appearance controlFlowAppearanceArrowHead {
+	lineWidth 4
+    lineStyle SOLID
+	foreground (0,0,0)
+    
+}
+
+appearance dataFlowAppearance extends default {
+	lineWidth 1
+	lineStyle SOLID
+	foreground (77,77,77)
+}
+
+// ############ NODE STYLES #############
+
+nodeStyle sib {
+	// appearanceProvider("info.scce.cinco.product.hippoflow.appear.flow.SIBAppearance")
+	roundedRectangle {
+		appearance extends default {
+			background (230,230,230)
+		}
+		size (240,65)
+		corner (6,6)
+	}
+}
+
+nodeStyle sibLabel(2) {
+	// appearanceProvider("info.scce.cinco.product.hippoflow.appear.flow.SIBLabelAppearance")
+	rectangle  {
+		appearance extends default {
+			transparency 1.0
+		}
+		size (236,50)
+		image  {
+			position (LEFT 8, MIDDLE)
+		 	size (fix 24, fix 24)
+		 	path ("%2$s")
+		}
+		text {
+			appearance labelFont
+			position (LEFT 40, MIDDLE)
+		 	value "%1$s"
+		}
+	}
+}
+
+nodeStyle inputPort(4) {
+	// appearanceProvider("info.scce.cinco.product.hippoflow.appear.flow.InputPortAppearance")
+	rectangle  {
+		appearance extends default {
+			lineWidth 0
+			foreground (245,245,245)
+			background (245,245,245)
+		}
+		size (236,30)
+		image {
+			position (LEFT, MIDDLE)
+		 	size (fix 15, fix 30)
+		 	path ( "cinco-de-bio/icons/arrow-input-filled-transparent-300.png" )
+		}
+		text {
+			appearance labelFontItalics
+			position (LEFT 25, MIDDLE)
+		 	value "%1$s : %3$s"
+		}
+	}
+}
+
+nodeStyle outputPort(4) {
+	// appearanceProvider("info.scce.cinco.product.hippoflow.appear.flow.OutputPortAppearance")
+	rectangle  {
+		appearance extends default {
+			lineWidth 0
+			foreground (245,245,245)
+			background (245,245,245)
+		}
+		size (236,30)
+		image {
+			position (RIGHT, MIDDLE)
+		 	size (fix 15, fix 30)
+		 	path ( "cinco-de-bio/icons/arrow-output-filled-300.png" )
+		}
+		text {
+			appearance labelFontItalics
+			position (LEFT 25, MIDDLE)
+		 	value "%1$s : %3$s"
+		}
+	}
+}
+
+edgeStyle controlFlow(1) {	
+	appearance controlFlowAppearanceLine
+	decorator {
+		location (0.98) // at the end of the edge
+		ARROW
+		appearance controlFlowAppearanceArrowHead
+	}
+	decorator {
+		movable
+		text {
+			appearance labelFontWhite
+		 	value "%s"
+		}
+		location (0.5) // at the middle of the edge
+	}
+}
+
+edgeStyle dataFlow {	
+	appearance dataFlowAppearance
+}
+
+// dummy node style to define required icons
+nodeStyle dummy {
+	rectangle {
+		image {
+			position (0,0)
+		 	size (0,0)
+		 	path ("cinco-de-bio/icons/service.png")
+		}
+		image {
+			position (0,0)
+		 	size (0,0)
+		 	path ("cinco-de-bio/icons/task.png")
+		}
+	}
+}

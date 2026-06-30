@@ -1,0 +1,94 @@
+stylePath "siblibrary.msl"
+
+@transient
+// @Hook("", PostContentChange)
+graphModel SIBLibrary {
+	diagramExtension "sibs"
+	
+	containableElements(SIBDef)
+}
+
+abstract container SIBDef {
+	attr string as name := "<unnamed>"
+	attr string as label := "<unnamed>"
+	@multiline attr string as documentation
+	
+	containableElements(Label,IODef,Branch)
+}
+
+// @postCreate("info.scce.cinco.product.hippoflow.hook.lib.ServicePostCreate")
+// @postMove("info.scce.cinco.product.hippoflow.hook.lib.ServicePostMove")
+// @postResize("info.scce.cinco.product.hippoflow.hook.lib.ServicePostResize")
+@Hook("SIBDefHook", PostCreate, PostMove, PostResize, PostAttributeChange)
+@AppearanceProvider(SIBDefAppearanceProvider)
+container Service extends SIBDef {
+	style service
+}
+
+// @postCreate("info.scce.cinco.product.hippoflow.hook.lib.TaskPostCreate")
+// @postMove("info.scce.cinco.product.hippoflow.hook.lib.TaskPostMove")
+// @postResize("info.scce.cinco.product.hippoflow.hook.lib.TaskPostResize")
+@Hook("SIBDefHook", PostCreate, PostMove, PostResize)
+@AppearanceProvider(SIBDefAppearanceProvider)
+container Task extends SIBDef {
+	style task
+}
+
+@disable(create,delete,move,resize)
+@AppearanceProvider("SibLibLabelAppearanceProvider")
+@disable(select)
+node Label {
+	style label("${icon}", "${name}", "${label}")
+	@readOnly
+	attr string as name := "<unnamed>"
+    @readOnly
+	attr string as label := "<unnamed>"
+    @hidden @readOnly 
+    attr string as icon := "icons/service.png"
+}
+
+/*** Input / Output ***/
+
+abstract node IODef {
+	// @mcam_label
+	attr string as name := "<unnamed>"
+	attr string as typeName := "<untyped>"
+	attr string as list := "false"
+}
+
+@disable(resize)
+@palette("IO")
+// @postCreate("info.scce.cinco.product.hippoflow.hook.lib.InputPostCreate")
+// @postMove("info.scce.cinco.product.hippoflow.hook.NodePostMove")
+// @postResize("info.scce.cinco.product.hippoflow.hook.NodePostResize")
+// @postDelete("info.scce.cinco.product.hippoflow.hook.NodePostDelete")
+@Hook("NodeHook",PostCreate,PostMove,PostResize,PostDelete)
+// @AppearanceProvider(SibLibInputAppearanceProvider)
+node Input extends IODef {
+	style input("${name}" ,"${typeName}")
+}
+
+@disable(resize)
+@palette("IO")
+// @postCreate("info.scce.cinco.product.hippoflow.hook.lib.OutputPostCreate")
+// @postMove("info.scce.cinco.product.hippoflow.hook.NodePostMove")
+// @postResize("info.scce.cinco.product.hippoflow.hook.NodePostResize")
+// @postDelete("info.scce.cinco.product.hippoflow.hook.NodePostDelete")
+@Hook("NodeHook",PostCreate,PostMove,PostResize,PostDelete)
+// @AppearanceProvider(SibLibOutputAppearanceProvider)
+node Output extends IODef {
+	style output("${name}" ,"${typeName}")
+}
+
+@disable(resize)
+@palette("Branching")
+// @postCreate("info.scce.cinco.product.hippoflow.hook.NodePostCreate")
+// @postMove("info.scce.cinco.product.hippoflow.hook.NodePostMove")
+// @postResize("info.scce.cinco.product.hippoflow.hook.NodePostResize")
+// @postDelete("info.scce.cinco.product.hippoflow.hook.NodePostDelete")
+@Hook("NodeHook",PostCreate,PostMove,PostResize,PostDelete)
+node Branch {
+	style branch("${name}")
+	// @mcam_label
+	attr string as name := "<unnamed>"
+}

@@ -5,7 +5,9 @@ metadata:
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /$1
     nginx.ingress.kubernetes.io/enable-rewrite-log: "true"
+  {{ if ne .Values.serverTier "local" }}
     cert-manager.io/issuer: "letsencrypt-{{ .Values.serverTier }}"
+  {{ end }}
 spec:
   ingressClassName: {{ .Values.ingress_class }}
   tls:
@@ -21,35 +23,98 @@ spec:
     http:
       paths:
       - path: /app/(.*)
-        pathType: Prefix
+        pathType: ImplementationSpecific
         backend:
           service:
             name: {{ .Values.frontend.name }}
             port:
               number: 80
 
+      {{- if .Values.editor.enabled }}
+      - path: /{{ .Values.global.ingress_paths.editor_ingress_path }}/(.*)
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: {{ .Values.editor.name }}
+            port:
+              number: 3000
+      - path: /{{ .Values.global.ingress_paths.editor_files_ingress_path }}/(.*)
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: {{ .Values.editor.name }}
+            port:
+              number: 3003
+      {{- end }}
+
       # Definitely needs to be available outside the cluster
       - path: /{{ .Values.global.ingress_paths.minio_console_ingress_path }}/(.*)
-        pathType: Prefix
+        pathType: ImplementationSpecific
         backend:
           service:
             name: {{ .Values.minio.fullnameOverride }}
             port:
               number: 9001
 ---
+{{- if .Values.editor.enabled }}
+# GLSP diagram websocket (editor :5007) proxied on port 80 so the diagram loads without
+# publishing :5007 to the host. The editor's WEBSOCKET_HOST_MAPPING makes the client connect to
+# ws://<host>/<editor_glsp_ingress_path>/cinco-diagram; the rewrite strips the prefix so the GLSP
+# server receives /cinco-diagram. Long proxy timeouts keep the long-lived ws connection open.
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: editor-glsp-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /$1
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
+  {{ if ne .Values.serverTier "local" }}
+    cert-manager.io/issuer: "letsencrypt-{{ .Values.serverTier }}"
+  {{ end }}
+spec:
+  ingressClassName: {{ .Values.ingress_class }}
+  tls:
+    - hosts:
+        - {{ .Values.hostname }}
+      {{- if eq .Values.serverTier "local" }}
+      secretName: "cincodebio-local-cert-secret"
+      {{- else }}
+      secretName: "letsencrypt-secret-{{ .Values.serverTier }}"
+      {{- end }}
+  rules:
+  - host: {{ .Values.hostname }}
+    http:
+      paths:
+      - path: /{{ .Values.global.ingress_paths.editor_glsp_ingress_path }}/(.*)
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: {{ .Values.editor.name }}
+            port:
+              number: 5007
+---
+{{- end }}
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: minio-presigned-ingress
   annotations:
+{{ if ne .Values.serverTier "local" }}
     cert-manager.io/issuer: "letsencrypt-{{ .Values.serverTier }}"
+{{ end }}
     nginx.ingress.kubernetes.io/proxy-body-size: "0"
     nginx.ingress.kubernetes.io/proxy-buffering: "off"
     nginx.ingress.kubernetes.io/proxy-request-buffering: "off"
     nginx.ingress.kubernetes.io/proxy-connect-timeout: "300"
     nginx.ingress.kubernetes.io/proxy-http-version: "1.1"
-    nginx.ingress.kubernetes.io/proxy-set-headers: |
-      Connection ""
+    # nginx.ingress.kubernetes.io/proxy-set-headers: |
+    #  Connection ""
+    # NOTE: 'proxy-set-headers' must reference a ConfigMap, not a literal — a literal
+    # value made the ingress-nginx controller reject this Ingress as a "risky annotation",
+    # so the minio.localhost server block was never generated (presigned URLs 404'd). Removed.
+    # 'configuration-snippet' requires controller config allow-snippet-annotations=true AND
+    # annotations-risk-level=Critical (set by both the k3s entrypoint and install.sh minikube path).
     nginx.ingress.kubernetes.io/configuration-snippet: |
       chunked_transfer_encoding off;
 spec:
@@ -79,10 +144,12 @@ kind: Ingress
 metadata:
   name: api-ingress
   annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /ext/$1
+    nginx.ingress.kubernetes.io/rewrite-target: /$1
     # nginx.ingress.kubernetes.io/ssl-redirect: "false"
     nginx.ingress.kubernetes.io/enable-rewrite-log: "true"
+  {{ if ne .Values.serverTier "local" }}
     cert-manager.io/issuer: "letsencrypt-{{ .Values.serverTier }}"
+  {{ end }}
 spec:
   ingressClassName: {{ .Values.ingress_class }}
   tls:
@@ -98,40 +165,40 @@ spec:
     http:
       paths:
       # Definitely needs to be available outside the cluster
-      - path: /{{ .Values.global.ingress_paths.execution_api_ingress_path }}/ext/(.*)
-        pathType: Prefix
+      - path: /{{ .Values.global.ingress_paths.execution_api_ingress_path }}/(.*)
+        pathType: ImplementationSpecific
         backend:
           service:
             name: {{ .Values.executionApi.name }}
             port:
               number: 80
 
-      - path: /{{ .Values.global.ingress_paths.jobs_api_ingress_path }}/ext/(.*)
-        pathType: Prefix
+      - path: /{{ .Values.global.ingress_paths.jobs_api_ingress_path }}/(.*)
+        pathType: ImplementationSpecific
         backend:
           service:
             name: {{ .Values.jobsApi.name }}
             port:
               number: 80
       # Definitely needs to be available outside the cluster
-      - path: /{{ .Values.global.ingress_paths.services_api_ingress_path }}/ext/(.*)
-        pathType: Prefix
+      - path: /{{ .Values.global.ingress_paths.services_api_ingress_path }}/(.*)
+        pathType: ImplementationSpecific
         backend:
           service:
             name: {{ .Values.serviceApi.name }}
             port:
               number: 80
       # Definitely needs to be available outside the cluster
-      - path: /{{ .Values.global.ingress_paths.sib_manager_ingress_path }}/ext/(.*)
-        pathType: Prefix
+      - path: /{{ .Values.global.ingress_paths.sib_manager_ingress_path }}/(.*)
+        pathType: ImplementationSpecific
         backend:
           service:
             name: {{ .Values.sibManager.name }}
             port:
               number: 80
 
-      - path: /{{ .Values.global.ingress_paths.data_manager_ingress_path }}/ext/(.*)
-        pathType: Prefix
+      - path: /{{ .Values.global.ingress_paths.data_manager_ingress_path }}/(.*)
+        pathType: ImplementationSpecific
         backend:
           service:
             name: {{ .Values.dataManager.name }}

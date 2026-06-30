@@ -121,8 +121,12 @@ def submit_k8s_job(
             value=MINIO_PRESIGNED_INGRESS_PATH
         ),
         client.V1EnvVar(
+            # Local k3s/minikube serve minio.localhost over http via the ingress (the
+            # cincodebio local CA cert is not trusted by minio-py inside the SIB pods), so
+            # MINIO_EXTERNAL_SECURE must be "False" there. Production (real TLS host) keeps
+            # the "True" default. Driven by the service-api pod env so the chart controls it.
             name="MINIO_EXTERNAL_SECURE",
-            value="True"
+            value=os.getenv("MINIO_EXTERNAL_SECURE", "True")
         ),
         client.V1EnvVar(
             name="MINIO_EXTERNAL_HOST",

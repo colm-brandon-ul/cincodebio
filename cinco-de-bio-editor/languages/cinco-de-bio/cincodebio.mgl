@@ -1,0 +1,139 @@
+import "siblibrary.mgl" as siblib
+stylePath "cincodebio.msl"
+
+
+@GeneratorAction("CincoDeBioGenerator")
+@Validation("SibCheck")
+@Validation("DataFlowCheck")
+@Validation("ControlFlowCheck")
+@CustomAction("SyncSibLibraryWithBackEnd", "Refresh SIB Library")
+graphModel CincoDeBioGraphModel {
+	iconPath "icons/ProcessModel.png"
+	diagramExtension "flow"
+    // add ontology url reference to graph model?
+    // attr string as label := "<unnamed>"
+	
+	containableElements(SIB)
+}
+
+
+/*** SIBs ***/
+@AppearanceProvider("SibAppearanceProvider")
+abstract container SIB {
+	containableElements(SIBLabel,IO)
+	
+	incomingEdges(ControlFlow)
+	outgoingEdges(ControlFlow[0,*])
+
+	@readOnly attr string as label := "<unnamed>"
+	@readOnly attr string as name := "<unnamed>"
+    @readOnly @hidden @multiline attr string as documentation
+    @readOnly @hidden attr string as validBranches [0,*]
+}
+
+// ClassName, methodname 
+@Hook("SIBHook", PostCreate, PostMove, PostResize, CanSelect)
+@CustomAction("UpdateSIB",'Refresh SIB')
+@AppearanceProvider("SibAppearanceProvider")
+@DoubleClickAction("GenericSibHook")
+@palette("Automated")
+container AutomatedSIB extends SIB {
+	style sib
+
+    @label("${label}") 
+	prime siblib::Service as service
+}
+
+@Hook("SIBHook", PostCreate, PostMove, PostResize, CanSelect)
+@CustomAction("UpdateSIB",'Refresh SIB')
+@AppearanceProvider("SibAppearanceProvider")
+@DoubleClickAction("GenericSibHook")
+@palette("Interactive")
+container InteractiveSIB extends SIB {
+	style sib
+
+	@label("${label}") 
+	prime siblib::Task as task
+}
+@disable(create,delete,move,resize)
+@disable("select")
+@AppearanceProvider("SibLabelAppearanceProvider")
+node SIBLabel {
+	style sibLabel("${label}", "${icon}")
+
+	@hidden @readOnly attr string as label := "<unnamed>"
+    @hidden @readOnly attr string as icon := "icons/service.png"
+}
+
+/*** Input / Output ***/
+
+abstract node IO {
+	@readOnly attr string as name := "port"
+	@readOnly attr string as list := "false"
+}
+
+@disable(create,delete,move,resize)
+@AppearanceProvider("InputAppearanceProvider")
+node InputPort extends IO {
+	style inputPort("${name}", "${list ? '[' : ''}", "${typeName}", "${list ? ']' : ''}")
+	
+	@readOnly attr string as typeName := "??"
+	
+	incomingEdges(DataFlow[0,1])
+}
+
+@disable(create,delete,move,resize)
+@AppearanceProvider("OutputAppearanceProvider")
+node OutputPort extends IO {
+	style outputPort("${name}", "${list ? '[' : ''}", "${typeName}", "${list ? ']' : ''}")
+	
+	outgoingEdges(DataFlow)
+
+	@readOnly attr string as typeName := "??"
+}
+
+/*** Control / Data Flow ***/
+
+@Hook("ControlFlowHook", PostCreate)
+edge ControlFlow {
+	style controlFlow("${label}")
+
+	// @possibleValuesProvider("info.scce.cinco.product.hippoflow.ControlFlowAvailableBranchNameProvider")
+	attr string as label := ""
+}
+
+@Hook("DataFlowHook", PostCreate)
+edge DataFlow {
+	style dataFlow
+}
+
+abstract type SibValue {
+
+}
+
+type StringValue extends SibValue {
+    // @regex('/*email@email*/')
+    attr string as value
+}
+type EnumValue extends SibValue {
+    @hidden attr string as enum_values
+
+    // @enum("$enum_values") TODO: use possible values provider
+    attr string as value
+}
+
+type IntegerValue extends SibValue {
+    @hidden
+    @readOnly
+    attr number as min_scale = 1
+    @hidden
+    @readOnly
+    attr number as max_scale = 10
+
+    // @interval("min_scale", "max_scale")
+    attr number as scale = 5
+}
+
+type ColorValue extends SibValue {
+    @color attr string as hex = 5
+}

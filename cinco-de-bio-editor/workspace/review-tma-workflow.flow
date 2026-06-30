@@ -1,0 +1,138 @@
+{
+  "id": "review_tma_workflow",
+  "type": "cincodebio:cincodebiographmodel",
+  "_attributes": {},
+  "_containments": [
+    {
+      "id": "sib_init_tma",
+      "type": "cincodebio:interactivesib",
+      "_attributes": {
+        "libraryComponentUID": "da04a27e24f6e8bc8eb8cca1eb983e07",
+        "name": "InitTMA",
+        "label": "InitTMA",
+        "documentation": "Collects the TMA experiment data and exposes the shared workflow parameters.",
+        "validBranches": ["success"],
+        "parameter": []
+      },
+      "_primeReference": { "instanceId": "da04a27e24f6e8bc8eb8cca1eb983e07", "instanceType": "siblibrary:task", "modelId": "d41d8cd98f00b204e9800998ecf8427e", "modelType": "siblibrary:siblibrary", "filePath": "siblib/cclib.sibs" },
+      "_position": { "x": 80, "y": 140 },
+      "_size": { "width": 270, "height": 260 },
+      "_containments": [
+        { "id": "label_init_tma", "type": "cincodebio:siblabel", "_attributes": { "label": "InitTMA", "icon": "icons/task.png" }, "_position": { "x": 2, "y": 10 }, "_size": { "width": 266, "height": 50 } },
+        { "id": "out_init_tma", "type": "cincodebio:outputport", "_attributes": { "name": "tissue_micro_array", "typeName": "TissueMicroArray", "isList": "false" }, "_position": { "x": 2, "y": 70 }, "_size": { "width": 266, "height": 30 } },
+        { "id": "out_init_nuclear_stain", "type": "cincodebio:outputport", "_attributes": { "name": "nuclear_stain", "typeName": "NuclearStain", "isList": "false" }, "_position": { "x": 2, "y": 105 }, "_size": { "width": 266, "height": 30 } },
+        { "id": "out_init_nuclear_markers", "type": "cincodebio:outputport", "_attributes": { "name": "nuclear_markers", "typeName": "NuclearMarkers", "isList": "false" }, "_position": { "x": 2, "y": 140 }, "_size": { "width": 266, "height": 30 } },
+        { "id": "out_init_membrane_markers", "type": "cincodebio:outputport", "_attributes": { "name": "membrane_markers", "typeName": "MembraneMarkers", "isList": "false" }, "_position": { "x": 2, "y": 175 }, "_size": { "width": 266, "height": 30 } },
+        { "id": "out_init_protein_markers", "type": "cincodebio:outputport", "_attributes": { "name": "protein_channel_markers", "typeName": "ProteinChannelMarkers", "isList": "false" }, "_position": { "x": 2, "y": 210 }, "_size": { "width": 266, "height": 30 } }
+      ]
+    },
+    {
+      "id": "sib_segarray_tma",
+      "type": "cincodebio:automatedsib",
+      "_attributes": { "libraryComponentUID": "0a125a45a33f3efc641cfa219725c38b", "name": "SegArrayTMA", "label": "SegArrayTMA", "documentation": "Predicts TMA core regions before review.", "validBranches": ["success"], "parameter": [] },
+      "_primeReference": { "instanceId": "0a125a45a33f3efc641cfa219725c38b", "instanceType": "siblibrary:service", "modelId": "d41d8cd98f00b204e9800998ecf8427e", "modelType": "siblibrary:siblibrary", "filePath": "siblib/cclib.sibs" },
+      "_position": { "x": 460, "y": 110 },
+      "_size": { "width": 270, "height": 190 },
+      "_containments": [
+        { "id": "in_seg_tma", "type": "cincodebio:inputport", "_attributes": { "name": "tissue_micro_array", "typeName": "TissueMicroArray", "isList": "false" }, "_position": { "x": 2, "y": 10 }, "_size": { "width": 266, "height": 30 } },
+        { "id": "in_seg_nuclear_stain", "type": "cincodebio:inputport", "_attributes": { "name": "nuclear_stain", "typeName": "NuclearStain", "isList": "false" }, "_position": { "x": 2, "y": 45 }, "_size": { "width": 266, "height": 30 } },
+        { "id": "label_segarray_tma", "type": "cincodebio:siblabel", "_attributes": { "label": "SegArrayTMA", "icon": "icons/service.png" }, "_position": { "x": 2, "y": 80 }, "_size": { "width": 266, "height": 50 } },
+        { "id": "out_seg_predicted_rois", "type": "cincodebio:outputport", "_attributes": { "name": "predicted_rois", "typeName": "RegionsOfInterestPredictions", "isList": "false" }, "_position": { "x": 2, "y": 140 }, "_size": { "width": 266, "height": 30 } }
+      ]
+    },
+    {
+      "id": "sib_edit_rois",
+      "type": "cincodebio:interactivesib",
+      "_attributes": { "libraryComponentUID": "18607208436eb20430c569e31f2ee869", "name": "EditPredictedRoisTMA", "label": "EditPredictedRoisTMA", "documentation": "Lets the reviewer correct predicted core regions before cropping.", "validBranches": ["success"], "parameter": [] },
+      "_primeReference": { "instanceId": "18607208436eb20430c569e31f2ee869", "instanceType": "siblibrary:task", "modelId": "d41d8cd98f00b204e9800998ecf8427e", "modelType": "siblibrary:siblibrary", "filePath": "siblib/cclib.sibs" },
+      "_position": { "x": 840, "y": 120 },
+      "_size": { "width": 290, "height": 230 },
+      "_containments": [
+        { "id": "in_edit_tma", "type": "cincodebio:inputport", "_attributes": { "name": "tissue_micro_array", "typeName": "TissueMicroArray", "isList": "false" }, "_position": { "x": 2, "y": 10 }, "_size": { "width": 286, "height": 30 } },
+        { "id": "in_edit_nuclear_stain", "type": "cincodebio:inputport", "_attributes": { "name": "nuclear_stain", "typeName": "NuclearStain", "isList": "false" }, "_position": { "x": 2, "y": 45 }, "_size": { "width": 286, "height": 30 } },
+        { "id": "in_edit_predicted_rois", "type": "cincodebio:inputport", "_attributes": { "name": "predicted_rois", "typeName": "RegionsOfInterestPredictions", "isList": "false" }, "_position": { "x": 2, "y": 80 }, "_size": { "width": 286, "height": 30 } },
+        { "id": "label_edit_rois", "type": "cincodebio:siblabel", "_attributes": { "label": "EditPredictedRoisTMA", "icon": "icons/task.png" }, "_position": { "x": 2, "y": 115 }, "_size": { "width": 286, "height": 50 } },
+        { "id": "out_edit_rois", "type": "cincodebio:outputport", "_attributes": { "name": "rois", "typeName": "RegionsOfInterest", "isList": "false" }, "_position": { "x": 2, "y": 175 }, "_size": { "width": 286, "height": 30 } }
+      ]
+    },
+    {
+      "id": "sib_crop_cores",
+      "type": "cincodebio:automatedsib",
+      "_attributes": { "libraryComponentUID": "d6a8c141eb839a81cd8f7be8224dcb6f", "name": "CropCoresTMA", "label": "CropCoresTMA", "documentation": "Crops reviewed cores from the tissue microarray.", "validBranches": ["success"], "parameter": [] },
+      "_primeReference": { "instanceId": "d6a8c141eb839a81cd8f7be8224dcb6f", "instanceType": "siblibrary:service", "modelId": "d41d8cd98f00b204e9800998ecf8427e", "modelType": "siblibrary:siblibrary", "filePath": "siblib/cclib.sibs" },
+      "_position": { "x": 1230, "y": 140 },
+      "_size": { "width": 270, "height": 190 },
+      "_containments": [
+        { "id": "in_crop_tma", "type": "cincodebio:inputport", "_attributes": { "name": "tissue_micro_array", "typeName": "TissueMicroArray", "isList": "false" }, "_position": { "x": 2, "y": 10 }, "_size": { "width": 266, "height": 30 } },
+        { "id": "in_crop_rois", "type": "cincodebio:inputport", "_attributes": { "name": "rois", "typeName": "RegionsOfInterest", "isList": "false" }, "_position": { "x": 2, "y": 45 }, "_size": { "width": 266, "height": 30 } },
+        { "id": "label_crop_cores", "type": "cincodebio:siblabel", "_attributes": { "label": "CropCoresTMA", "icon": "icons/service.png" }, "_position": { "x": 2, "y": 80 }, "_size": { "width": 266, "height": 50 } },
+        { "id": "out_crop_dtma", "type": "cincodebio:outputport", "_attributes": { "name": "dearrayed_tissue_micro_array", "typeName": "DearrayedTissueMicroArray", "isList": "false" }, "_position": { "x": 2, "y": 140 }, "_size": { "width": 266, "height": 30 } }
+      ]
+    },
+    {
+      "id": "sib_ace_dtma",
+      "type": "cincodebio:automatedsib",
+      "_attributes": { "libraryComponentUID": "d698ed3683fde7261efc01f43dbebe1f", "name": "AceDTMA", "label": "AceDTMA", "documentation": "Applies technical variance correction to cropped TMA cores.", "validBranches": ["success"], "parameter": [] },
+      "_primeReference": { "instanceId": "d698ed3683fde7261efc01f43dbebe1f", "instanceType": "siblibrary:service", "modelId": "d41d8cd98f00b204e9800998ecf8427e", "modelType": "siblibrary:siblibrary", "filePath": "siblib/cclib.sibs" },
+      "_position": { "x": 1600, "y": 100 },
+      "_size": { "width": 270, "height": 155 },
+      "_containments": [
+        { "id": "in_ace_dtma", "type": "cincodebio:inputport", "_attributes": { "name": "dearrayed_tissue_micro_array", "typeName": "DearrayedTissueMicroArray", "isList": "false" }, "_position": { "x": 2, "y": 10 }, "_size": { "width": 266, "height": 30 } },
+        { "id": "label_ace_dtma", "type": "cincodebio:siblabel", "_attributes": { "label": "AceDTMA", "icon": "icons/service.png" }, "_position": { "x": 2, "y": 45 }, "_size": { "width": 266, "height": 50 } },
+        { "id": "out_ace_dtma", "type": "cincodebio:outputport", "_attributes": { "name": "dearrayed_tissue_micro_array", "typeName": "DearrayedTissueMicroArray", "isList": "false" }, "_position": { "x": 2, "y": 105 }, "_size": { "width": 266, "height": 30 } }
+      ]
+    },
+    {
+      "id": "sib_xtracit_dtma",
+      "type": "cincodebio:automatedsib",
+      "_attributes": { "libraryComponentUID": "a654eee1011a6707ccab474c82663d14", "name": "XtracitDTMA", "label": "XtracitDTMA", "documentation": "Extracts MISSILE-compatible single-cell features.", "validBranches": ["success"], "parameter": [] },
+      "_primeReference": { "instanceId": "a654eee1011a6707ccab474c82663d14", "instanceType": "siblibrary:service", "modelId": "d41d8cd98f00b204e9800998ecf8427e", "modelType": "siblibrary:siblibrary", "filePath": "siblib/cclib.sibs" },
+      "_position": { "x": 1990, "y": 210 },
+      "_size": { "width": 305, "height": 250 },
+      "_containments": [
+        { "id": "in_xtracit_dtma", "type": "cincodebio:inputport", "_attributes": { "name": "dearrayed_tissue_micro_array", "typeName": "DearrayedTissueMicroArray", "isList": "false" }, "_position": { "x": 2, "y": 10 }, "_size": { "width": 301, "height": 30 } },
+        { "id": "in_xtracit_nuclear_markers", "type": "cincodebio:inputport", "_attributes": { "name": "nuclear_markers", "typeName": "NuclearMarkers", "isList": "false" }, "_position": { "x": 2, "y": 80 }, "_size": { "width": 301, "height": 30 } },
+        { "id": "in_xtracit_protein_markers", "type": "cincodebio:inputport", "_attributes": { "name": "protein_channel_markers", "typeName": "ProteinChannelMarkers", "isList": "false" }, "_position": { "x": 2, "y": 115 }, "_size": { "width": 301, "height": 30 } },
+        { "id": "label_xtracit_dtma", "type": "cincodebio:siblabel", "_attributes": { "label": "XtracitDTMA", "icon": "icons/service.png" }, "_position": { "x": 2, "y": 150 }, "_size": { "width": 301, "height": 50 } },
+        { "id": "out_xtracit_fcs", "type": "cincodebio:outputport", "_attributes": { "name": "dearrayed_tissue_micro_array_missile_fcs", "typeName": "DearrayedTissueMicroArrayMissileFCS", "isList": "false" }, "_position": { "x": 2, "y": 210 }, "_size": { "width": 301, "height": 30 } }
+      ]
+    },
+    {
+      "id": "sib_create_missile",
+      "type": "cincodebio:automatedsib",
+      "_attributes": { "libraryComponentUID": "7f28bc3ef60f6789785d5763421270e5", "name": "CreateMissileObjectDTMA", "label": "CreateMissileObjectDTMA", "documentation": "Creates MISSILE metadata, expression counts, and spatial data outputs.", "validBranches": ["success"], "parameter": [] },
+      "_primeReference": { "instanceId": "7f28bc3ef60f6789785d5763421270e5", "instanceType": "siblibrary:service", "modelId": "d41d8cd98f00b204e9800998ecf8427e", "modelType": "siblibrary:siblibrary", "filePath": "siblib/cclib.sibs" },
+      "_position": { "x": 2400, "y": 220 },
+      "_size": { "width": 320, "height": 250 },
+      "_containments": [
+        { "id": "in_create_fcs", "type": "cincodebio:inputport", "_attributes": { "name": "dearrayed_tissue_micro_array_missile_fcs", "typeName": "DearrayedTissueMicroArrayMissileFCS", "isList": "false" }, "_position": { "x": 2, "y": 10 }, "_size": { "width": 316, "height": 30 } },
+        { "id": "in_create_protein_markers", "type": "cincodebio:inputport", "_attributes": { "name": "protein_channel_markers", "typeName": "ProteinChannelMarkers", "isList": "false" }, "_position": { "x": 2, "y": 45 }, "_size": { "width": 316, "height": 30 } },
+        { "id": "label_create_missile", "type": "cincodebio:siblabel", "_attributes": { "label": "CreateMissileObjectDTMA", "icon": "icons/service.png" }, "_position": { "x": 2, "y": 80 }, "_size": { "width": 316, "height": 50 } },
+        { "id": "out_missile_metadata", "type": "cincodebio:outputport", "_attributes": { "name": "missile_metadata", "typeName": "MissileMetadata", "isList": "false" }, "_position": { "x": 2, "y": 140 }, "_size": { "width": 316, "height": 30 } },
+        { "id": "out_missile_counts", "type": "cincodebio:outputport", "_attributes": { "name": "missile_counts", "typeName": "MissileExpressionCounts", "isList": "false" }, "_position": { "x": 2, "y": 175 }, "_size": { "width": 316, "height": 30 } },
+        { "id": "out_missile_spatial", "type": "cincodebio:outputport", "_attributes": { "name": "missile_spatial_data", "typeName": "MissileExpressionSpatialData", "isList": "false" }, "_position": { "x": 2, "y": 210 }, "_size": { "width": 316, "height": 30 } }
+      ]
+    }
+  ],
+  "_edges": [
+    { "id": "cf_init_to_seg", "type": "cincodebio:controlflow", "sourceID": "sib_init_tma", "targetID": "sib_segarray_tma", "_attributes": { "label": "success" }, "_routingPoints": [] },
+    { "id": "cf_seg_to_edit", "type": "cincodebio:controlflow", "sourceID": "sib_segarray_tma", "targetID": "sib_edit_rois", "_attributes": { "label": "success" }, "_routingPoints": [] },
+    { "id": "cf_edit_to_crop", "type": "cincodebio:controlflow", "sourceID": "sib_edit_rois", "targetID": "sib_crop_cores", "_attributes": { "label": "success" }, "_routingPoints": [] },
+    { "id": "cf_crop_to_ace", "type": "cincodebio:controlflow", "sourceID": "sib_crop_cores", "targetID": "sib_ace_dtma", "_attributes": { "label": "success" }, "_routingPoints": [] },
+    { "id": "cf_ace_to_xtracit", "type": "cincodebio:controlflow", "sourceID": "sib_ace_dtma", "targetID": "sib_xtracit_dtma", "_attributes": { "label": "success" }, "_routingPoints": [] },
+    { "id": "cf_xtracit_to_create", "type": "cincodebio:controlflow", "sourceID": "sib_xtracit_dtma", "targetID": "sib_create_missile", "_attributes": { "label": "success" }, "_routingPoints": [] },
+    { "id": "df_init_tma_to_seg", "type": "cincodebio:dataflow", "sourceID": "out_init_tma", "targetID": "in_seg_tma", "_attributes": {}, "_routingPoints": [] },
+    { "id": "df_init_stain_to_seg", "type": "cincodebio:dataflow", "sourceID": "out_init_nuclear_stain", "targetID": "in_seg_nuclear_stain", "_attributes": {}, "_routingPoints": [] },
+    { "id": "df_init_tma_to_edit", "type": "cincodebio:dataflow", "sourceID": "out_init_tma", "targetID": "in_edit_tma", "_attributes": {}, "_routingPoints": [] },
+    { "id": "df_init_stain_to_edit", "type": "cincodebio:dataflow", "sourceID": "out_init_nuclear_stain", "targetID": "in_edit_nuclear_stain", "_attributes": {}, "_routingPoints": [] },
+    { "id": "df_seg_rois_to_edit", "type": "cincodebio:dataflow", "sourceID": "out_seg_predicted_rois", "targetID": "in_edit_predicted_rois", "_attributes": {}, "_routingPoints": [] },
+    { "id": "df_init_tma_to_crop", "type": "cincodebio:dataflow", "sourceID": "out_init_tma", "targetID": "in_crop_tma", "_attributes": {}, "_routingPoints": [] },
+    { "id": "df_edit_rois_to_crop", "type": "cincodebio:dataflow", "sourceID": "out_edit_rois", "targetID": "in_crop_rois", "_attributes": {}, "_routingPoints": [] },
+    { "id": "df_crop_dtma_to_ace", "type": "cincodebio:dataflow", "sourceID": "out_crop_dtma", "targetID": "in_ace_dtma", "_attributes": {}, "_routingPoints": [] },
+    { "id": "df_ace_dtma_to_xtracit", "type": "cincodebio:dataflow", "sourceID": "out_ace_dtma", "targetID": "in_xtracit_dtma", "_attributes": {}, "_routingPoints": [] },
+    { "id": "df_init_nuclear_markers_to_xtracit", "type": "cincodebio:dataflow", "sourceID": "out_init_nuclear_markers", "targetID": "in_xtracit_nuclear_markers", "_attributes": {}, "_routingPoints": [] },
+    { "id": "df_init_protein_to_xtracit", "type": "cincodebio:dataflow", "sourceID": "out_init_protein_markers", "targetID": "in_xtracit_protein_markers", "_attributes": {}, "_routingPoints": [] },
+    { "id": "df_xtracit_fcs_to_create", "type": "cincodebio:dataflow", "sourceID": "out_xtracit_fcs", "targetID": "in_create_fcs", "_attributes": {}, "_routingPoints": [] },
+    { "id": "df_init_protein_to_create", "type": "cincodebio:dataflow", "sourceID": "out_init_protein_markers", "targetID": "in_create_protein_markers", "_attributes": {}, "_routingPoints": [] }
+  ]
+}

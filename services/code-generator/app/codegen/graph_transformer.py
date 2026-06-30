@@ -64,10 +64,14 @@ class ComputationalGraphTransformer:
                         edges.append((
                             sib['identifier'], 
                             map[df['subport_identifier']], 
-                            dict(edge_type=EdgeType.DataFlow, 
-                                    data_type=port['port_properties']['typeName'], 
-                                    name=port['port_properties']['name'], 
-                                    is_list=port['port_properties']['isList'], 
+                            dict(edge_type=EdgeType.DataFlow,
+                                    data_type=port['port_properties']['typeName'],
+                                    name=port['port_properties']['name'],
+                                    # The editor mgl emits the list flag as `list`, while the fixtures
+                                    # / canonical models use `isList` (see semantics.ts which reads
+                                    # `isList ?? list`). Accept either so GUI-built and seeded models
+                                    # both generate.
+                                    is_list=port['port_properties'].get('isList', port['port_properties'].get('list', 'false')),
                                     source_ip=port['port_identifier'], 
                                     target_ip=df['subport_identifier'],
                                     source_sib_name=sib['properties']['name'],

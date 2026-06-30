@@ -56,7 +56,7 @@ def compute_local_hash(file=None,v2: bool = True) -> tuple[str, str]:
     if v2:
         if file is None:
             file = UTD_SIB_FILE_V2
-        with open(cinco_cloud_state_path / file, 'r') as f:
+        with open(cinco_cloud_state_path / file, 'rb') as f:
             og_str = f.read()
     else:
         with open(state_path / UTD_SIB_FILE, 'rb') as f:

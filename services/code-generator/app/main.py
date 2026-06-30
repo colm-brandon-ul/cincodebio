@@ -34,50 +34,75 @@ def on_message(channel, method_frame, header_frame, body, thread_list):
     t.start()
     thread_list.append(t)
     
+def mark_workflow_failed(workflow_id: str, reason: str):
+    """Surface a code-generation / dispatch failure on the workflow page instead of
+    leaving it stuck at 'submitted' forever. Best-effort: never raises."""
+    logging.error(f"Workflow {workflow_id} failed in code-generator: {reason}")
+    try:
+        requests.post(
+            f"{EXECUTION_API_ADDRESS}/control/update-workflow/{workflow_id}",
+            json={"status": "failed"},
+            timeout=15,
+        )
+    except Exception:
+        logging.exception(f"Could not mark workflow {workflow_id} as failed")
+
+
 # Launched in a new thread
 def do_work(ch, method_frame, body):
     thread_id = threading.get_ident()
     payload = json.loads(body)
-    
+    workflow_id = payload.get("workflow_id")
+
     logging.warning(f" Number of Threads: {threading.active_count()}, Thread id: {thread_id}")
-    
-    # Code generator and dispatch 
-    logging.warning(payload)
-    if "v2" in payload:
-        v2 = True
-    else:
-        v2 = False
 
-    res = requests.get(f"{SIB_MANAGER_ADDRESS}/get-sib-map")
+    # Code generator and dispatch — wrapped so any failure is reported on the
+    # workflow page (status='failed') with a logged traceback, rather than the
+    # thread dying silently and the workflow staying 'submitted' with no jobs.
+    try:
+        # Code generator and dispatch
+        logging.warning(payload)
+        if "v2" in payload:
+            v2 = True
+        else:
+            v2 = False
 
-    sib_map = json.loads(res.content.decode("utf-8"))
-    logging.warning(sib_map)
+        res = requests.get(f"{SIB_MANAGER_ADDRESS}/get-sib-map")
+        res.raise_for_status()
 
-    executable = HippoFlowCodegenrator.generate(
-        model = payload["model"],
-        workflow_id=payload["workflow_id"],
-        sib_mapping=sib_map,
-        cdb_external_url=payload["external_url"],
-        v2=v2
-        
-    )
+        sib_map = json.loads(res.content.decode("utf-8"))
+        logging.warning(sib_map)
 
-    logging.warning(f'WORKFLOW CODE: \n{executable}')
-    
+        executable = HippoFlowCodegenrator.generate(
+            model = payload["model"],
+            workflow_id=workflow_id,
+            sib_mapping=sib_map,
+            cdb_external_url=payload["external_url"],
+            v2=v2
+        )
 
-    # This will be replaced with some code generatioon functionality
-    
-    res = requests.post(f"http://{EXECUTION_ENV_LB}.{CINCO_DE_BIO_NAMESPACE}.svc.cluster.local/", 
-                        json={"code": executable, "workflow_id": payload["workflow_id"]})
+        logging.warning(f'WORKFLOW CODE: \n{executable}')
 
-    if res.status_code == 202:
-        res = requests.post(f"{EXECUTION_API_ADDRESS}/control/update-workflow/{payload['workflow_id']}", json={"status": "accepted"})
+        # Dispatch the generated workflow code to the execution environment.
+        res = requests.post(f"http://{EXECUTION_ENV_LB}.{CINCO_DE_BIO_NAMESPACE}.svc.cluster.local/",
+                            json={"code": executable, "workflow_id": workflow_id})
 
-    # logging.warning(str(res.status_code))
-
-    # For acknowledging the message from the main loop
-    cb = functools.partial(ack_message, ch, method_frame.delivery_tag)
-    ch.connection.add_callback_threadsafe(cb)
+        if res.status_code == 202:
+            res = requests.post(f"{EXECUTION_API_ADDRESS}/control/update-workflow/{workflow_id}", json={"status": "accepted"})
+            logging.info(str(res.status_code))
+        else:
+            mark_workflow_failed(
+                workflow_id,
+                f"execution-environment returned HTTP {res.status_code}: {res.text[:500]}",
+            )
+    except Exception as exc:
+        logging.exception(f"Code generation/dispatch failed for workflow {workflow_id}")
+        if workflow_id:
+            mark_workflow_failed(workflow_id, repr(exc))
+    finally:
+        # Always acknowledge the message so it is not redelivered in a loop.
+        cb = functools.partial(ack_message, ch, method_frame.delivery_tag)
+        ch.connection.add_callback_threadsafe(cb)
 
 
 def main():
